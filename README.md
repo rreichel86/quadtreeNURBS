@@ -1,5 +1,7 @@
 ## Quadtree Decomposition of Heterogeneous Materials in NURBS-boundary Representation
 
+![ALT](https://git.rwth-aachen.de/rainer.reichel/nurbs_brep_quadtree/blob/master/Moby-Dick.png)
+
 Composite materials have been for decades widely used in civil engineering and related fields.
 Some approaches for treating numerical models, which deal with different materials, involve the
 employment of uniform meshes. This might be expensive in terms of computational resources.
