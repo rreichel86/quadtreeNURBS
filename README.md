@@ -1,9 +1,8 @@
 ## Quadtree Decomposition of Heterogeneous Materials in NURBS-boundary Representation
 
-![ALT](/Moby-Dick.png)
 
-
-
+| ![ALT](/Circunference.png) |![ALT](/Double_Circunference.png) |
+| ![ALT](/Moby-Dick.png) | ![ALT](/Flat_Shape.png) | 
 
 Composite materials have been for decades widely used in civil engineering and related fields.
 Some approaches for treating numerical models, which deal with different materials, involve the
