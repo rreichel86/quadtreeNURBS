@@ -1,9 +1,5 @@
 ## Quadtree Decomposition of Heterogeneous Materials in NURBS-boundary Representation
 
-
-| ![ALT|20%](/Circumference.png) |![ALT](/Double_Circumference.png) |
-| ![ALT](/Moby-Dick.png) | ![ALT](/Flat_Shape.png) | 
-
 Composite materials have been for decades widely used in civil engineering and related fields.
 Some approaches for treating numerical models, which deal with different materials, involve the
 employment of uniform meshes. This might be expensive in terms of computational resources.
@@ -16,3 +12,10 @@ is done with NURBS. This method makes use of the quadtree decomposition procedur
 generates non-uniform interface-conforming meshes. This allows us to create an automatic nonuniform
 mesh, based on the complexity of the geometry, and to maintain an exact representation
 of the boundary.
+
+
+## Examples
+![ALT](/Circumference.png) 
+![ALT](/Double_Circumference.png) 
+![ALT](/Moby-Dick.png) 
+![ALT](/Flat_Shape.png)  
