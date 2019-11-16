@@ -15,7 +15,8 @@ of the boundary.
 
 
 ## Examples
-![ALT](/Circumference.png)
-![ALT](/Double_Circumference.png) 
-![ALT](/Moby-Dick.png) 
-![ALT](/Flat_Shape.png)  
+
+|  | |
+| ------ | ------ |
+| ![ALT](/Circumference.png) | ![ALT](/Double_Circumference.png) |
+| ![ALT](/Moby-Dick.png)  | ![ALT](/Flat_Shape.png) | 
