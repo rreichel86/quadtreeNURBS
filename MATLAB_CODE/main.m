@@ -71,6 +71,6 @@ end
 % close all the figures and plots the NURBS cointained in each leaf
 % separatedly
 %plot_leaf(Quadtree,ax)
-
+[coordinates,element_nodes,nel]=extract_leaf(Quadtree);
 
 
