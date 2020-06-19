@@ -73,4 +73,12 @@ end
 %plot_leaf(Quadtree,ax)
 [coordinates,element_nodes,nel]=extract_leaf(Quadtree);
 
-
+%%
+% pick first element of element_nodes 
+for ielno = 1:nel
+    elmt = element_nodes{ielno,:}
+    ex = coordinates( elmt(3:end), 2);
+    ey = coordinates( elmt(3:end), 3);
+    
+    patch(ex,ey, 'red','FaceAlpha',.5)
+end 
