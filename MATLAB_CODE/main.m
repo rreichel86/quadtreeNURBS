@@ -11,7 +11,7 @@ clc;
 %       4      |      Flat shape         |     4.1
 %       5      |  Limit double circum.   |     4.2
 %       6      |    Degenerated case     |     4.2
-fig=1;
+fig=2;
 
 
 
