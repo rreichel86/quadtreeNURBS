@@ -1,4 +1,4 @@
-function [coordinates,element_nodes,nel]=extract_leaf(Quadtree);
+function [coordinates,element_nodes,nel]=extract_leaf(Quadtree)
 %Function extract leaf will help to take out the Quadleaf element data
 
 l = Quadtree.findleaves();
@@ -11,10 +11,10 @@ coordinates = cell(length(l),1);
 %This will give an array for storing Quad coordinates
 
 elements = cell(nel,1);
-%This will give an array for storing coordinates OF elements
+%This will give an array for storing coordinates of elements
 element_nodes=cell(nel,1);
 j=1;
-for i=1:length(l);
+for i=1:length(l)
     
     %This function will take out the intersection.parametric data from
     %Quadtree
@@ -24,7 +24,7 @@ for i=1:length(l);
     %Function to get the coordinates of neighboring element that are
     %sharing the boundary
     
-    if isempty(intersections) || length(intersections) == 1;
+    if isempty(intersections) || length(intersections) == 1
         %if intersection data is empty then
         %there will be only Quad vertices no intersection points
         
@@ -51,7 +51,7 @@ for i=1:length(l);
         coordinate=[quad,inter_cor,cont_points];
         
         element = [quad,extract_element,inter_cor];
-   
+        
         
     elseif isempty(Quadtree.Node{l(i),1}{4,1})==1
         %if intersection.vertical data empty then
@@ -156,7 +156,7 @@ set(gca,'FontSize',10);
 text(coordinates(:,2),coordinates(:,3),num2str(nodes));
 
 %Element w.r.t node numbers in cells by using nel
-for i=1:nel;
+for i=1:nel
     %Following loop for giving nodes to elemnt coordintes by using
     %coordinates row
         for n=1 : size(elements{i},2)
