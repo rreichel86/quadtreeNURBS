@@ -1,10 +1,12 @@
 function [nel]=number_of_elements(Quadtree);
-
-%Count number of elements
+%function to get to know about total number of elements
 
 l = Quadtree.findleaves();
+%Calling each leaf of Quadtree
 nel=0;
 
+%Following loop is basically if ther are intersectional points than there
+%are 2 elements otherwise 1
 for i=1:length(l);
     intersections=Quadtree.Node{l(i),1}{5,1};
     
