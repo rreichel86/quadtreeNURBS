@@ -1,4 +1,4 @@
-function [coordinates,element_nodes,nel]=extract_leaf(Quadtree)
+function [coordinates,element_nodes,ncoor,maxnel,numel]=extract_leaf(Quadtree)
 %Function extract leaf will help to take out the Quadleaf element data
 
 l = Quadtree.findleaves();
