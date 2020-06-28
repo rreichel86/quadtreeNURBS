@@ -145,8 +145,8 @@ tol=1e-10;
 coordinates=uniquetol(coordinates,tol,'ByRows',true);
 %A=coordinates';
 %qref=reshape(A,[],1);
-nnode = size(coordinates,1) ;
-nodes = [1:nnode]' ;
+ncoor = size(coordinates,1) ;
+nodes = [1:ncoor]' ;
 coordinates = [nodes,coordinates];
 figure(2)
 plot(coordinates(:,2),coordinates(:,3),'.r') ;
@@ -156,6 +156,7 @@ set(gca,'FontSize',10);
 text(coordinates(:,2),coordinates(:,3),num2str(nodes));
 
 %Element w.r.t node numbers in cells by using numel
+maxnel = 0;
 for i=1:numel
     %Following loop for giving nodes to elemnt coordintes by using
     %coordinates row
@@ -170,6 +171,7 @@ for i=1:numel
     element_nodes{i}= unique(element_nodes{i},'stable');
     %to remove the repeated element_nodes values without changing
     %the order
+    maxnel = max(nel,maxnel);  % maximum number of nodes on any element
     element_nodes{i}=[i,nel,element_nodes{i}];
 end
 
