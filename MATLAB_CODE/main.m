@@ -71,14 +71,14 @@ end
 % close all the figures and plots the NURBS cointained in each leaf
 % separatedly
 %plot_leaf(Quadtree,ax)
-[coordinates,element_nodes,numel]=extract_leaf(Quadtree);
+[coor,connectivity,nnode,maxnel,numel]=extract_leaf(Quadtree);
 
 %%
 % pick first element of element_nodes 
 for ielno = 1:numel
-    elmt = element_nodes{ielno,:};
-    ex = coordinates( elmt(3:end), 2);
-    ey = coordinates( elmt(3:end), 3);
+    elmt = connectivity{ielno,:};
+    ex = coor( elmt(3:end), 2);
+    ey = coor( elmt(3:end), 3);
     
     patch(ex,ey, 'red','FaceAlpha',.5)
 end 
