@@ -4,15 +4,15 @@ function [coordinates,element_nodes,nel]=extract_leaf(Quadtree)
 l = Quadtree.findleaves();
 %Gives leaf numbers
 
-[nel]=number_of_elements(Quadtree);
+[numel]=number_of_elements(Quadtree);
 %function to get to know about total number of elements
 
 coordinates = cell(length(l),1);
 %This will give an array for storing Quad coordinates
 
-elements = cell(nel,1);
+elements = cell(numel,1);
 %This will give an array for storing coordinates of elements
-element_nodes=cell(nel,1);
+element_nodes=cell(numel,1);
 j=1;
 for i=1:length(l)
     
@@ -155,11 +155,13 @@ set(findall(gcf,'-property','FontSize'),'FontSize',8);%to set figure all data in
 set(gca,'FontSize',10);
 text(coordinates(:,2),coordinates(:,3),num2str(nodes));
 
-%Element w.r.t node numbers in cells by using nel
-for i=1:nel
+%Element w.r.t node numbers in cells by using numel
+for i=1:numel
     %Following loop for giving nodes to elemnt coordintes by using
     %coordinates row
-    for n=1 : size(elements{i},2)
+    
+    nel = size(elements{i},2); % number of nodes per element
+    for n=1 : nel
         [a] = find ( abs(coordinates(:,2) - elements{i}(1,n))<1e-10);
         [b] = find (abs(coordinates(:,3) - elements{i}(2,n))<1e-10);
         row= intersect(a,b);
@@ -168,7 +170,7 @@ for i=1:nel
     element_nodes{i}= unique(element_nodes{i},'stable');
     %to remove the repeated element_nodes values without changing
     %the order
-    element_nodes{i}=[i,size(element_nodes{i},2),element_nodes{i}];
+    element_nodes{i}=[i,nel,element_nodes{i}];
 end
 
 end
