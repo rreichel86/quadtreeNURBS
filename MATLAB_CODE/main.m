@@ -71,10 +71,9 @@ end
 % close all the figures and plots the NURBS cointained in each leaf
 % separatedly
 %plot_leaf(Quadtree,ax)
-[coor,connectivity,nnode,maxnel,numel]=extract_leaf(Quadtree);
+[coor,connectivity,nnode,maxnel,numel,kv_element,kv_num,maxnk]=extract_leaf(Quadtree);
 
-%%
-% pick first element of element_nodes 
+%% pick first element of element_nodes 
 for ielno = 1:numel
     elmt = connectivity{ielno,:};
     ex = coor( elmt(3:end), 2);

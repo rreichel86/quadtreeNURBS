@@ -1,5 +1,25 @@
-function [coordinates,element_nodes,ncoor,maxnel,numel]=extract_leaf(Quadtree)
+function [coor,connectivity,ncoor,maxnel,numel,kv_element,kv_num,maxnk]=extract_leaf(Quadtree)
 %Function extract leaf will help to take out the Quadleaf element data
+%input
+%Quadtree Data
+%Output
+%coor:coordinates with their weight
+%coor=[Number,x-coor,y-coor,weight]
+%connectivity:connectivity matrix for elements
+%connectivity=[Number,number of coordinates in element,coordinates of element]
+%ncoor:number of coordintes
+%maxnel:maximum number of nodes on any element
+%nmel:number of elements
+%kv_element:Vector with knot vector number and connectivity vector that
+%leaf 
+% kv_element=[Number,Knot_v Number(0 if the quad have no NURBS
+%curve),connectivity matrix from 2 column to end] 
+% kv_num:Vector having degree of NURBS curve,intersectional coordinates number,
+% size of knot vector and knot vector values
+%kv_num=[Number,degree of NURBS curve,intersectional coordinates number in clockwise direction,
+% size of knot vector and knot vector values]
+% maxnk:maximum number of knot values on any element
+
 
 l = Quadtree.findleaves();
 %Gives leaf numbers
@@ -7,13 +27,27 @@ l = Quadtree.findleaves();
 [numel]=number_of_elements(Quadtree);
 %function to get to know about total number of elements
 
-coordinates = cell(length(l),1);
+coor = cell(length(l),1);
 %This will give an array for storing Quad coordinates
+
+cp_we = cell(length(l),1);
+%Control points and it's associated weights 
+
+knot_v= cell(length(l),1);
+%knot vector of the NURBS in quad
 
 elements = cell(numel,1);
 %This will give an array for storing coordinates of elements
-element_nodes=cell(numel,1);
+
+connectivity=cell(numel,1);
+%connectivity matrix of elements
+
+inter_coor= cell(length(l),1);
+%Cell for all the intersectional coordinates that contain NURBS to in Cell
+%form
+
 j=1;
+m=1;
 for i=1:length(l)
     
     %This function will take out the intersection.parametric data from
@@ -24,6 +58,8 @@ for i=1:length(l)
     %Function to get the coordinates of neighboring element that are
     %sharing the boundary
     
+    %     [scaling_center]=scal_center(Quadtree,intersections,l,i);
+    
     if isempty(intersections) || length(intersections) == 1
         %if intersection data is empty then
         %there will be only Quad vertices no intersection points
@@ -33,10 +69,15 @@ for i=1:length(l)
         
         coordinate = [quad];
         
-        element = [quad,extract_element];
+        cp_w =[];%control points and weight
         
-        inter_cor=[];
-        %No intersectional coordinates
+        kv  =[];%knot vector from Quadtree
+        
+        element = [quad,extract_element];%leaf coordinates from quad 
+%         definition and neighboring elemnt quads
+        
+        inter_cor = [];%No intersectional coordinates
+        
     elseif isempty(Quadtree.Node{l(i),1}{3,1})==1
         %if intersection.horizontal data empty then
         %only intersection.vertical and Quad data taken out
@@ -45,12 +86,22 @@ for i=1:length(l)
         %points
         
         quad=Quadtree.Node{l(i),1}{10,1}(1:2,1:4);
+         %Quad definition
+         
+        cont_points=Quadtree.Node{l(i),1}{7,1};%control points from Quadtree
         
-        cont_points=Quadtree.Node{l(i),1}{7,1};
+        weights=Quadtree.Node{l(i),1}{9,1};%weights from Quadtree
+        
+        cp_w =[cont_points',weights'];%control points and weights
+        
+        kv  =[m,Quadtree.Node{l(i),1}{8,1}];%knot vector from Quadtree
+        
+        m=m+1;
         
         coordinate=[quad,inter_cor,cont_points];
         
-        element = [quad,extract_element,inter_cor];
+        element = [quad,extract_element,inter_cor];%leaf coordinates from quad 
+%         definition,neighboring element quads and intersectional points
         
         
     elseif isempty(Quadtree.Node{l(i),1}{4,1})==1
@@ -61,13 +112,22 @@ for i=1:length(l)
         %intersectional coordiantes are the 1st and last points of control
         %points
         
-        quad=Quadtree.Node{l(i),1}{10,1}(1:2,1:4);
+        quad=Quadtree.Node{l(i),1}{10,1}(1:2,1:4);%Quad definition
         
-        cont_points=Quadtree.Node{l(i),1}{7,1};
+        cont_points=Quadtree.Node{l(i),1}{7,1};%control points from Quadtree
+        
+        weights=Quadtree.Node{l(i),1}{9,1};%weights from Quadtree
+        
+        cp_w =[cont_points',weights'];%control points and weights
+        
+        kv  =[m,Quadtree.Node{l(i),1}{8,1}];%knot vector from Quadtree
+        
+        m=m+1;
         
         coordinate=[quad,inter_cor,cont_points];
         
-        element = [quad,extract_element,inter_cor];
+        element = [quad,extract_element,inter_cor];%leaf coordinates from quad 
+%         definition,neighboring element quads and intersectional points
         
         
     else
@@ -77,17 +137,33 @@ for i=1:length(l)
         %intersectional coordiantes are the 1st and last points of control
         %points
         
-        quad=Quadtree.Node{l(i),1}{10,1}(1:2,1:4);
+        quad=Quadtree.Node{l(i),1}{10,1}(1:2,1:4);%Quad definition
         
-        cont_points=Quadtree.Node{l(i),1}{7,1};
+        cont_points=Quadtree.Node{l(i),1}{7,1};%control points from Quadtree
+        
+        weights=Quadtree.Node{l(i),1}{9,1};%weights from Quadtree
+        
+        cp_w =[cont_points',weights'];%control points and weights
+        
+        kv  =[m,Quadtree.Node{l(i),1}{8,1}];%knot vector from Quadtree
+        
+        m=m+1;
         
         coordinate=[quad,inter_cor,cont_points];
         
-        element = [quad,extract_element,inter_cor];
+        element = [quad,extract_element,inter_cor];%leaf coordinates from quad 
+%         definition,neighboring element quads and intersectional points
         
     end
     
-    coordinates{i} = coordinate;
+    cp_we{i} = cp_w;%control points and weights in one cell
+    
+    knot_v{i}=kv;%knot vectors in one cell
+    
+    inter_coor{i}=inter_cor';%intersectional coordiantes in one cell 
+%     where x and y coordinates in one row
+    
+    coor{i} = coordinate;%coordinates in one cell
     
     % Given element commands are to remove the -99 number and arrange the leaf coordinates
     % (including quad,neighboring quad and intersectional coordinates)
@@ -114,8 +190,8 @@ for i=1:length(l)
     end
     %if int_cor empty than there is only one element that was itself leaf
     %otherwise it would be two elements
-    if isempty(inter_cor)
-        elements{j} = element;
+    if isempty(inter_cor)    
+        elements{j} = [element];
         j=j+1;
     else
         %loop for two inter_cor points to know in element definition where they exist
@@ -124,56 +200,80 @@ for i=1:length(l)
             [d] = find (abs(inter_cor(2,k) - element(2,:))<1e-10);
             col(:,k)= intersect(b,d);
         end
+        %Given loop is only for the control points in Clockwise direction 
         if col(1,1) < col(1,2)
-            %In Quadtree all control_points are defined in clockwise direction
-            %so if col 1 value is less than 2nd these 2 commands work
             elements{j}=[element(:,[1:col(1,1)]),cont_points(:,[2:end-1]),element(:,[col(1,2):end])];
             elements{j+1}=[element(:,[col(1,1):col(1,2)]),fliplr(cont_points(:,[2:end-1]))];
             
         else
             elements{j}=[element(:,[1:col(1,2)]),fliplr(cont_points(:,[2:end-1])),element(:,[col(1,1):end])];
-            elements{j+1}=[element(:,[col(1,2):col(1,1)]),cont_points(:,[2:end-1])];
+            elements{j+1}=[element(:,[col(1,2):col(1,1)]),cont_points(:,[2:end-1])];   
         end
         j=j+2;
     end
 end
 
-%Given commands are used to remove the repeated coordinates and arrange
-% them by the x coordinte value increasing
-coordinates = [coordinates{:}]';
+cp_w = cell2mat(cp_we);%converting into matrix form
+inter_coor=cell2mat(inter_coor);%intersectional coordiantes in one matrix
 tol=1e-10;
-coordinates=uniquetol(coordinates,tol,'ByRows',true);
-%A=coordinates';
-%qref=reshape(A,[],1);
-ncoor = size(coordinates,1) ;
+cp_w=uniquetol(cp_w,tol,'ByRows',true);%to remove repeated control points
+
+%following commands are used to remove the repeated coordinates and 
+% arrange them by the x coordinte value increasing
+coor = [coor{:}]';%coordinates in matrix form
+
+coor=uniquetol(coor,tol,'ByRows',true);
+coor=[coor,zeros(size(coor,1),1)];
+ncoor = size(coor,1) ;
 nodes = [1:ncoor]' ;
-coordinates = [nodes,coordinates];
+coor = [nodes,coor];
+
+%Following loop is to find the control points and assign the weights
+for k=1:length(cp_w)
+    [a] = find ( abs(coor(:,2)-cp_w(k,1))<1e-10);
+    [b] = find ( abs(coor(:,3)-cp_w(k,2))<1e-10);
+    row= intersect(a,b);
+    if isempty(row)~=1
+        coor(row,4)=cp_w(k,3);
+    end
+end
+%Following loop is to find the intersectional coordintes number that will 
+% be used to establish knot vector number matrix
+rows=zeros(size(inter_coor,1),1);
+for k=1:size(inter_coor,1)
+    [a] = find ( abs(coor(:,2)-inter_coor(k,1))<1e-10);
+    [b] = find ( abs(coor(:,3)-inter_coor(k,2))<1e-10);
+    row= intersect(a,b);
+   rows(k,1)=row; 
+end
+
 figure(2)
-plot(coordinates(:,2),coordinates(:,3),'.r') ;
+plot(coor(:,2),coor(:,3),'.r') ;
 hold on
 set(findall(gcf,'-property','FontSize'),'FontSize',8);%to set figure all data in one font
 set(gca,'FontSize',10);
-text(coordinates(:,2),coordinates(:,3),num2str(nodes));
+text(coor(:,2),coor(:,3),num2str(nodes));
 
 %Element w.r.t node numbers in cells by using numel
 maxnel = 0;
 for i=1:numel
-    %Following loop for giving nodes to elemnt coordintes by using
+    %Following loop for giving nodes to element coordintes by using
     %coordinates row
-    
     nel = size(elements{i},2); % number of nodes per element
     for n=1 : nel
-        [a] = find ( abs(coordinates(:,2) - elements{i}(1,n))<1e-10);
-        [b] = find (abs(coordinates(:,3) - elements{i}(2,n))<1e-10);
+        [a] = find ( abs(coor(:,2) - elements{i}(1,n))<1e-10);
+        [b] = find (abs(coor(:,3) - elements{i}(2,n))<1e-10);
         row= intersect(a,b);
-        element_nodes{i}(1,n) = row;
+        connectivity{i}(1,n) = row;
     end
-    element_nodes{i}= unique(element_nodes{i},'stable');
-    %to remove the repeated element_nodes values without changing
+    connectivity{i}= unique(connectivity{i},'stable');
+    %to remove the repeated connectivity values without changing
     %the order
     maxnel = max(nel,maxnel);  % maximum number of nodes on any element
-    element_nodes{i}=[i,nel,element_nodes{i}];
+    connectivity{i}=[i,nel,connectivity{i}];
 end
+
+[kv_element,kv_num,maxnk]=knotv_element(Quadtree,connectivity,knot_v,numel,rows);
 
 end
 
