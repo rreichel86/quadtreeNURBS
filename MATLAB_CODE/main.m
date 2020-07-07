@@ -51,7 +51,7 @@ if nPoints > 1
     data={data;[]};
     Quadtree = Quadtree.set(1, data);
     
-    l=1; % l: 1 if quad NW, 2 SW, 3 NE, 4 SE. Initializate at 1
+    l=1; % l: 1 if quad NW, 2 SW, 3 NE, 4 SE. Initialize at 1
     k=0; % k: level of decomposition, equal to 0 at the root
     pos_aux=[]; Q_aux=[0]; %auxiliar arrays
         
@@ -68,8 +68,7 @@ end
 [Quadtree]=Balance_Quadtree(Quadtree,NURBS,controlPoints, knots, ...
                             weights, degree,Boundary);
 
-% close all the figures and plots the NURBS cointained in each leaf
-% separatedly
+% close all the figures and plots the NURBS contained in each leaf separately
 %plot_leaf(Quadtree,ax)
 [coor,connectivity,nnode,maxnel,numel,kv_element,kv_num,maxnk]=extract_leaf(Quadtree);
 
