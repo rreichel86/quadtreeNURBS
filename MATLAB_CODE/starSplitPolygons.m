@@ -6,7 +6,7 @@ function [polygon1,polygon2] = starSplitPolygons(Quad_current,points,Int)
 points_flip = fliplr(points); % Flip the values of points
 
 
-% Stores the 4 vertices of the quad in variable polygon, in whcih later the
+% Stores the 4 vertices of the quad in variable polygon, in which later the
 % intersection points will be inserted, preserving a clockwise direction of
 % rotation, starting from the bottom left vertex
 polygon = Quad_current; 

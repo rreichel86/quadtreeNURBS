@@ -43,7 +43,7 @@ connectivity=cell(numel,1);
 %connectivity matrix of elements
 
 inter_coor= cell(length(l),1);
-%Cell for all the intersectional coordinates that contain NURBS to in Cell
+%Cell for all the intersection coordinates that contain NURBS to in Cell
 %form
 
 j=1;

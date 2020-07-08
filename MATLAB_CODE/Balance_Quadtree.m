@@ -2,9 +2,9 @@ function [Quadtree] = Balance_Quadtree(Quadtree,NURBS,controlPoints,...
     knots, weights, degree,Boundary)
 % Balance Quadtree function obtains a balanced Quadtree out of an
 % unbalanced tree. It goes through the nodes of the tree, checking how
-% manys subdivions it has, and comparing it with the neighbours. If any
+% many subdivisions it has, and comparing it with the neighbours. If any
 % quad is unbalanced, it calls the decomposition function. This is done
-% recursively done until the tree is balanced  
+% recursively until the tree is balanced  
 %
 % Input:
 % Quadtree data
@@ -16,7 +16,7 @@ function [Quadtree] = Balance_Quadtree(Quadtree,NURBS,controlPoints,...
 i=2;
 update_Location=0;
 
-% The function Location_Quads creates an adressbook of all nodes in 1:4
+% The function Location_Quads creates an address book of all nodes in 1:4
 % format (11 = 1, 21 = 2, 12 = 3, 22 = 4)
 Location=Location_Quads(Quadtree);
 
@@ -27,9 +27,9 @@ while i<=length(Quadtree.Node)
     P=[Quadtree.Node{i,1}{2,1}(end-1) Quadtree.Node{i,1}{2,1}(end)];
     Loc_Current=Location{i};%its location in 1:4 format
     
-    % Obtaining ammount of sons' generations (level of decomposition) of 
+    % Obtaining amount of sons' generations (level of decomposition) of 
     % current quad. This will be compared with it's neighbours. The
-    % function number_sons takes the current location and the adressbook
+    % function number_sons takes the current location and the address book
     % 'Location' and gives as output the number of sons' generations
     [nSons]= number_sons(Location,Loc_Current);
 
