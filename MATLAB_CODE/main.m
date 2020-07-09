@@ -72,11 +72,11 @@ end
 %plot_leaf(Quadtree,ax)
 [coor,connectivity,nnode,maxnel,numel,kv_element,kv_num,maxnk]=extract_leaf(Quadtree);
 
-%% pick first element of element_nodes 
-for ielno = 1:numel
-    elmt = connectivity{ielno,:};
-    ex = coor( elmt(3:end), 2);
-    ey = coor( elmt(3:end), 3);
-    
-    patch(ex,ey, 'red','FaceAlpha',.5)
-end 
+%% Plot polygonal elements 
+ for ielno = 1:numel
+     elmt = connectivity{ielno,:};
+     ex = coor( elmt(3:end), 2);
+     ey = coor( elmt(3:end), 3);
+     
+     patch(ex,ey, 'red','FaceAlpha',.5)
+ end 
