@@ -80,3 +80,71 @@ end
      
      patch(ex,ey, 'red','FaceAlpha',.5)
  end 
+
+
+%% Plot polygonal elements with curve edges
+ for ielno = 3:numel
+     kvno = kv_element{ielno}(2);
+     nel = kv_element{ielno}(3);
+     elmt = kv_element{ielno}(4:end);
+     ecoor = coor( elmt(1:end), 2:3);
+     wg = coor( elmt(1:end), 4);
+     if kvno ~= 0
+        nKnot = kv_num{kvno}(5);
+        pgrad = kv_num{kvno}(2);
+        knotVector = kv_num{kvno}(6:end)
+        iknot = find( elmt == kv_num{kvno}(3) )
+        eknot = find( elmt == kv_num{kvno}(4) )
+     end    
+     
+     % plot polygon that dont have curve edges
+     if kvno == 0
+         for ii = 1:nel
+             if ii ~= nel 
+                 a = ii;
+                 b = ii+1;
+             else
+                 a = nel;
+                 b = 1;
+             end    
+             plot(ecoor([a,b],1).', ecoor([a,b],2).', 'r-')
+             hold on 
+         end    
+     end 
+
+     % plot polygon that dont have curve edges
+     % ONLY WORKS FOR SOME ELEMENTS !
+     if kvno ~= 0 && iknot < eknot && iknot ~= 1
+         ii = 1;
+         while ii <= nel 
+             
+             
+             if ii == iknot
+                 a = ii;
+                 b = ii + pgrad;
+                 ii = ii + pgrad - 1;
+                 NURBS_sec=CalculateNURBS(pgrad,knotVector,ecoor(a:b,:)',wg(b:-1:a)');
+                 plot(NURBS_sec(1,:),NURBS_sec(2,:),'r','LineWidth',3);
+             elseif ii ~= nel 
+                 a = ii;
+                 b = ii+1;
+                 plot(ecoor([a,b],1).', ecoor([a,b],2).', 'r-')
+             elseif ii == nel
+                 a = nel;
+                 b = 1;
+                 plot(ecoor([a,b],1).', ecoor([a,b],2).', 'r-')
+             end    
+               
+             
+             
+             hold on 
+             
+             ii = ii + 1;
+         end    
+     end 
+     
+     
+ end 
+
+
+
