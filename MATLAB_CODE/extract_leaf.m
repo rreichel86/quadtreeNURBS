@@ -58,8 +58,6 @@ for i=1:length(l)
     %Function to get the coordinates of neighboring element that are
     %sharing the boundary
     
-    %     [scaling_center]=scal_center(Quadtree,intersections,l,i);
-    
     if isempty(intersections) || length(intersections) == 1
         %if intersection data is empty then
         %there will be only Quad vertices no intersection points
@@ -69,9 +67,9 @@ for i=1:length(l)
         
         coordinate = [quad];
         
-        cp_w =[];%control points and weight
+        cp_w = [];%control points and weight
         
-        kv  =[];%knot vector from Quadtree
+        kv  = [];%knot vector from Quadtree
         
         element = [quad,extract_element];%leaf coordinates from quad 
 %         definition and neighboring elemnt quads
@@ -153,6 +151,9 @@ for i=1:length(l)
         
         element = [quad,extract_element,inter_cor];%leaf coordinates from quad 
 %         definition,neighboring element quads and intersectional points
+
+
+         
         
     end
     
