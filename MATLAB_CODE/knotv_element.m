@@ -27,6 +27,7 @@ kv_num=cell(size(rows,1)/2,1);
 j=1;
 k=1;
 m=1;
+nk = 0;
 maxnk=0;
 for i=1:length(l)
     
