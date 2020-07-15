@@ -1,4 +1,4 @@
-function [kv_element,kv_num,maxnk]=knotv_element(Quadtree,connectivity,knot_v,numel,rows);
+function [kv_element,kv_num,maxnk]=knotv_element(Quadtree,connectivity,knot_v,numel,rows)
 %function to get knot vector with there connectivity and degree in matrix
 %form 
 % Input 

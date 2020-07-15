@@ -22,7 +22,7 @@ for j=1:length(out)
         k=k+1;
     end
 end
-if exist('idx2','var');
+if exist('idx2','var')
 Sons=cell(length(idx2),1);
 nSons=length(Sons);
 else
