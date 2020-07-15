@@ -298,23 +298,6 @@ for iel = 1:numel
         connectivity{iel}(1,n) = row;
     end
     
-    
-    
-    
-    
-    % get vertices coordinates of the current polygonal element
-    vertices = coor(connectivity{i},2:3);
-    
-    % plot polygonal element
-    patch(vertices(:,1),vertices(:,2), 'red','FaceAlpha',.75)
-    
-    % compute kernel
-    kernel = computePolygonKernel(vertices);
-    % plot kernel
-    patch(kernel(:,1),kernel(:,2), 'blue','FaceAlpha',.5)
-    
-    
-    
     % remove repeated values without changing the order
     connectivity{iel} = unique(connectivity{iel},'stable');
     % update number of nodes per element
