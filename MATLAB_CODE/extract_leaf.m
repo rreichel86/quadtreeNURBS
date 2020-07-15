@@ -1,4 +1,4 @@
-function [coor,connectivity,ncoor,maxnel,numel,kv_element,kv_num,maxnk]=extract_leaf(Quadtree)
+function [coor,connectivity,numcoor,maxnel,numel,kv_element,kv_num,maxnk]=extract_leaf(Quadtree)
 %Function extract leaf will help to take out the Quadleaf element data
 %input
 %Quadtree Data
@@ -219,15 +219,40 @@ inter_coor=cell2mat(inter_coor);%intersectional coordiantes in one matrix
 tol=1e-10;
 cp_w=uniquetol(cp_w,tol,'ByRows',true);%to remove repeated control points
 
-%following commands are used to remove the repeated coordinates and 
-% arrange them by the x coordinte value increasing
-coor = [coor{:}]';%coordinates in matrix form
+% coordinates in matrix form
+coor = [coor{:}]';
+% remove repeated coordinates and rearrange them by increasing x coordiante
+% value
+tmp_coor = uniquetol(coor,tol,'ByRows',true);
 
-coor=uniquetol(coor,tol,'ByRows',true);
-coor=[coor,zeros(size(coor,1),1)];
-ncoor = size(coor,1) ;
-nodes = [1:ncoor]' ;
-coor = [nodes,coor];
+% number of coordinates without counting scaling centers
+numcoor0 = size(tmp_coor,1);
+% number of scaling centers = number of elements
+numsc = numel;
+% update numcoor
+numcoor = numcoor0 + numsc;
+
+% prealloc coor matrix 
+coor = zeros(numcoor, 4);
+% coordinates 
+coor(1:numcoor0,2:3) = tmp_coor;
+
+% compute scaling center of polygonal elements
+for iel = 1:numel
+    % compute kernel
+    kernel = computePolygonKernel( elements{iel}' );
+    
+    % compute scaling center
+    % compute centroid of the kernel
+    [scx,scy] = centroid(polyshape(kernel,'Simplify',false));
+    coor(numcoor0+iel,2:3) = [scx,scy];
+end
+
+% coor numbers 
+coor(:,1) = (1:numcoor) ;
+
+% delete tmp_coor
+clearvars tmp_coor
 
 %Following loop is to find the control points and assign the weights
 for k=1:length(cp_w)
