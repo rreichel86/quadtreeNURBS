@@ -214,10 +214,13 @@ for i=1:length(l)
     end
 end
 
-cp_w = cell2mat(cp_we);%converting into matrix form
-inter_coor=cell2mat(inter_coor);%intersectional coordiantes in one matrix
+% control points in matrix form
+cp_w = cell2mat(cp_we);
+% intersection point coordinates in matrix form
+inter_coor = cell2mat(inter_coor);
 tol=1e-10;
-cp_w=uniquetol(cp_w,tol,'ByRows',true);%to remove repeated control points
+% remove repeated control points
+cp_w = uniquetol(cp_w,tol,'ByRows',true);
 
 % coordinates in matrix form
 coor = [coor{:}]';
