@@ -1,6 +1,6 @@
 function [Quadtree,update_Location]=Check_SW(Quadtree, NURBS, controlPoints,...
-      knots, weights, degree,i,Location,nSons,Loc_Current,Boundary)
-% Check_SW function looks for the possible neighbours of a SW quad and 
+    knots, weights, degree,i,Location,nSons,Loc_Current,Boundary)
+% Check_SW function looks for the possible neighbours of a SW quad and
 % compares their level of decomponsitions. If they differ in more than one
 % level, the 2:1 rule is not fulfilled, therefore it calls decomposition
 %
@@ -42,7 +42,7 @@ if check == 0
         
         % if level of decompisition differ in more than one, decompose
         if nSons_E_Sib>nSons+1
-            % Decompose_balance functions prepares input for decompose function 
+            % Decompose_balance functions prepares input for decompose function
             [Quadtree]=Decompose_balance(Quadtree,NURBS,controlPoints, ...
                 knots, weights, degree,i,Loc_Current,idx_Father,Boundary);
             update_Location=1;
@@ -103,7 +103,7 @@ if check == 0
         
         
         % Adress of eventual west sibiling, findig if it exists and level
-        % of decompoition          
+        % of decompoition
         if length(Location{i})>1
             Loc_W_Sib=zeros(1,length(Location{i}));
             copy=0;
@@ -136,7 +136,7 @@ if check == 0
                 if tf==true;idx_W_Sib=j;check=1;
                 end
             end
-                        
+            
             if check==1
                 [nSons_W_Sib]= number_sons(Location,Loc_W_Sib);
                 % if level of decompisition differ in more than one, decompose
@@ -153,7 +153,7 @@ if check == 0
         check=0;
         
         
-        % Adress of north sibiling          
+        % Adress of north sibiling
         if idx_Father==1;idx_N_Sib=Father{2}(1);else;idx_N_Sib=Father{11}(1);end
         Loc_N_Sib=Location{idx_N_Sib};
         % Checking it's level of decomposition
