@@ -285,20 +285,18 @@ text(coor(:,2),coor(:,3),num2str(nodes));
 
 %Element w.r.t node numbers in cells by using numel
 maxnel = 0;
-for i=1:numel
+for iel = 1:numel
     %Following loop for giving nodes to element coordintes by using
     %coordinates row
-    nel = size(elements{i},2); % number of nodes per element
-    for n=1 : nel
-        [a] = find ( abs(coor(:,2) - elements{i}(1,n))<1e-10);
-        [b] = find (abs(coor(:,3) - elements{i}(2,n))<1e-10);
+    
+    % number of nodes per element
+    nel = size(elements{iel},2); 
+    for n = 1 : nel
+        [a] = find ( abs(coor(:,2) - elements{iel}(1,n))<1e-10);
+        [b] = find (abs(coor(:,3) - elements{iel}(2,n))<1e-10);
         row= intersect(a,b);
-        connectivity{i}(1,n) = row;
+        connectivity{iel}(1,n) = row;
     end
-    connectivity{i}= unique(connectivity{i},'stable');
-    %to remove the repeated connectivity values without changing
-    %the order
-    maxnel = max(nel,maxnel);  % maximum number of nodes on any element
     
     
     
@@ -317,9 +315,15 @@ for i=1:numel
     
     
     
+    % remove repeated values without changing the order
+    connectivity{iel} = unique(connectivity{iel},'stable');
+    % update number of nodes per element
+    nel = size(connectivity{iel},2); 
     
+    % maximum number of nodes on any element
+    maxnel = max(nel,maxnel);  
     
-    connectivity{i} = [i,nel,connectivity{i}];
+    connectivity{iel} = [iel,nel,connectivity{iel},numcoor0+iel];
     
 end
 
