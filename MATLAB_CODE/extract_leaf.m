@@ -271,7 +271,28 @@ for i=1:numel
     %to remove the repeated connectivity values without changing
     %the order
     maxnel = max(nel,maxnel);  % maximum number of nodes on any element
-    connectivity{i}=[i,nel,connectivity{i}];
+    
+    
+    
+    
+    
+    % get vertices coordinates of the current polygonal element
+    vertices = coor(connectivity{i},2:3);
+    
+    % plot polygonal element
+    patch(vertices(:,1),vertices(:,2), 'red','FaceAlpha',.75)
+    
+    % compute kernel
+    kernel = computePolygonKernel(vertices);
+    % plot kernel
+    patch(kernel(:,1),kernel(:,2), 'blue','FaceAlpha',.5)
+    
+    
+    
+    
+    
+    connectivity{i} = [i,nel,connectivity{i}];
+    
 end
 
 [kv_element,kv_num,maxnk]=knotv_element(Quadtree,connectivity,knot_v,numel,rows);
