@@ -74,9 +74,10 @@ end
 
 %% Plot polygonal elements 
  for ielno = 1:numel
-     elmt = connectivity{ielno,:};
-     ex = coor( elmt(3:end), 2);
-     ey = coor( elmt(3:end), 3);
+     nel = connectivity{ielno}(2);
+     elmt = connectivity{ielno}(3:2+nel);
+     ex = coor( elmt, 2);
+     ey = coor( elmt, 3);
      
      patch(ex,ey, 'red','FaceAlpha',.5)
  end 
