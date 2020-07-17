@@ -25,8 +25,9 @@ if k==1
     for j=1:length(newKnots)/2
         % Loop over the inserted knots and selecting section of the NURBS
         % contained in the quad
-        k0=find(knots_new == newKnots(2*(j-1)+1),1,'First');
-        k1=find(knots_new == newKnots(2*(j-1)+2),1,'Last');
+        k0 = find( abs(knots_new - newKnots(2*(j-1)+1)) < 1e-10, 1, 'First');
+        k1 = find( abs(knots_new - newKnots(2*(j-1)+2)) < 1e-10, 1, 'Last');
+        
         if k0==1
             controlPoints2 = controlPoints(1:2,k0:(k1-degree));
             knots_new2= [knots_new(k0:k1) knots_new(k1)];
@@ -56,8 +57,10 @@ else
     for j=1:length(newKnots)/2
         % Loop over the inserted knots and selecting section of the NURBS
         % contained in the quad
-        k0=find(knots_new == newKnots(2*(j-1)+1),1,'First');
-        k1=find(knots_new == newKnots(2*(j-1)+2),1,'Last');
+        k0 = find( abs(knots_new - newKnots(2*(j-1)+1)) < 1e-10, 1, 'First');
+        k1 = find( abs(knots_new - newKnots(2*(j-1)+2)) < 1e-10, 1, 'Last');
+        
+        
         if k0==1
             controlPoints2 = controlPoints(1:2,k0:(k1-degree));
             knots_new2= [knots_new(k0:k1) knots_new(k1)];
