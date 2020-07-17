@@ -7,7 +7,7 @@ function NURBS = CalculateNURBS(degree,knots,controlPoints,weights)
 
 counter = 1;%initialize counter
 n=length(controlPoints)-1; %number of knot spans
-subs = knots(1):(knots(end)-knots(1))*0.001:knots(end);
+subs = knots(1):(knots(end)-knots(1))*0.01:knots(end);
 
 NURBS = zeros(3,size(subs,2));
 
