@@ -25,9 +25,9 @@ for i=1:length(l)
         % Plotting  leaf's quad
         plot(Quadtree.Node{l(i),1}{10,1}(1,:),Quadtree.Node{l(i),1}{10,1}(2,:),'k');
         
-        % Plotting control points and control poligon for each leaf
-        %plot(Quadtree.Node{l(i),1}{7,1}(1,:),Quadtree.Node{l(i),1}{7,1}(2,:),'--','LineWidth',1)
-        %plot(Quadtree.Node{l(i),1}{7,1}(1,:),Quadtree.Node{l(i),1}{7,1}(2,:),'bo','LineWidth',1)
+        % Plotting control points and control polygon for each leaf
+        plot(Quadtree.Node{l(i),1}{7,1}(1,:),Quadtree.Node{l(i),1}{7,1}(2,:),'--','LineWidth',1)
+        plot(Quadtree.Node{l(i),1}{7,1}(1,:),Quadtree.Node{l(i),1}{7,1}(2,:),'bo','LineWidth',1)
         
     end
 end
