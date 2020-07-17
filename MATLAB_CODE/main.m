@@ -68,10 +68,12 @@ end
 [Quadtree]=Balance_Quadtree(Quadtree,NURBS,controlPoints, knots, ...
                             weights, degree,Boundary);
 
-% close all the figures and plots the NURBS contained in each leaf separately
-%plot_leaf(Quadtree,ax)
+
 [coor,connectivity,nnode,maxnel,numel,kv_element,kv_num,maxnk]=extract_leaf(Quadtree);
 
+%% Plots the NURBS contained in each leaf separately
+    plot_leaf(Quadtree,ax)
+   
 %% Plot polygonal elements 
  for ielno = 1:numel
      nel = connectivity{ielno}(2);
