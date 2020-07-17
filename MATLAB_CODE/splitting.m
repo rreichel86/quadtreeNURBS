@@ -47,8 +47,8 @@ if ~isempty(U)
     for j= 1:length(newKnots)
         % loop over newKnots vector. We insert them at knot vector
         newKnot=newKnots(j);
-        num_ins= degree-sum(knots_new(:) == newKnot); 
-        if num_ins>0 
+        num_ins = degree-sum(abs(knots_new(:) - newKnot) < 1e-10);
+        if num_ins > 0 
         for ij=1:num_ins % Insert knot untill C0 continuity condition
             [knots_new, controlPoints, weights] = CurveKnotIns(degree,...
                 controlPoints, knots_new, weights, newKnot);
