@@ -9,7 +9,7 @@ if abs(u-U(n+2))<1e-10, s=n; return,  end
 low = p;                                       
 high = n + 1;                                   
 mid = floor((low + high) / 2);                  
-while (u < U(mid+1) || u >= U(mid+2))            
+while (u < U(mid+1) || u > U(mid+2) || (abs(u - U(mid+2)) < 1e-10))           
     if (u < U(mid+1))                           
         high = mid;                             
     else                                       
