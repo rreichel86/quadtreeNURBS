@@ -2,8 +2,9 @@ clear all;
 close all;
 clc;
 
-% Controls:
-%   Figure Nr. |      Description        |    Section     
+% Select example
+example_nro = 2;
+%      Nr.     |      Description        |    Section     
 %---------------------------------------------------------
 %       1      |       Moby-Dick         |      3         
 %       2      |     Circumference       |     4.1
@@ -11,7 +12,6 @@ clc;
 %       4      |      Flat shape         |     4.1
 %       5      |  Limit double circum.   |     4.2
 %       6      |    Degenerated case     |     4.2
-fig=3;
 
 
 
@@ -23,7 +23,7 @@ fig=3;
 % consequently lies in its own column.
 
 % Obtains the selected NURBS definition
-[degree,knots,controlPoints,weights,ax,Boundary]=NURBS_parameters(fig);
+[degree,knots,controlPoints,weights,ax,Boundary]=NURBS_parameters(example_nro);
 
 % CalculateNURBS computes the curve
 NURBS=CalculateNURBS(degree,knots,controlPoints,weights);
