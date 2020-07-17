@@ -14,6 +14,8 @@ example_nro = 2;
 %       6      |    Degenerated case     |     4.2
 
 
+% Plot options
+f_plotLeaves = 0; % Plots the NURBS contained in each leaf separately
 
 % Initialization
 % ==============
@@ -72,7 +74,9 @@ end
 [coor,connectivity,nnode,maxnel,numel,kv_element,kv_num,maxnk]=extract_leaf(Quadtree);
 
 %% Plots the NURBS contained in each leaf separately
+if f_plotLeaves == 1
     plot_leaf(Quadtree,ax)
+end
    
 %% Plot polygonal elements 
  for ielno = 1:numel
