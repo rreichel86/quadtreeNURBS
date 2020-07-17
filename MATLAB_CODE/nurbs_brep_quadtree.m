@@ -11,7 +11,6 @@ NURBS = CalculateNURBS(degree,knots,controlPoints,weights);
 % First plotting
 figure(1);
 hold on;
-axis(ax);
 plot(NURBS(1,:),NURBS(2,:),'r','LineWidth',3);
 plot(controlPoints(1, :), controlPoints(2, :), 'ro','LineWidth',3);
 plot(controlPoints(1, :), controlPoints(2, :), '--','LineWidth',0.5);
