@@ -16,6 +16,7 @@ example_nro = 2;
 
 % Plot options
 f_plotLeaves = 0; % Plots the NURBS contained in each leaf separately
+f_plotPolyElmt = 1; % Plot polygonal elements
 f_plotPolyElmtCurvedEdges = 0; % Plot polygonal elements curve edges
 
 % Initialization
@@ -80,15 +81,16 @@ if f_plotLeaves == 1
 end
    
 %% Plot polygonal elements 
- for ielno = 1:numel
-     nel = connectivity{ielno}(2);
-     elmt = connectivity{ielno}(3:2+nel);
-     ex = coor( elmt, 2);
-     ey = coor( elmt, 3);
-     
-     patch(ex,ey, 'red','FaceAlpha',.5)
- end 
+if f_plotPolyElmt == 1
+    for ielno = 1:numel
+        nel = connectivity{ielno}(2);
+        elmt = connectivity{ielno}(3:2+nel);
+        ex = coor( elmt, 2);
+        ey = coor( elmt, 3);
         
+        patch(ex,ey, 'red','FaceAlpha',.5)
+    end
+end
 %% Plot polygonal elements with curve edges
 if f_plotPolyElmtCurvedEdges == 1
     for ielno = 1:numel
