@@ -1,13 +1,14 @@
-clear all;
+clearvars;
 close all;
 clc;
+config;
 
 % Select example
 example_nro = 2;
 %      Nr.     |      Description        |    Section     
 %---------------------------------------------------------
 %       1      |       Moby-Dick         |      3         
-%       2      |     Circumference       |     4.1
+%       2      |     Circumference       |     4.
 %       3      |    Double circumf.      |     4.1
 %       4      |      Flat shape         |     4.1
 %       5      |  Limit double circum.   |     4.2
