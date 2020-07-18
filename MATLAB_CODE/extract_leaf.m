@@ -279,7 +279,7 @@ end
 figure(2)
 plot(coor(:,2),coor(:,3),'.r') ;
 hold on
-text(coor(:,2), coor(:,3), num2str(coor(:,1)));
+% text(coor(:,2), coor(:,3), num2str(coor(:,1)));
 
 %Element w.r.t node numbers in cells by using numel
 maxnel = 0;
