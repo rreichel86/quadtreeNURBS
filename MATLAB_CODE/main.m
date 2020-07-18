@@ -40,6 +40,162 @@ if f_plotLeaves == 1
     plot_leaf(Quadtree,ax)
 end
    
+%% Splitt polygonal elements into section
+if f_splittElmtIntoSec == 1
+    for ielno = 1:numel
+        kvno = kv_element{ielno}(2);
+        nel = kv_element{ielno}(3);
+        elmt = kv_element{ielno}(4:end);
+        ecoor = coor( elmt(1:end), 2:3);
+        wg = coor( elmt(1:end), 4);
+        if kvno ~= 0
+            nKnot = kv_num{kvno}(5);
+            pgrad = kv_num{kvno}(2);
+            knotVector = kv_num{kvno}(6:end);
+            iknot = find( elmt == kv_num{kvno}(3) );
+            eknot = find( elmt == kv_num{kvno}(4) );
+            
+            iknot_coor = ecoor(iknot,:);
+            eknot_coor = ecoor(eknot,:);
+            sc_coor = ecoor(end,:);
+            % determine orientation
+            % ori =  1 for CCW
+            % ori = -1 for CW
+            ori = orientation(iknot_coor,eknot_coor,sc_coor);
+            
+            % swap iknot and eknot
+            if ori == -1
+                temp = iknot;
+                iknot = eknot;
+                eknot = temp;
+            end
+            
+            
+        end
+        
+        % plot polygon that dont have curve edges
+        if kvno == 0
+            % continue
+            for ii = 1:nel
+                if ii ~= nel
+                    a = ii;
+                    b = ii+1;
+                else
+                    a = nel;
+                    b = 1;
+                end
+                idx = [a,b,nel+1];
+                patch(ecoor(idx,1).', ecoor(idx,2).', 'green','FaceAlpha',.5)
+
+                hold on
+            end
+
+            % patch(ecoor(:,1),ecoor(:,2), 'green','FaceAlpha',.5)
+
+
+
+        % plot polygon that have curve edges
+        elseif kvno ~= 0 && iknot < eknot && iknot == 1
+            % continue
+            ii = 1;
+            while ii <= nel
+                if (ii == eknot) && (iknot == 1)
+                    a = ii;
+                    b = 1;
+                    ii = ii + pgrad - 1;
+                    idx = [a:nel,1,nel+1];
+                elseif ii ~= nel
+                    a = ii;
+                    b = ii+1;
+                    idx = [a,b,nel+1];
+                elseif ii == nel
+                    a = elmt(nel);
+                    b = elmt(1);
+                    idx = [a,b,nel+1];
+                end
+                patch(ecoor(idx,1).', ecoor(idx,2).', 'blue','FaceAlpha',.5)
+                hold on
+                ii = ii + 1;
+            end
+        elseif kvno ~= 0 && iknot < eknot && iknot ~= 1
+            % continue
+            ii = 1;
+            while ii <= nel
+                if ii == iknot
+                    a = ii;
+                    b = ii + pgrad;
+                    ii = ii + pgrad - 1;
+                    idx = [a:b,nel+1];
+                elseif ii ~= nel
+                    a = ii;
+                    b = ii+1;
+                    idx = [a,b,nel+1];
+                elseif ii == nel
+                    a = nel;
+                    b = 1;
+                    idx = [a,b,nel+1];
+                end
+                patch(ecoor(idx,1).', ecoor(idx,2).', 'blue','FaceAlpha',.5)
+                hold on
+                ii = ii + 1;
+            end
+        elseif kvno ~= 0 && iknot > eknot && eknot == 1
+            % continue
+            ii = 1;
+            while ii <= nel
+                if (ii == iknot) && (eknot == 1)
+                    a = ii;
+                    b = 1;
+                    ii = ii + pgrad - 1;
+                    idx = [a:nel,1,nel+1];
+                elseif ii ~= nel
+                    a = ii;
+                    b = ii+1;
+                    idx = [a,b,nel+1];
+                elseif ii == nel
+                    a = nel;
+                    b = 1;
+                    idx = [a,b,nel+1];
+                end
+                patch(ecoor(idx,1).', ecoor(idx,2).', 'blue','FaceAlpha',.5)
+                hold on
+                ii = ii + 1;
+            end
+
+        elseif kvno ~= 0 && iknot > eknot && eknot ~= 1
+            % continue
+            ii = 1;
+            while ii <= nel
+                if ii == eknot
+                    a = ii;
+                    b = ii + pgrad;
+                    ii = ii + pgrad - 1;
+                    idx = [a:b,nel+1];
+                elseif ii ~= nel
+                    a = ii;
+                    b = ii+1;
+                    idx = [a,b,nel+1];
+                elseif ii == nel
+                    a = nel;
+                    b = 1;
+                    idx = [a,b,nel+1];
+                end
+                patch(ecoor(idx,1).', ecoor(idx,2).', 'blue','FaceAlpha',.5)
+                hold on
+                ii = ii + 1;
+            end
+
+        end
+
+    end
+
+
+
+end
+
+
+
+
 %% Plot polygonal elements 
 if f_plotPolyElmt == 1
     for ielno = 1:numel
