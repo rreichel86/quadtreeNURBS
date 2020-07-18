@@ -34,6 +34,7 @@ f_splittElmtIntoSec = 0; % Splitt polygonal elements into section
 % Quadtree decomposition
 [Quadtree] = nurbs_brep_quadtree(degree,knots,controlPoints,weights,Boundary);
 
+%% Extract polygonal elements 
 [coor,connectivity,nnode,maxnel,numel,kv_element,kv_num,maxnk]=extract_leaf(Quadtree);
 
 %% Plots the NURBS contained in each leaf separately
