@@ -17,8 +17,7 @@ plot(controlPoints(1, :), controlPoints(2, :), '--','LineWidth',0.5);
 box on
 
 %Count of control points in the root
-nPoints = checkQuad( Boundary(:,2)',  Boundary(:,4)', Boundary(:,2)',...
-    controlPoints);
+nPoints = checkQuad( Boundary(:,2)',  Boundary(:,4)',controlPoints);
 
 % Split the root if there is more than one point in the root
 if nPoints > 1
