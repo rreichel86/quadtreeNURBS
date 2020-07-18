@@ -43,8 +43,7 @@ for i = 1:4
         knots, weights, degree,l, k, i, pos_aux);
  
     %Obtains number of seed points in given quad
-    nPointsCurrent = checkQuad(Current(:,1)', Current(:,2)',...
-        Boundary(:,2)', controlPoints);
+    nPointsCurrent = checkQuad(Current(:,1)', Current(:,2)', controlPoints);
     
     %If there are more than two segments or seed points, decompose again
     if nPointsCurrent > 1 || numInterPoints > 2
