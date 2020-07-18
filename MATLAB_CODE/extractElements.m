@@ -1,4 +1,4 @@
-function [coor,connectivity,numcoor,maxnel,numel,kv_element,kv_num,maxnk]=extract_leaf(Quadtree)
+function [coor,connectivity,numcoor,maxnel,numel,kv_element,kv_num,maxnk]=extractElements(Quadtree)
 %Function extract leaf will help to take out the Quadleaf element data
 %input
 %Quadtree Data
@@ -24,7 +24,7 @@ function [coor,connectivity,numcoor,maxnel,numel,kv_element,kv_num,maxnk]=extrac
 l = Quadtree.findleaves();
 %Gives leaf numbers
 
-[numel]=number_of_elements(Quadtree);
+[numel] = countElements(Quadtree);
 %function to get to know about total number of elements
 
 coor = cell(length(l),1);
@@ -33,16 +33,16 @@ coor = cell(length(l),1);
 cp_we = cell(length(l),1);
 %Control points and it's associated weights 
 
-knot_v= cell(length(l),1);
+knot_v = cell(length(l),1);
 %knot vector of the NURBS in quad
 
 elements = cell(numel,1);
 %This will give an array for storing coordinates of elements
 
-connectivity=cell(numel,1);
+connectivity = cell(numel,1);
 %connectivity matrix of elements
 
-inter_coor= cell(length(l),1);
+inter_coor = cell(length(l),1);
 %Cell for all the intersection coordinates that contain NURBS to in Cell
 %form
 
