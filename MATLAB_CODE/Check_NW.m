@@ -1,5 +1,5 @@
-function [Quadtree,update_Location]=Check_NW(Quadtree, NURBS, controlPoints,...
-      knots, weights, degree,i,Location,nSons,Loc_Current,Boundary)
+function [Quadtree,update_Location]=Check_NW(Quadtree, controlPoints,...
+      knots, weights, degree,i,Location,nSons,Loc_Current, Boundary)
 % Check_NW function looks for the possible neighbours of a NW quad and 
 % compares their level of decomponsitions. If they differ in more than one
 % level, the 2:1 rule is not fulfilled, therefore it calls decomposition
@@ -43,7 +43,7 @@ if check == 0
         % if level of decompisition differ in more than one, decompose
         if nSons_E_Sib>nSons+1
             % Decompose_balance functions prepares input for decompose function 
-            [Quadtree]=Decompose_balance(Quadtree,NURBS,controlPoints, ...
+            [Quadtree]=Decompose_balance(Quadtree,controlPoints, ...
                 knots, weights, degree,i,Loc_Current,idx_Father,Boundary);
             update_Location=1;
         end
@@ -60,7 +60,7 @@ if check == 0
         % if level of decompisition differ in more than one, decompose
         if nSons_S_Sib>nSons+1
             % Decompose_balance functions prepares input for decompose function 
-            [Quadtree]=Decompose_balance(Quadtree,NURBS,controlPoints, ...
+            [Quadtree]=Decompose_balance(Quadtree,controlPoints, ...
                 knots, weights, degree,i,Loc_Current,idx_Father,Boundary);
             update_Location=1;
         end
@@ -103,7 +103,7 @@ if check == 0
                 % if level of decompisition differ in more than one, decompose
                 if nSons_W_Sib>nSons+1
                     % Decompose_balance functions prepares input for decompose function 
-                    [Quadtree]=Decompose_balance(Quadtree,NURBS,controlPoints, ...
+                    [Quadtree]=Decompose_balance(Quadtree,controlPoints, ...
                         knots, weights, degree,i,Loc_Current,idx_Father,Boundary);
                     update_Location=1;
                 end
@@ -151,7 +151,7 @@ if check == 0
                 % if level of decompisition differ in more than one, decompose
                 if nSons_N_Sib>nSons+1
                     % Decompose_balance functions prepares input for decompose function 
-                    [Quadtree]=Decompose_balance(Quadtree,NURBS,controlPoints, ...
+                    [Quadtree]=Decompose_balance(Quadtree,controlPoints, ...
                         knots, weights, degree,i,Loc_Current,idx_Father,Boundary);
                     update_Location=1;
                 end

@@ -1,4 +1,4 @@
-function [Quadtree]=Star_Shape(Quadtree,controlPoints,NURBS, knots, weights, degree, Boundary)
+function [Quadtree]=Star_Shape(Quadtree, controlPoints, knots, weights, degree, Boundary)
 
 % Star_Shape is the main function which controls the kernel searching.
 % First, it calls starAlgorithm1 for all leaves, that have a piece of the
@@ -58,7 +58,7 @@ for i=1:length(l)
                 
                 % If the loop still hasn't been broken, no kernel were
                 % found after Algorithm2 , so a decomposition is needed
-                [Quadtree]=Decompose_Star(Quadtree,NURBS,controlPoints, ...
+                [Quadtree]=Decompose_Star(Quadtree, controlPoints, ...
                     knots, weights, degree,l(i),Boundary);
                 flag = 1;
                 break
@@ -74,7 +74,7 @@ for i=1:length(l)
         if flag == 1
             % If the quad has been decomposed, the kernel searching must
             % start from the beginning for the new situation 
-            Star_Shape(Quadtree,controlPoints,NURBS, knots, weights, degree, Boundary);
+            Star_Shape(Quadtree,controlPoints, knots, weights, degree, Boundary);
             break;
             
         end

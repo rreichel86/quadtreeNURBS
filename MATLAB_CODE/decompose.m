@@ -1,4 +1,4 @@
-function [Quadtree] = decompose(Quadtree,Quad,NURBS, controlPoints, knots,...
+function [Quadtree] = decompose(Quadtree, Quad,  controlPoints, knots,...
     weights, degree, l, k,pos_aux, Q_aux, Boundary)
 % decompose function divides a given quad into 4 children. It calls the
 % splitting function for obtaining the possible NURBS segment contained
@@ -48,7 +48,7 @@ for i = 1:4
     %If there are more than two segments or seed points, decompose again
     if nPointsCurrent > 1 || numInterPoints > 2
         
-        [Quadtree] = decompose(Quadtree,Quad,NURBS, controlPoints, knots,...
+        [Quadtree] = decompose(Quadtree,Quad, controlPoints, knots,...
             weights, degree, l, k,pos_aux, Q_aux,Boundary);
     end
     
