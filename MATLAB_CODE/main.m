@@ -25,7 +25,7 @@ f_splittElmtIntoSec = 0; % Splitt polygonal elements into section
 % ==============
 % Control points input should be a matrix with dimensions
 % (coordinates,nPoints), and should be as follows: first row corresponds to
-% the x coordinate, second to the y coordinate, . Each control point
+% the x coordinate, second to the y coordinate. Each control point
 % consequently lies in its own column.
 
 % Obtains the selected NURBS definition
@@ -122,8 +122,8 @@ if f_splittElmtIntoSec == 1
                     b = ii+1;
                     idx = [a,b,nel+1];
                 elseif ii == nel
-                    a = elmt(nel);
-                    b = elmt(1);
+                    a = nel;
+                    b = 1;
                     idx = [a,b,nel+1];
                 end
                 patch(ecoor(idx,1).', ecoor(idx,2).', 'blue','FaceAlpha',.5)
