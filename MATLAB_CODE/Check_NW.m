@@ -1,18 +1,18 @@
 function [Quadtree,update_Location]=Check_NW(Quadtree, controlPoints,...
       knots, weights, degree,i,Location,nSons,Loc_Current, Boundary)
 % Check_NW function looks for the possible neighbours of a NW quad and 
-% compares their level of decomponsitions. If they differ in more than one
+% compares their level of decomposition. If they differ in more than one
 % level, the 2:1 rule is not fulfilled, therefore it calls decomposition
 %
 % Input:
 % Quadtree data
 % Definition of the NURBS
-% Location: adressbook of all nodes
-% nSons: ammount of sons' generations of given quad
-% Loc_Current: adress of given quad
+% Location: address book of all nodes
+% nSons: amount of sons' generations of given quad
+% Loc_Current: address of given quad
 % Output:
 % Quadtree after eventual decomposition
-% update_Location: flag for updating adressbook
+% update_Location: flag for updating address book
 
 % Variables initialization
 update_Location=0;
@@ -34,13 +34,13 @@ if check == 0
         idx_Father=Quadtree.Parent(i);%it´s index
         check=0;
         
-        % Adress of east sibiling
+        % Address of east sibling
         if idx_Father==1;idx_E_Sib=Father{2}(3);else;idx_E_Sib=Father{11}(3);end
         Loc_E_Sib=Location{idx_E_Sib};
         % Checking it's level of decomposition
         [nSons_E_Sib]= number_sons(Location,Loc_E_Sib);
         
-        % if level of decompisition differ in more than one, decompose
+        % if level of decomposition differ in more than one, decompose
         if nSons_E_Sib>nSons+1
             % Decompose_balance functions prepares input for decompose function 
             [Quadtree]=Decompose_balance(Quadtree,controlPoints, ...
@@ -51,13 +51,13 @@ if check == 0
         if update_Location==1;break;end
         check=0;
         
-        % Adress of east sibiling
+        % Address of east sibling
         if idx_Father==1;idx_S_Sib=Father{2}(2);else;idx_S_Sib=Father{11}(2);end
         Loc_S_Sib=Location{idx_S_Sib};
         % Checking it's level of decomposition
         [nSons_S_Sib]= number_sons(Location,Loc_S_Sib);
         
-        % if level of decompisition differ in more than one, decompose
+        % if level of decomposition differ in more than one, decompose
         if nSons_S_Sib>nSons+1
             % Decompose_balance functions prepares input for decompose function 
             [Quadtree]=Decompose_balance(Quadtree,controlPoints, ...
@@ -68,8 +68,8 @@ if check == 0
         if update_Location==1;break;end
         check=0;
         
-        % Adress of eventual west sibiling, findig if it exists and level
-        % of decompoition
+        % Address of eventual west sibling, findig if it exists and level
+        % of decomposition
         if length(Location{i})>1
             Loc_W_Sib=zeros(1,length(Location{i}));
             copy=0;
@@ -92,7 +92,7 @@ if check == 0
                 if Loc_W_Sib(j)>4;Loc_W_Sib(1)=Loc_W_Sib(1)-4;
                 end
             end
-            % Finding if sibiling exists
+            % Finding if sibling exists
             idx = cellfun('length',Location)==length(Loc_W_Sib);
             for j=1:length(idx);tf=isequal(Location{j},Loc_W_Sib);
                 if tf==true;idx_W_Sib=j;check=1;
@@ -100,7 +100,7 @@ if check == 0
             end
             if check==1
                 [nSons_W_Sib]= number_sons(Location,Loc_W_Sib);
-                % if level of decompisition differ in more than one, decompose
+                % if level of decomposition differ in more than one, decompose
                 if nSons_W_Sib>nSons+1
                     % Decompose_balance functions prepares input for decompose function 
                     [Quadtree]=Decompose_balance(Quadtree,controlPoints, ...
@@ -114,8 +114,8 @@ if check == 0
         check=0;
         
         
-        % Adress of eventual north sibiling, findig if it exists and level
-        % of decompoition
+        % Address of eventual north sibling, findig if it exists and level
+        % of decomposition
         if length(Location{i})>1
             Loc_N_Sib=zeros(1,length(Location{i}));
             copy=0;
@@ -138,7 +138,7 @@ if check == 0
                 if Loc_N_Sib(j)>4;Loc_N_Sib(1)=Loc_N_Sib(1)-4;
                 end
             end
-            % Finding if sibiling exists
+            % Finding if sibling exists
             idx = cellfun('length',Location)==length(Loc_N_Sib);
             for j=1:length(idx)
                 tf=isequal(Location{j},Loc_N_Sib);
@@ -148,7 +148,7 @@ if check == 0
             
             if check==1
                 [nSons_N_Sib]= number_sons(Location,Loc_N_Sib);
-                % if level of decompisition differ in more than one, decompose
+                % if level of decomposition differ in more than one, decompose
                 if nSons_N_Sib>nSons+1
                     % Decompose_balance functions prepares input for decompose function 
                     [Quadtree]=Decompose_balance(Quadtree,controlPoints, ...

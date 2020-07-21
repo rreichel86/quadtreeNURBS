@@ -4,17 +4,18 @@ function [Quadtree] = decompose(Quadtree, Quad,  controlPoints, knots,...
 % splitting function for obtaining the possible NURBS segment contained
 % in each children.
 %
-% Input:
+% INPUT:
 % Quadtree data
 % Quad: geometrical definition of the quad that is about to be splitted
 % Definition of the NURBS
 % l: 1 if quad NW, 2 SW, 3 NE, 4 SE. Initializate at 1
 % k: level of decomposition
-% Output:
+%
+% OUTPUT:
 % Quadtree data after performing decomposition and eventual curve splitting
 
 
-% Each time decompose is called - k is increased, since we are splitting
+% Each time decompose is called the var k is increased, since we are splitting
 % the quad
 k=k+1;
 
