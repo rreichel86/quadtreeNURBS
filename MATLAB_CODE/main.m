@@ -31,6 +31,17 @@ f_splittElmtIntoSec = 0; % Splitt polygonal elements into section
 % Obtains the selected NURBS definition
 [degree,knots,controlPoints,weights,ax,Boundary]=NURBS_parameters(example_nro);
 
+% compute point of the NURBS curve
+NURBS = CalculateNURBS(degree,knots,controlPoints,weights)';
+
+% Plot NURBS curve
+figure(1)
+plot(NURBS(:,1),NURBS(:,2),'r','LineWidth',3);
+hold on
+plot(controlPoints(1, :), controlPoints(2, :), 'ro','LineWidth',3);
+plot(controlPoints(1, :), controlPoints(2, :), '--','LineWidth',0.5);
+box on
+
 %% Quadtree decomposition
 [Quadtree] = nurbs_brep_quadtree(degree,knots,controlPoints,weights,Boundary);
 
