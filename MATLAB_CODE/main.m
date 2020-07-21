@@ -31,7 +31,7 @@ f_splittElmtIntoSec = 0; % Splitt polygonal elements into section
 % Obtains the selected NURBS definition
 [degree,knots,controlPoints,weights,ax,Boundary]=NURBS_parameters(example_nro);
 
-% Quadtree decomposition
+%% Quadtree decomposition
 [Quadtree] = nurbs_brep_quadtree(degree,knots,controlPoints,weights,Boundary);
 
 %% Extract polygonal elements 
