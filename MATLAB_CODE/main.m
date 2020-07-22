@@ -13,6 +13,7 @@ example_nro = 2;
 %       4      |      Flat shape         |     4.1
 %       5      |  Limit double circum.   |     4.2
 %       6      |    Degenerated case     |     4.2
+%       7      |       Heart             |      -
 
 
 % Plot options

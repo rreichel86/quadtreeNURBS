@@ -65,3 +65,15 @@ if flag==6
     axis=([min(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2,...
         min(controlPoints(2,:))*1.2, max(controlPoints(2,:))*1.2,]);
 end
+
+if flag==7
+    degree=3;
+    controlPoints=[0 -5 -2 0 2 5 0;...
+                   -3 2 5 2 5 2 -3];
+    knots=[0 0 0 0 0.5 0.5 0.5 1 1 1 1];  
+    weights=[1 2 2 1 2 2 1];
+    Boundary=[min(controlPoints(1,:))*1.2, min(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2;...
+        max(controlPoints(2,:))*1.2, min(controlPoints(2,:))*1.2, min(controlPoints(2,:))*1.2, max(controlPoints(2,:))*1.2];
+    axis=([min(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2,...
+        min(controlPoints(2,:))*1.2, max(controlPoints(2,:))*1.2,]);
+end
