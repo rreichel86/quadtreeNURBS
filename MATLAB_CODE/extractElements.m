@@ -277,7 +277,7 @@ for k=1:size(inter_coor,1)
 end
 
 figure(2)
-plot(coor(:,2),coor(:,3),'.r') ;
+plot(coor(:,2),coor(:,3),'.k') ;
 hold on
 % text(coor(:,2), coor(:,3), num2str(coor(:,1)));
 
