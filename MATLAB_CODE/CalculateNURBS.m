@@ -5,18 +5,17 @@ function NURBS = CalculateNURBS(degree,knots,controlPoints,weights)
 %3rd row: parametrical coordinates
 %Input: parameters that define the NURBS 
 
-counter = 1;%initialize counter
 n=length(controlPoints)-1; %number of knot spans
-subs = knots(1):(knots(end)-knots(1))*0.01:knots(end);
+subs = knots(1):(knots(end)-knots(1))*0.001:knots(end);
 
-NURBS = zeros(3,size(subs,2));
+NURBS = zeros(length(subs),3);
 
-for i = subs
+for i = 1:length(subs)
     %loop over parametrical space defined by knot vector
     %obtain each coordinate of the NURBS and store it 
-    [f] = curvePoint(n,degree,knots,controlPoints,i,weights);
+    [f] = curvePoint(n,degree,knots,controlPoints,subs(i),weights);
     
-    NURBS(1:3,counter) = [f(1);f(2);i];
-    counter=counter+1;
+    NURBS(i,:) = [f(1);f(2);subs(i)];
+    
     
 end

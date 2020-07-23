@@ -33,7 +33,7 @@ f_splittElmtIntoSec = 0; % Splitt polygonal elements into section
 [degree,knots,controlPoints,weights,ax,Boundary]=NURBS_parameters(example_nro);
 
 % compute point of the NURBS curve
-NURBS = CalculateNURBS(degree,knots,controlPoints,weights)';
+NURBS = CalculateNURBS(degree,knots,controlPoints,weights);
 
 % Plot NURBS curve
 figure(1)
