@@ -51,11 +51,24 @@ box on
 %% Plot Nodes
 
 figure(2)
+plot(NURBS(:,1),NURBS(:,2),'b','LineWidth',1);
+hold on
 plot(coor(1:nnode-numel-1,2),coor(1:nnode-numel-1,3),'.r') ;
 hold on;
 plot(coor(nnode-numel:nnode,2),coor(nnode-numel:nnode,3),'.k') ;
 hold on;
 % text(coor(:,2), coor(:,3), num2str(coor(:,1)));
+
+% Compute bounding box that enclosed the NURBS curve
+x_min = min(NURBS(:,1));
+x_max = max(NURBS(:,1));
+y_min = min(NURBS(:,2));
+y_max = max(NURBS(:,2));
+
+% Plot bounding box
+
+plot( [x_min,x_max,x_max,x_min,x_min], [y_min,y_min,y_max,y_max,y_min], '-k')
+hold on;
 
 
 %% Plots the NURBS contained in each leaf separately
