@@ -48,6 +48,15 @@ box on
 
 %% Extract polygonal elements 
 [coor,connectivity,nnode,maxnel,numel,kv_element,kv_num,maxnk]=extractElements(Quadtree);
+%% Plot Nodes
+
+figure(2)
+plot(coor(1:nnode-numel-1,2),coor(1:nnode-numel-1,3),'.r') ;
+hold on;
+plot(coor(nnode-numel:nnode,2),coor(nnode-numel:nnode,3),'.k') ;
+hold on;
+% text(coor(:,2), coor(:,3), num2str(coor(:,1)));
+
 
 %% Plots the NURBS contained in each leaf separately
 if f_plotLeaves == 1

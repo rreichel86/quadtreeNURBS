@@ -276,11 +276,6 @@ for k=1:size(inter_coor,1)
    rows(k,1)=row; 
 end
 
-figure(2)
-plot(coor(:,2),coor(:,3),'.k') ;
-hold on
-% text(coor(:,2), coor(:,3), num2str(coor(:,1)));
-
 %Element w.r.t node numbers in cells by using numel
 maxnel = 0;
 for iel = 1:numel
