@@ -237,23 +237,6 @@ if f_plotPolyElmtCurvedEdges == 1
             knotVector = kv_num{kvno}(6:end);
             iknot = find( elmt == kv_num{kvno}(3) );
             eknot = find( elmt == kv_num{kvno}(4) );
-            
-            iknot_coor = ecoor(iknot,:);
-            eknot_coor = ecoor(eknot,:);
-            
-            % determine orientation
-            % ori =  1 for CCW
-            % ori = -1 for CW
-            ori = orientation(iknot_coor,eknot_coor,sc_coor);
-            
-            % swap iknot and eknot
-            if ori == -1
-                temp = iknot;
-                iknot = eknot;
-                eknot = temp;
-            end
-            
-            
         end
         
         % plot polygon that dont have curve edges
