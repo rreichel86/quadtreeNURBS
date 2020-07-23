@@ -89,7 +89,6 @@ if f_splittElmtIntoSec == 1
         
         % plot polygon that dont have curve edges
         if kvno == 0
-            % continue
             for ii = 1:nel
                 if ii ~= nel
                     a = ii;
@@ -104,13 +103,8 @@ if f_splittElmtIntoSec == 1
                 hold on
             end
 
-            % patch(ecoor(:,1),ecoor(:,2), 'green','FaceAlpha',.5)
-
-
-
         % plot polygon that have curve edges
         elseif kvno ~= 0 && iknot < eknot && iknot == 1
-            % continue
             ii = 1;
             while ii <= nel
                 if (ii == eknot) && (iknot == 1)
@@ -132,7 +126,6 @@ if f_splittElmtIntoSec == 1
                 ii = ii + 1;
             end
         elseif kvno ~= 0 && iknot < eknot && iknot ~= 1
-            % continue
             ii = 1;
             while ii <= nel
                 if ii == iknot
@@ -154,7 +147,6 @@ if f_splittElmtIntoSec == 1
                 ii = ii + 1;
             end
         elseif kvno ~= 0 && iknot > eknot && eknot == 1
-            % continue
             ii = 1;
             while ii <= nel
                 if (ii == iknot) && (eknot == 1)
@@ -177,7 +169,6 @@ if f_splittElmtIntoSec == 1
             end
 
         elseif kvno ~= 0 && iknot > eknot && eknot ~= 1
-            % continue
             ii = 1;
             while ii <= nel
                 if ii == eknot
@@ -198,17 +189,9 @@ if f_splittElmtIntoSec == 1
                 hold on
                 ii = ii + 1;
             end
-
         end
-
     end
-
-
-
 end
-
-
-
 
 %% Plot polygonal elements 
 if f_plotPolyElmt == 1
@@ -241,7 +224,6 @@ if f_plotPolyElmtCurvedEdges == 1
         
         % plot polygon that dont have curve edges
         if kvno == 0
-            %         continue
             %         for ii = 1:nel
             %             if ii ~= nel
             %                 a = ii;
@@ -257,11 +239,8 @@ if f_plotPolyElmtCurvedEdges == 1
             
             patch(ecoor(:,1),ecoor(:,2), 'green','FaceAlpha',.5)
             
-            
-            
-            % plot polygon that dont have curve edges
+        % plot polygon that dont have curve edges
         elseif kvno ~= 0 && iknot < eknot && iknot == 1
-            %          continue
             ii = 1;
             while ii <= nel
                 if (ii == eknot) && (iknot == 1)
@@ -283,9 +262,7 @@ if f_plotPolyElmtCurvedEdges == 1
                 ii = ii + 1;
             end
             
-            
         elseif kvno ~= 0 && iknot < eknot && iknot ~= 1
-            %          continue
             ii = 1;
             while ii <= nel
                 if ii == iknot
@@ -308,7 +285,6 @@ if f_plotPolyElmtCurvedEdges == 1
             end
             
         elseif kvno ~= 0 && iknot > eknot && eknot == 1
-            %          continue
             ii = 1;
             while ii <= nel
                 if (ii == iknot) && (eknot == 1)
@@ -331,7 +307,6 @@ if f_plotPolyElmtCurvedEdges == 1
             end
             
         elseif kvno ~= 0 && iknot > eknot && eknot ~= 1
-            %          continue
             ii = 1;
             while ii <= nel
                 if ii == eknot
