@@ -1,5 +1,5 @@
 function ptInPolygon = isPointInPolygon(polygon, point)
-% IsPointInPolygon: Determine if a given point is inside a Polygon
+% IsPointInPolygon: Determine if a given point is inside a polygon
 %
 % INPUT:
 % polygon --------------------- [x_1, y_1;
@@ -11,18 +11,25 @@ function ptInPolygon = isPointInPolygon(polygon, point)
 % point ----------------------- [ptx, pty]
 %
 % OUTPUT:
-% ptInPolygon -------------------- is 1 if point is inside and 0 otherwise
+% ptInPolygon -------------------- gives 1 if point is inside and 
+%                                        0 otherwise
 %
 %-------------------------------------------------------------------------
 
-% xmin = polygon(:,1);
-% ymin = polygon(:,2);
+% Compute bounding box that enclosed the polygon
+% xmin = min(polygon(:,1));
+% ymin = min(polygon(:,2));
 xmax = max(polygon(:,1));
 ymax = max(polygon(:,2));
 
+% Point in question
 q = [point(1) point(2)];
-r = [xmax+10,ymax+10];
+% Arbitrary point outside the polygon 
+% For example, use bounding box top right corner 
+% and shift it.
+r = [xmax+10,ymax+10]; 
 
+% counter number of crossings or intersections
 countIntersection = 0;
 numvertices = size(polygon,1);
 
@@ -49,43 +56,128 @@ for nv = 1 : numvertices
     pi = polygon(b,:);
     pj = polygon(c,:);
     
-    
-    if orientation(q,pi,pj) == 0
+    % Are q, p_(i) and p_(j) collinear?
+    if orientation(q,pi,pj) == 0 % yes
         vi = pi-q;
         vj = pj-q;
-        if vi(1) * vj(1) < 0 || vi(2) * vj(2) < 0 || norm(vi) < 1e-10 || norm(vj) < 1e-10
+        % Is q on the segment p_(i)p_(j)?
+        if vi(1) * vj(1) < 0 || vi(2) * vj(2) < 0 || norm(vi) < 1e-10 || norm(vj) < 1e-10 % yes
+            % q is at the boundary
             countIntersection = countIntersection + 1;
             break;
-        else
-            if orientation(r,pi,pj) == 0
+        else % no
+            % Does also r lie on the line passing through q, p_(i) and p_(j)?
+            if orientation(r,pi,pj) == 0 % yes
                 wi = pi-r;
-                if vi(1) * wi(1) < 0 || vi(2) * wi(2) < 0
-                    ph = polygon(a,:);
-                    pk = polygon(d,:);
-                    if orientation(ph,q,r)*orientation(pk,q,r) < 0
+                % Are q and r on the same side?
+                %          p_(i)            p_(j)
+                %    q & r  *----------------* 
+                %           *----------------*  q & r
+                % Remark: By definition r can not be on the segment p_(i)p_(j)
+                if vi(1) * wi(1) < 0 || vi(2) * wi(2) < 0 % no
+                    ph = polygon(a,:); % p_(i-1)
+                    pk = polygon(d,:); % p_(j+1)
+                    % case (iii) or
+                    %
+                    %                    q
+                    %                    |   
+                    %                    .    * ...
+                    %                    |   /
+                    %                    .  /
+                    %                    | /
+                    %                    ./
+                    %                    * p_(i)
+                    %                    |
+                    %                    |
+                    %                    |
+                    %                    |
+                    %                    * p_(j)
+                    %                    .\
+                    %                    | \
+                    %                    .  \
+                    %                    |   \
+                    %                    .    * ...
+                    %                    |
+                    %                    r
+                    %
+                    % case (iv)
+                    %
+                    %                    q
+                    %                    |   
+                    %                    .    * ...
+                    %                    |   /
+                    %                    .  /
+                    %                    | /
+                    %                    ./
+                    %                    * p_(i)
+                    %                    |
+                    %                    |
+                    %                    |
+                    %                    |
+                    %                    * p_(j)
+                    %                   /.
+                    %                  / |
+                    %                 /  .
+                    %                /   |
+                    %           ... *    .
+                    %                    |
+                    %                    r
+                    %
+                    if orientation(ph,q,r)*orientation(pk,q,r) < 0 % case (iv)
                         countIntersection = countIntersection + 1;
                     end
                 end
             end
-
-            
         end
-        
-    else
-        if orientation(pi,q,r) == 0
+    else % no
+        % Are p_(i), q and r collinear?
+        if orientation(pi,q,r) == 0 % yes
             vi = q-pi;
             vj = r-pi;
-            if vi(1) * vj(1) < 0 || vi(2) * vj(2) < 0 || norm(vi) < 1e-10 || norm(vj) < 1e-10
-                ph = polygon(a,:);
-                if orientation(ph,q,r)*orientation(pj,q,r) < 0
+            % Is p_(i) on the segment qr?
+            if vi(1) * vj(1) < 0 || vi(2) * vj(2) < 0 || norm(vi) < 1e-10 || norm(vj) < 1e-10 % yes
+                ph = polygon(a,:); % p_(i-1)
+                % case (i) or
+                %
+                %                    q
+                %                    |   
+                %                    .    * ...
+                %                    |   /
+                %                    .  /
+                %                    | /
+                %                    ./
+                %                    * p_(i)
+                %                    .\
+                %                    | \
+                %                    .  \
+                %                    |   \
+                %                    .    * ...
+                %                    |
+                %                    r
+                %
+                % case (ii)
+                %
+                %                         * ...
+                %                        /
+                %                       /
+                %                      /
+                %                p_(i) /
+                %       r - . - . - .*. - . - . - q
+                %                     \
+                %                      \
+                %                       \
+                %                        \
+                %                         * ...
+                %
+                if orientation(ph,q,r)*orientation(pj,q,r) < 0 % case (ii)
                     countIntersection = countIntersection + 1;
                 end
             end
-        else
+        else % no
            
+            % Do segment qr and p_(i)p_(j) intersect?
             if (orientation(q,pi,pj)*orientation(r,pi,pj) < 0) && ...
-                (orientation(pi,q,r)*orientation(pj,q,r) < 0)
-            
+                (orientation(pi,q,r)*orientation(pj,q,r) < 0) % yes
                 countIntersection = countIntersection + 1;
             end
         end
