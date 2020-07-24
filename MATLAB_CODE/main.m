@@ -245,7 +245,16 @@ if f_plotPolyElmt == 1
         ex = coor( elmt, 2);
         ey = coor( elmt, 3);
         
-        patch(ex,ey, 'red','FaceAlpha',.5)
+        % determine if a polygonal element is
+        % inside or outside the region enclosed 
+        % by the NURBS curve
+        if sum(coor( elmt, 7)) < 0 % outside
+          color = 'red';
+        else % inside
+          color = 'blue';
+        end
+        
+        patch(ex,ey, color,'FaceAlpha',.5)
     end
 end
 %% Plot polygonal elements with curve edges
