@@ -69,7 +69,8 @@ y_max = max(NURBS(:,2));
 % plot( [x_min,x_max,x_max,x_min,x_min], [y_min,y_min,y_max,y_max,y_min], '-k')
 % hold on;
 
-for ii = 1 : nnode
+% loop over nodes, excluding control points
+for ii = find(coor(:,5) == 1)'
     
     % Check if current node is inside the bounding box
     if ( isPointInQuad([x_min,y_min], [x_max,y_max], coor(ii,2:3)) == 1 )
@@ -81,6 +82,7 @@ for ii = 1 : nnode
         % Check if current node is also inside 
         % the region enclosed by the NURBS curve
         pointInPoly = isPointInPolygon(NURBS(1:end-1,1:2), coor(ii,2:3));
+        coor(ii,7) = pointInPoly;
 %         if (  pointInPoly > 0 )
 %             
 %             
