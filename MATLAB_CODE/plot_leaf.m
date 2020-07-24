@@ -1,8 +1,7 @@
 function plot_leaf(Quadtree,ax)
 % Function plot_leaf plots each quadtree's leaf content
-close all
 l=Quadtree.findleaves();
-figure(1)
+figure(3)
 hold on
 for i=1:length(l)
     
@@ -20,7 +19,7 @@ for i=1:length(l)
         
         % Obtaining NURBS definition of the curve contained in each leaf quad
         leave=CalculateNURBS( Quadtree.Node{l(i),1}{6,1},Quadtree.Node{l(i),1}{8,1}, Quadtree.Node{l(i),1}{7,1},  Quadtree.Node{l(i),1}{9,1});
-        plot(leave(1,:),leave(2,:),'r','LineWidth',3);
+        plot(leave(:,1),leave(:,2),'r','LineWidth',3);
         
         % Plotting  leaf's quad
         plot(Quadtree.Node{l(i),1}{10,1}(1,:),Quadtree.Node{l(i),1}{10,1}(2,:),'k');
