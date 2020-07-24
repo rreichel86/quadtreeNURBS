@@ -11,8 +11,9 @@ function ptInPolygon = isPointInPolygon(polygon, point)
 % point ----------------------- [ptx, pty]
 %
 % OUTPUT:
-% ptInPolygon -------------------- gives 1 if point is inside and 
-%                                        0 otherwise
+% ptInPolygon -------------------- gives 1 if point is inside 
+%                                        0 if point is at the boundary and 
+%                                       -1 otherwise
 %
 %-------------------------------------------------------------------------
 
@@ -63,8 +64,8 @@ for nv = 1 : numvertices
         % Is q on the segment p_(i)p_(j)?
         if vi(1) * vj(1) < 0 || vi(2) * vj(2) < 0 || norm(vi) < 1e-10 || norm(vj) < 1e-10 % yes
             % q is at the boundary
-            countIntersection = countIntersection + 1;
-            break;
+            ptInPolygon = 0;
+            return
         else % no
             % Does also r lie on the line passing through q, p_(i) and p_(j)?
             if orientation(r,pi,pj) == 0 % yes
@@ -188,6 +189,8 @@ end
 
 % if number of intersections even, the point is outside the polygon
 % otherwise the point is inside the polygon or on the polygon's boundary
-ptInPolygon = mod(countIntersection,2);
-
+if ( mod(countIntersection,2) == 0 )
+   ptInPolygon = -1;
+else 
+   ptInPolygon = 1;
 end
