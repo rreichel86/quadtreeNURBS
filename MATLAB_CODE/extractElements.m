@@ -1,25 +1,30 @@
 function [coor,connectivity,numcoor,maxnel,numel,kv_element,kv_num,maxnk]=extractElements(Quadtree)
-%Function extract leaf will help to take out the Quadleaf element data
-%input
-%Quadtree Data
-%Output
-%coor:coordinates with their weight
-%coor=[Number,x-coor,y-coor,weight]
-%connectivity:connectivity matrix for elements
-%connectivity=[Number,number of coordinates in element,coordinates of element]
-%ncoor:number of coordintes
-%maxnel:maximum number of nodes on any element
-%nmel:number of elements
-%kv_element:Vector with knot vector number and connectivity vector that
-%leaf 
-% kv_element=[Number,Knot_v Number(0 if the quad have no NURBS
-%curve),connectivity matrix from 2 column to end] 
-% kv_num:Vector having degree of NURBS curve,intersectional coordinates number,
-% size of knot vector and knot vector values
-%kv_num=[Number,degree of NURBS curve,intersectional coordinates number in clockwise direction,
-% size of knot vector and knot vector values]
-% maxnk:maximum number of knot values on any element
-
+% extractElements: get polygonal elements from Quadtree data structure
+%
+% INPUT:
+% Quadtree Data
+%
+% OUTPUT:
+% coor ----------------------- nodes coordinates and weights 
+% coor = [number, x-coor, y-coor, weight, type, which_region, inside_region]
+%
+%                              type: 1 -  node
+%                                    2 - control point or intersection point
+%                              which_region: region number
+%                              inside_region: 0 - at the boundary
+%                                             1 - inside 
+%                                            -1 - outside
+%
+% connectivity --------------- elements connectivity matrix as nel-tupel of 
+%                              nodes, where nel is the number of nodes per elmt
+% connectivity = [number, nel, node_1,...,node_nel, scaling_center]
+%
+% numcoor -------------------- number of coordinates = number of nodes
+% maxnel --------------------- maximum number of nodes on any element
+% numel ---------------------- number of elements
+%
+%
+% -----------------------------------------------------------------------------
 
 l = Quadtree.findleaves();
 %Gives leaf numbers
@@ -236,7 +241,7 @@ numsc = numel;
 numcoor = numcoor0 + numsc;
 
 % prealloc coor matrix 
-coor = zeros(numcoor, 4);
+coor = zeros(numcoor, 7);
 % coordinates 
 coor(1:numcoor0,2:3) = tmp_coor;
 
@@ -251,8 +256,10 @@ for iel = 1:numel
     coor(numcoor0+iel,2:3) = [scx,scy];
 end
 
-% coor numbers 
+% coor numbers and type
 coor(:,1) = (1:numcoor) ;
+coor(:,5) = 1;
+coor(:,7) = -1; 
 
 % delete tmp_coor
 clearvars tmp_coor
@@ -263,7 +270,9 @@ for k=1:length(cp_w)
     [b] = find ( abs(coor(:,3)-cp_w(k,2))<1e-10);
     row= intersect(a,b);
     if isempty(row)~=1
-        coor(row,4)=cp_w(k,3);
+        coor(row,4) = cp_w(k,3);
+        coor(row,5) = 2;
+        coor(row,7) = 0;
     end
 end
 %Following loop is to find the intersectional coordintes number that will 
