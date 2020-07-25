@@ -27,6 +27,16 @@ function [numcoor,coor,numel,connectivity,maxnel,...
 % connectivity = [iel, ikv, nel, node_1,...,node_nel, scaling_center]
 % maxnel --------------------- maximum number of nodes on any element
 %
+% numKnotVectors ------------- number of knot vectors
+% knotVectors ---------------- contains knot vectors and following information
+%                              ikv - knot vektor number
+%                              degree - NURBS curve degree
+%                              icp - index initial control point
+%                              ecp - last control point
+%                              nkonts - number of knots per knot vector
+%
+% knotVectors = [ikv, degree, icp, ecp, nknots, knot_1,...,knot_nknots]
+% maxnknots ------------------ maximun number of knot on any knot vector
 %
 % -----------------------------------------------------------------------------
 
