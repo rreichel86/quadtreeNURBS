@@ -64,10 +64,10 @@ for i = 1:numleaves
     %Quadtree
     intersections = Quadtree.Node{leaves(i),1}{5,1};
     
+    % Check neighborhood of current leaf
+    % get mid points if they exist
     [midPoints] = extracting_element(Quadtree,leaves,i);
 
-    %Function to get the coordinates of neighboring element that are
-    %sharing the boundary
     
     if isempty(intersections) || length(intersections) == 1
         %if intersection data is empty then
