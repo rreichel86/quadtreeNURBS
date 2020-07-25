@@ -314,7 +314,6 @@ for iel = 1:numel
     connectivity{iel} = [iel,0,nel,connectivity{iel},numcoor0+iel];  
 end
 
-[kv_element,kv_num,maxnk]=knotv_element(Quadtree,connectivity,knotVectors,numel,rows);
 
 end
 
