@@ -47,7 +47,8 @@ box on
 [Quadtree] = nurbs_brep_quadtree(degree,knots,controlPoints,weights,Boundary);
 
 %% Extract polygonal elements 
-[nnode,coor,numel,connectivity,maxnel,kv_element,kv_num,maxnk]=extractElements(Quadtree);
+[nnode,coor,numel,connectivity,maxnel,...
+ numKnotVectors,knotVectors,maxnknots] = extractElements(Quadtree);
 %% Plot Nodes
 
 figure(2)
