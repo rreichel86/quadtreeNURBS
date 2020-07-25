@@ -311,7 +311,7 @@ if f_plotPolyElmtCurvedEdges == 1
                     b = 1;
                     ii = ii + (nKnot-1)-pgrad-2;
                     NURBS_sec=CalculateNURBS(pgrad,knotVector,ecoor([a:nel,1],:)',wg([a:nel,1])');
-                    plot(NURBS_sec(1,:),NURBS_sec(2,:),'b','LineWidth',3);
+                    plot(NURBS_sec(:,1),NURBS_sec(:,2),'b','LineWidth',3);
                 elseif ii ~= nel
                     a = ii;
                     b = ii+1;
@@ -333,7 +333,7 @@ if f_plotPolyElmtCurvedEdges == 1
                     b = ii + (nKnot-1)-pgrad-1;
                     ii = ii + (nKnot-1)-pgrad-2;
                     NURBS_sec=CalculateNURBS(pgrad,knotVector,ecoor(a:b,:)',wg(a:b)');
-                    plot(NURBS_sec(1,:),NURBS_sec(2,:),'r','LineWidth',3);
+                    plot(NURBS_sec(:,1),NURBS_sec(:,2),'r','LineWidth',3);
                 elseif ii ~= nel
                     a = ii;
                     b = ii+1;
@@ -355,7 +355,7 @@ if f_plotPolyElmtCurvedEdges == 1
                     b = 1;
                     ii = ii + (nKnot-1)-pgrad-2;
                     NURBS_sec=CalculateNURBS(pgrad,knotVector,ecoor([a:nel,1],:)',wg([a:nel,1])');
-                    plot(NURBS_sec(1,:),NURBS_sec(2,:),'b','LineWidth',3);
+                    plot(NURBS_sec(:,1),NURBS_sec(:,2),'b','LineWidth',3);
                 elseif ii ~= nel
                     a = ii;
                     b = ii+1;
@@ -377,7 +377,7 @@ if f_plotPolyElmtCurvedEdges == 1
                     b = ii +  (nKnot-1)-pgrad-1;
                     ii = ii + (nKnot-1)-pgrad-2;
                     NURBS_sec=CalculateNURBS(pgrad,knotVector,ecoor(a:b,:)',wg(a:b)');
-                    plot(NURBS_sec(1,:),NURBS_sec(2,:),'b','LineWidth',3);
+                    plot(NURBS_sec(:,1),NURBS_sec(:,2),'b','LineWidth',3);
                 elseif ii ~= nel
                     a = ii;
                     b = ii+1;
