@@ -55,8 +55,8 @@ intersections_coor = cell(numleaves,1);
 %Cell for all the intersection coordinates that contain NURBS to in Cell
 %form
 
-j=1;
-m=1;
+j = 1;
+countKnotVectors = 0;
 % loop over leaves
 for i = 1:numleaves
     
@@ -101,10 +101,8 @@ for i = 1:numleaves
         weights = Quadtree.Node{leaves(i),1}{9,1}; %weights from Quadtree
         cp = [controlPoints',weights']; %control points and weights
         
-        
         kv  =[m,Quadtree.Node{leaves(i),1}{8,1}];%knot vector from Quadtree
-        
-        m=m+1;
+        countKnotVectors = countKnotVectors + 1;
         
         coordinates = [quad,intersectionPoints,controlPoints];
         
@@ -126,11 +124,9 @@ for i = 1:numleaves
         weights = Quadtree.Node{leaves(i),1}{9,1};%weights from Quadtree
         cp = [controlPoints',weights'];%control points and weights
         
-        
         kv  =[m,Quadtree.Node{leaves(i),1}{8,1}];%knot vector from Quadtree
-        
-        m=m+1;
-        
+        countKnotVectors = countKnotVectors + 1;
+
         coordinates = [quad,intersectionPoints,controlPoints];
         
         element = [quad,midPoints,intersectionPoints];%leaf coordinates from quad 
@@ -150,10 +146,8 @@ for i = 1:numleaves
         weights = Quadtree.Node{leaves(i),1}{9,1};%weights from Quadtree
         cp = [controlPoints',weights'];%control points and weights
         
-        
         kv  =[m,Quadtree.Node{leaves(i),1}{8,1}];%knot vector from Quadtree
-        
-        m=m+1;
+        countKnotVectors = countKnotVectors + 1;
         
         coordinates = [quad,intersectionPoints,controlPoints];
         
