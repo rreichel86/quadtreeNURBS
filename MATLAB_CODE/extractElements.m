@@ -1,4 +1,5 @@
-function [numcoor,coor,numel,connectivity,maxnel,kv_element,kv_num,maxnk]=extractElements(Quadtree)
+function [numcoor,coor,numel,connectivity,maxnel,...
+          numKnotVectors,knotVectors,maxnknots] = extractElements(Quadtree)
 % extractElements: get polygonal elements from Quadtree data structure
 %
 % INPUT:
@@ -36,32 +37,20 @@ numleaves = length(leaves);
 % Get total number of elements
 [numel] = countElements(Quadtree);
 
+% prealloc cell array
 coor = cell(numleaves,1);
-%This will give an array for storing Quad coordinates
-
 controlPoints_coor = cell(numleaves,1);
-%Control points and it's associated weights 
-
 knotVectors = cell(numleaves,1);
-%knot vector of the NURBS in quad
-
 elements = cell(numel,1);
-%This will give an array for storing coordinates of elements
-
 connectivity = cell(numel,1);
-%connectivity matrix of elements
-
 intersections_coor = cell(numleaves,1);
-%Cell for all the intersection coordinates that contain NURBS to in Cell
-%form
 
 j = 1;
 countKnotVectors = 0;
-% loop over leaves
+maxnknots = 0;% maximun number of knot on any knot vector
+% loop over leaves 
 for i = 1:numleaves
     
-    %This function will take out the intersection.parametric data from
-    %Quadtree
     intersections = Quadtree.Node{leaves(i),1}{5,1};
     
     % Check neighborhood of current leaf
@@ -70,119 +59,91 @@ for i = 1:numleaves
 
     
     if isempty(intersections) || length(intersections) == 1
-        %if intersection data is empty then
-        %there will be only Quad vertices no intersection points
         
         quad = Quadtree.Node{leaves(i),1}{10,1}(1:2,1:4);
-        %Quad definition
-        
+        cp = [];% control points and weight
+        intersectionPoints = [];
+
         coordinates = quad;
+        element = [quad,midPoints];
         
-        cp = [];%control points and weight
+    elseif isempty(Quadtree.Node{leaves(i),1}{3,1}) == 1
         
-        kv  = [];%knot vector from Quadtree
-        
-        element = [quad,midPoints];%leaf coordinates from quad 
-%         definition and neighboring elemnt quads
-        
-        intersectionPoints = [];%No intersection points
-        
-    elseif isempty(Quadtree.Node{leaves(i),1}{3,1})==1
-        %if intersection.horizontal data empty then
-        %only intersection.vertical and Quad data taken out
         intersectionPoints = [Quadtree.Node{leaves(i),1}{7,1}(:,1),Quadtree.Node{leaves(i),1}{7,1}(:,end)];
-        %intersection points are the 1st and last points of control
-        %points
-        
         quad = Quadtree.Node{leaves(i),1}{10,1}(1:2,1:4);
-         %Quad definition
-         
-        controlPoints = Quadtree.Node{leaves(i),1}{7,1}; %control points from Quadtree
-        weights = Quadtree.Node{leaves(i),1}{9,1}; %weights from Quadtree
-        cp = [controlPoints',weights']; %control points and weights
         
-        kv  =[m,Quadtree.Node{leaves(i),1}{8,1}];%knot vector from Quadtree
+        controlPoints = Quadtree.Node{leaves(i),1}{7,1};
+        weights = Quadtree.Node{leaves(i),1}{9,1};
+        cp = [controlPoints',weights'];% control points and weights
+        
         countKnotVectors = countKnotVectors + 1;
+        knots = Quadtree.Node{leaves(i),1}{8,1};
+        nknots = length(knots);
+        maxnknots = max(maxnknots,nknots);
+        degree = Quadtree.Node{leaves(i),1}{6,1};
+        knotVectors{countKnotVectors} = [countKnotVectors,degree,0,0,nknots,knots];
         
         coordinates = [quad,intersectionPoints,controlPoints];
+        element = [quad,midPoints,intersectionPoints];
         
-        element = [quad,midPoints,intersectionPoints];%leaf coordinates from quad 
-%         definition,neighboring element quads and intersectional points
-        
-        
-    elseif isempty(Quadtree.Node{leaves(i),1}{4,1})==1
-        %if intersection.vertical data empty then
-        %only intersection.horizontal and Quad data taken out
+    elseif isempty(Quadtree.Node{leaves(i),1}{4,1}) == 1
         
         intersectionPoints = [Quadtree.Node{leaves(i),1}{7,1}(:,1),Quadtree.Node{leaves(i),1}{7,1}(:,end)];
-        %intersection points are the 1st and last points of control
-        %points
+        quad = Quadtree.Node{leaves(i),1}{10,1}(1:2,1:4);
         
-        quad = Quadtree.Node{leaves(i),1}{10,1}(1:2,1:4);%Quad definition
+        controlPoints = Quadtree.Node{leaves(i),1}{7,1};
+        weights = Quadtree.Node{leaves(i),1}{9,1};
+        cp = [controlPoints',weights'];% control points and weights
         
-        controlPoints = Quadtree.Node{leaves(i),1}{7,1};%control points from Quadtree
-        weights = Quadtree.Node{leaves(i),1}{9,1};%weights from Quadtree
-        cp = [controlPoints',weights'];%control points and weights
-        
-        kv  =[m,Quadtree.Node{leaves(i),1}{8,1}];%knot vector from Quadtree
         countKnotVectors = countKnotVectors + 1;
+        knots = Quadtree.Node{leaves(i),1}{8,1};
+        nknots = length(knots);
+        maxnknots = max(maxnknots,nknots);
+        degree = Quadtree.Node{leaves(i),1}{6,1};
+        knotVectors{countKnotVectors} = [countKnotVectors,degree,0,0,nknots,knots];
 
         coordinates = [quad,intersectionPoints,controlPoints];
-        
-        element = [quad,midPoints,intersectionPoints];%leaf coordinates from quad 
-%         definition,neighboring element quads and intersectional points
-        
+        element = [quad,midPoints,intersectionPoints];
         
     else
-        %intersection.horizontal,intersection.vertical and Quad data taken
-        %out
+
         intersectionPoints = [Quadtree.Node{leaves(i),1}{7,1}(:,1),Quadtree.Node{leaves(i),1}{7,1}(:,end)];
-        %intersection points are the 1st and last points of control
-        %points
+        quad = Quadtree.Node{leaves(i),1}{10,1}(1:2,1:4);
         
-        quad = Quadtree.Node{leaves(i),1}{10,1}(1:2,1:4);%Quad definition
+        controlPoints = Quadtree.Node{leaves(i),1}{7,1};
+        weights = Quadtree.Node{leaves(i),1}{9,1};
+        cp = [controlPoints',weights'];% control points and weights
         
-        controlPoints = Quadtree.Node{leaves(i),1}{7,1};%control points from Quadtree
-        weights = Quadtree.Node{leaves(i),1}{9,1};%weights from Quadtree
-        cp = [controlPoints',weights'];%control points and weights
-        
-        kv  =[m,Quadtree.Node{leaves(i),1}{8,1}];%knot vector from Quadtree
         countKnotVectors = countKnotVectors + 1;
+        knots = Quadtree.Node{leaves(i),1}{8,1};
+        nknots = length(knots);
+        maxnknots = max(maxnknots,nknots);
+        degree = Quadtree.Node{leaves(i),1}{6,1};
+        knotVectors{countKnotVectors} = [countKnotVectors,degree,0,0,nknots,knots];
         
         coordinates = [quad,intersectionPoints,controlPoints];
-        
-        element = [quad,midPoints,intersectionPoints];%leaf coordinates from quad 
-%         definition,neighboring element quads and intersectional points
-
-
-         
+        element = [quad,midPoints,intersectionPoints];
         
     end
     
-    controlPoints_coor{i} = cp;%control points and weights in one cell
+    controlPoints_coor{i} = cp;% control points and weights
+    intersections_coor{i} = intersectionPoints';% intersection points
+    coor{i} = coordinates;% nodal coordinates
     
-    knotVectors{i}=kv;%knot vectors in one cell
-    
-    intersections_coor{i} = intersectionPoints';%intersection points in one cell 
-%     where x and y coordinates in one row
-    
-    coor{i} = coordinates;%coordinates in one cell
-    
-    % Given element commands are to remove the -99 number and arrange the leaf coordinates
-    % (including quad,neighboring quad and intersection points)
-    % in the anticlockwise direction starting from left bottom
-    element = element(element~=-99);
+    % remove -99 values and arrange the element nodal coordinates
+    % counterclockwise starting from the left bottom corner
+    element = element(element ~= -99);
     ncol = size(element, 1);
     element = reshape(element,[2,ncol/2]);
     x = element(1,:);
     y = element(2,:);
     cx = mean(x);
     cy = mean(y);
-    a = atan2(y - cy, x - cx);%Gives angle in anticlockwise from [-pi,pi]
+    a = atan2(y - cy, x - cx);% angle counterclockwise from [-pi,pi]
     [~, order] = sort(a, 'ascend');
     x_1 = x(order);
     y_1 = y(order);
-    if a(1,1)>min(a(1,2:end))
+    if a(1,1) > min(a(1,2:end))
         %if there is any point angle which is less than the left bottom
         %point than it should be end point
         element(1,:) = [x_1(1,2:end),x_1(1,1)];
@@ -195,15 +156,20 @@ for i = 1:numleaves
     %otherwise it would be two elements
     if isempty(intersectionPoints)    
         elements{j} = element;
+        % element number
+        connectivity{j}(1,1) = j;
+        % knot vector number
+        connectivity{j}(1,2) = 0;
         j = j+1;
     else
-        %loop for two intersectionPoints points to know in element definition where they exist
+        % loop over intersection points 
         for k = 1:2
+            % search for intersection points in current element nodal coordinates
             [b] = find ( abs(intersectionPoints(1,k) - element(1,:))<1e-10);
             [d] = find (abs(intersectionPoints(2,k) - element(2,:))<1e-10);
             col(:,k) = intersect(b,d);
         end
-        %Given loop is only for the control points in Clockwise direction 
+        % for the control points in Clockwise direction 
         if col(1,1) < col(1,2)
             elements{j} = [element(:,[1:col(1,1)]),controlPoints(:,[2:end-1]),element(:,[col(1,2):end])];
             elements{j+1} = [element(:,[col(1,1):col(1,2)]),fliplr(controlPoints(:,[2:end-1]))];
@@ -213,6 +179,12 @@ for i = 1:numleaves
             elements{j} = [element(:,[1:col(1,2)]),fliplr(controlPoints(:,[2:end-1])),element(:,[col(1,1):end])];
             elements{j+1} = [element(:,[col(1,2):col(1,1)]),controlPoints(:,[2:end-1])];   
         end
+        % element numbers
+        connectivity{j}(1,1) = j;
+        connectivity{j+1}(1,1) = j+1;
+        connectivity{j}(1,2) = countKnotVectors;
+        % knot vector number
+        connectivity{j+1}(1,2) = countKnotVectors;
         j = j+2;
     end
 end
@@ -246,7 +218,6 @@ coor(1:numcoor0,2:3) = tmp_coor;
 for iel = 1:numel
     % compute kernel
     kernel = computePolygonKernel( elements{iel}' );
-    
     % compute scaling center
     % compute centroid of the kernel
     [scx,scy] = centroid(polyshape(kernel,'Simplify',false));
@@ -278,7 +249,6 @@ for k = 1:length(cp)
     end
 end
 
-
 indices = zeros(size(intersections_coor,1),1);
 % loop over intersection points
 for k = 1:size(intersections_coor,1)
@@ -290,7 +260,6 @@ for k = 1:size(intersections_coor,1)
     indices(k,1) = index;
 end
 
-
 maxnel = 0;
 % loop over elements
 for iel = 1:numel
@@ -300,20 +269,32 @@ for iel = 1:numel
     % and get the corresponding node numbers
     for n = 1 : nel
         [a] = find ( abs(coor(:,2) - elements{iel}(1,n))<1e-10);
-        [b] = find (abs(coor(:,3) - elements{iel}(2,n))<1e-10);
-        nodeNumber= intersect(a,b);
-        connectivity{iel}(1,n) = nodeNumber;
+        [b] = find ( abs(coor(:,3) - elements{iel}(2,n))<1e-10);
+        nodeNumber = intersect(a,b);
+        connectivity{iel}(1,3+n) = nodeNumber;
     end
     % remove repeated values without changing the order
-    connectivity{iel} = unique(connectivity{iel},'stable');
+    connectivity{iel}(1,4:end) = unique(connectivity{iel}(1,4:end),'stable');
     % update number of nodes per element
     nel = size(connectivity{iel},2); 
+    connectivity{iel}(1,3) = nel;
     % maximum number of nodes on any element
     maxnel = max(nel,maxnel);  
-    
-    connectivity{iel} = [iel,0,nel,connectivity{iel},numcoor0+iel];  
+    % append correspondig scaling center index
+    connectivity{iel}(1,end+1) = numcoor0+iel;  
 end
 
+numKnotVectors = countKnotVectors;
+idx = 1;
+% loop over knotVectors
+for ikv = 1:numKnotVectors
+    % index initial control point
+    knotVectors{ikv}(1,3) = indices(idx);
+    % index last control point
+    knotVectors{ikv}(1,4) = indices(idx + 1);
+    idx = idx + 2;
+    
+end
 
 end
 
