@@ -132,6 +132,15 @@ if f_splittElmtIntoSec == 1
             
         end
         
+        % determine if a polygonal element is
+        % inside or outside the region enclosed 
+        % by the NURBS curve
+        if sum(coor( elmt, 7)) < 0 % outside
+          color = 'red';
+        else % inside
+          color = 'blue';
+        end
+        
         % plot polygon that dont have curve edges
         if kvno == 0
             for ii = 1:nel
@@ -143,7 +152,7 @@ if f_splittElmtIntoSec == 1
                     b = 1;
                 end
                 idx = [a,b,nel+1];
-                patch(ecoor(idx,1).', ecoor(idx,2).', 'green','FaceAlpha',.5)
+                patch(ecoor(idx,1).', ecoor(idx,2).', color, 'FaceAlpha',.5)
 
                 hold on
             end
@@ -166,7 +175,7 @@ if f_splittElmtIntoSec == 1
                     b = 1;
                     idx = [a,b,nel+1];
                 end
-                patch(ecoor(idx,1).', ecoor(idx,2).', 'blue','FaceAlpha',.5)
+                patch(ecoor(idx,1).', ecoor(idx,2).', color, 'FaceAlpha',.5)
                 hold on
                 ii = ii + 1;
             end
@@ -187,7 +196,7 @@ if f_splittElmtIntoSec == 1
                     b = 1;
                     idx = [a,b,nel+1];
                 end
-                patch(ecoor(idx,1).', ecoor(idx,2).', 'blue','FaceAlpha',.5)
+                patch(ecoor(idx,1).', ecoor(idx,2).', color, 'FaceAlpha',.5)
                 hold on
                 ii = ii + 1;
             end
@@ -208,7 +217,7 @@ if f_splittElmtIntoSec == 1
                     b = 1;
                     idx = [a,b,nel+1];
                 end
-                patch(ecoor(idx,1).', ecoor(idx,2).', 'blue','FaceAlpha',.5)
+                patch(ecoor(idx,1).', ecoor(idx,2).', color, 'FaceAlpha',.5)
                 hold on
                 ii = ii + 1;
             end
@@ -230,7 +239,7 @@ if f_splittElmtIntoSec == 1
                     b = 1;
                     idx = [a,b,nel+1];
                 end
-                patch(ecoor(idx,1).', ecoor(idx,2).', 'blue','FaceAlpha',.5)
+                patch(ecoor(idx,1).', ecoor(idx,2).', color, 'FaceAlpha',.5)
                 hold on
                 ii = ii + 1;
             end
