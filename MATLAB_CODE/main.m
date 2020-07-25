@@ -240,8 +240,8 @@ end
 %% Plot polygonal elements 
 if f_plotPolyElmt == 1
     for ielno = 1:numel
-        nel = connectivity{ielno}(2);
-        elmt = connectivity{ielno}(3:2+nel);
+        nel = connectivity{ielno}(3);
+        elmt = connectivity{ielno}(4:3+nel);
         ex = coor( elmt, 2);
         ey = coor( elmt, 3);
         
