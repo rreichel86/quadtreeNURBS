@@ -319,8 +319,7 @@ for iel = 1:numel
     % maximum number of nodes on any element
     maxnel = max(nel,maxnel);  
     
-    connectivity{iel} = [iel,nel,connectivity{iel},numcoor0+iel];
-    
+    connectivity{iel} = [iel,0,nel,connectivity{iel},numcoor0+iel];  
 end
 
 [kv_element,kv_num,maxnk]=knotv_element(Quadtree,connectivity,knotVectors,numel,rows);
