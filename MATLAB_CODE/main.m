@@ -102,9 +102,9 @@ end
 %% Splitt polygonal elements into section
 if f_splittElmtIntoSec == 1
     for ielno = 1:numel
-        kvno = kv_element{ielno}(2);
-        nel = kv_element{ielno}(3);
-        elmt = kv_element{ielno}(4:end);
+        kvno = connectivity{ielno}(2);
+        nel = connectivity{ielno}(3);
+        elmt = connectivity{ielno}(4:end);
         ecoor = coor( elmt(1:end), 2:3);
         wg = coor( elmt(1:end), 4);
         if kvno ~= 0
@@ -261,10 +261,10 @@ end
 %% Plot polygonal elements with curve edges
 if f_plotPolyElmtCurvedEdges == 1
     for ielno = 1:numel
-        kvno = kv_element{ielno}(2);
-        nel = kv_element{ielno}(3);
-        elmt = kv_element{ielno}(4:4+nel-1);
-        scno = kv_element{ielno}(end);
+        kvno = connectivity{ielno}(2);
+        nel = connectivity{ielno}(3);
+        elmt = connectivity{ielno}(4:3+nel);
+        scno = connectivity{ielno}(end);
         ecoor = coor( elmt(1:end), 2:3);
         sc_coor = coor( scno, 2:3);
         wg = coor( elmt(1:end), 4);
