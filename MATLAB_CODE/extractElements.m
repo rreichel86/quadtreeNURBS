@@ -29,19 +29,20 @@ function [numcoor,coor,numel,connectivity,maxnel,kv_element,kv_num,maxnk]=extrac
 %
 % -----------------------------------------------------------------------------
 
-l = Quadtree.findleaves();
-%Gives leaf numbers
+% Get Quadtree leaves
+leaves = Quadtree.findleaves();
+numleaves = length(leaves);
 
+% Get total number of elements
 [numel] = countElements(Quadtree);
-%function to get to know about total number of elements
 
-coor = cell(length(l),1);
+coor = cell(numleaves,1);
 %This will give an array for storing Quad coordinates
 
-cp_we = cell(length(l),1);
+controlPoints_coor = cell(numleaves,1);
 %Control points and it's associated weights 
 
-knot_v = cell(length(l),1);
+knotVectors = cell(numleaves,1);
 %knot vector of the NURBS in quad
 
 elements = cell(numel,1);
@@ -50,19 +51,21 @@ elements = cell(numel,1);
 connectivity = cell(numel,1);
 %connectivity matrix of elements
 
-inter_coor = cell(length(l),1);
+intersections_coor = cell(numleaves,1);
 %Cell for all the intersection coordinates that contain NURBS to in Cell
 %form
 
 j=1;
 m=1;
-for i=1:length(l)
+% loop over leaves
+for i=1:numleaves
     
     %This function will take out the intersection.parametric data from
     %Quadtree
-    intersections=Quadtree.Node{l(i),1}{5,1};
+    intersections=Quadtree.Node{leaves(i),1}{5,1};
     
-    [extract_element] = extracting_element(Quadtree,l,i);
+    [midPoints] = extracting_element(Quadtree,leaves,i);
+
     %Function to get the coordinates of neighboring element that are
     %sharing the boundary
     
@@ -70,94 +73,94 @@ for i=1:length(l)
         %if intersection data is empty then
         %there will be only Quad vertices no intersection points
         
-        quad=Quadtree.Node{l(i),1}{10,1}(1:2,1:4);
+        quad=Quadtree.Node{leaves(i),1}{10,1}(1:2,1:4);
         %Quad definition
         
-        coordinate = [quad];
+        coordinates = [quad];
         
-        cp_w = [];%control points and weight
+        cp = [];%control points and weight
         
         kv  = [];%knot vector from Quadtree
         
-        element = [quad,extract_element];%leaf coordinates from quad 
+        element = [quad,midPoints];%leaf coordinates from quad 
 %         definition and neighboring elemnt quads
         
-        inter_cor = [];%No intersectional coordinates
+        intersectionPoints = [];%No intersection points
         
-    elseif isempty(Quadtree.Node{l(i),1}{3,1})==1
+    elseif isempty(Quadtree.Node{leaves(i),1}{3,1})==1
         %if intersection.horizontal data empty then
         %only intersection.vertical and Quad data taken out
-        inter_cor=[Quadtree.Node{l(i),1}{7,1}(:,1),Quadtree.Node{l(i),1}{7,1}(:,end)];
-        %intersectional coordiantes are the 1st and last points of control
+        intersectionPoints=[Quadtree.Node{leaves(i),1}{7,1}(:,1),Quadtree.Node{leaves(i),1}{7,1}(:,end)];
+        %intersection points are the 1st and last points of control
         %points
         
-        quad=Quadtree.Node{l(i),1}{10,1}(1:2,1:4);
+        quad=Quadtree.Node{leaves(i),1}{10,1}(1:2,1:4);
          %Quad definition
          
-        cont_points=Quadtree.Node{l(i),1}{7,1};%control points from Quadtree
+        controlPoints=Quadtree.Node{leaves(i),1}{7,1};%control points from Quadtree
         
-        weights=Quadtree.Node{l(i),1}{9,1};%weights from Quadtree
+        weights=Quadtree.Node{leaves(i),1}{9,1};%weights from Quadtree
         
-        cp_w =[cont_points',weights'];%control points and weights
+        cp =[controlPoints',weights'];%control points and weights
         
-        kv  =[m,Quadtree.Node{l(i),1}{8,1}];%knot vector from Quadtree
+        kv  =[m,Quadtree.Node{leaves(i),1}{8,1}];%knot vector from Quadtree
         
         m=m+1;
         
-        coordinate=[quad,inter_cor,cont_points];
+        coordinates=[quad,intersectionPoints,controlPoints];
         
-        element = [quad,extract_element,inter_cor];%leaf coordinates from quad 
+        element = [quad,midPoints,intersectionPoints];%leaf coordinates from quad 
 %         definition,neighboring element quads and intersectional points
         
         
-    elseif isempty(Quadtree.Node{l(i),1}{4,1})==1
+    elseif isempty(Quadtree.Node{leaves(i),1}{4,1})==1
         %if intersection.vertical data empty then
         %only intersection.horizontal and Quad data taken out
         
-        inter_cor=[Quadtree.Node{l(i),1}{7,1}(:,1),Quadtree.Node{l(i),1}{7,1}(:,end)];
-        %intersectional coordiantes are the 1st and last points of control
+        intersectionPoints=[Quadtree.Node{leaves(i),1}{7,1}(:,1),Quadtree.Node{leaves(i),1}{7,1}(:,end)];
+        %intersection points are the 1st and last points of control
         %points
         
-        quad=Quadtree.Node{l(i),1}{10,1}(1:2,1:4);%Quad definition
+        quad=Quadtree.Node{leaves(i),1}{10,1}(1:2,1:4);%Quad definition
         
-        cont_points=Quadtree.Node{l(i),1}{7,1};%control points from Quadtree
+        controlPoints=Quadtree.Node{leaves(i),1}{7,1};%control points from Quadtree
         
-        weights=Quadtree.Node{l(i),1}{9,1};%weights from Quadtree
+        weights=Quadtree.Node{leaves(i),1}{9,1};%weights from Quadtree
         
-        cp_w =[cont_points',weights'];%control points and weights
+        cp =[controlPoints',weights'];%control points and weights
         
-        kv  =[m,Quadtree.Node{l(i),1}{8,1}];%knot vector from Quadtree
+        kv  =[m,Quadtree.Node{leaves(i),1}{8,1}];%knot vector from Quadtree
         
         m=m+1;
         
-        coordinate=[quad,inter_cor,cont_points];
+        coordinates=[quad,intersectionPoints,controlPoints];
         
-        element = [quad,extract_element,inter_cor];%leaf coordinates from quad 
+        element = [quad,midPoints,intersectionPoints];%leaf coordinates from quad 
 %         definition,neighboring element quads and intersectional points
         
         
     else
         %intersection.horizontal,intersection.vertical and Quad data taken
         %out
-        inter_cor=[Quadtree.Node{l(i),1}{7,1}(:,1),Quadtree.Node{l(i),1}{7,1}(:,end)];
-        %intersectional coordiantes are the 1st and last points of control
+        intersectionPoints=[Quadtree.Node{leaves(i),1}{7,1}(:,1),Quadtree.Node{leaves(i),1}{7,1}(:,end)];
+        %intersection points are the 1st and last points of control
         %points
         
-        quad=Quadtree.Node{l(i),1}{10,1}(1:2,1:4);%Quad definition
+        quad=Quadtree.Node{leaves(i),1}{10,1}(1:2,1:4);%Quad definition
         
-        cont_points=Quadtree.Node{l(i),1}{7,1};%control points from Quadtree
+        controlPoints=Quadtree.Node{leaves(i),1}{7,1};%control points from Quadtree
         
-        weights=Quadtree.Node{l(i),1}{9,1};%weights from Quadtree
+        weights=Quadtree.Node{leaves(i),1}{9,1};%weights from Quadtree
         
-        cp_w =[cont_points',weights'];%control points and weights
+        cp =[controlPoints',weights'];%control points and weights
         
-        kv  =[m,Quadtree.Node{l(i),1}{8,1}];%knot vector from Quadtree
+        kv  =[m,Quadtree.Node{leaves(i),1}{8,1}];%knot vector from Quadtree
         
         m=m+1;
         
-        coordinate=[quad,inter_cor,cont_points];
+        coordinates=[quad,intersectionPoints,controlPoints];
         
-        element = [quad,extract_element,inter_cor];%leaf coordinates from quad 
+        element = [quad,midPoints,intersectionPoints];%leaf coordinates from quad 
 %         definition,neighboring element quads and intersectional points
 
 
@@ -165,17 +168,17 @@ for i=1:length(l)
         
     end
     
-    cp_we{i} = cp_w;%control points and weights in one cell
+    controlPoints_coor{i} = cp;%control points and weights in one cell
     
-    knot_v{i}=kv;%knot vectors in one cell
+    knotVectors{i}=kv;%knot vectors in one cell
     
-    inter_coor{i}=inter_cor';%intersectional coordiantes in one cell 
+    intersections_coor{i}=intersectionPoints';%intersection points in one cell 
 %     where x and y coordinates in one row
     
-    coor{i} = coordinate;%coordinates in one cell
+    coor{i} = coordinates;%coordinates in one cell
     
     % Given element commands are to remove the -99 number and arrange the leaf coordinates
-    % (including quad,neighboring quad and intersectional coordinates)
+    % (including quad,neighboring quad and intersection points)
     % in the anticlockwise direction starting from left bottom
     element = element(element~=-99);
     ncol = size(element, 1);
@@ -199,41 +202,40 @@ for i=1:length(l)
     end
     %if int_cor empty than there is only one element that was itself leaf
     %otherwise it would be two elements
-    if isempty(inter_cor)    
+    if isempty(intersectionPoints)    
         elements{j} = [element];
         j=j+1;
     else
-        %loop for two inter_cor points to know in element definition where they exist
+        %loop for two intersectionPoints points to know in element definition where they exist
         for k=1:2
-            [b] = find ( abs(inter_cor(1,k) - element(1,:))<1e-10);
-            [d] = find (abs(inter_cor(2,k) - element(2,:))<1e-10);
+            [b] = find ( abs(intersectionPoints(1,k) - element(1,:))<1e-10);
+            [d] = find (abs(intersectionPoints(2,k) - element(2,:))<1e-10);
             col(:,k)= intersect(b,d);
         end
         %Given loop is only for the control points in Clockwise direction 
         if col(1,1) < col(1,2)
-            elements{j}=[element(:,[1:col(1,1)]),cont_points(:,[2:end-1]),element(:,[col(1,2):end])];
-            elements{j+1}=[element(:,[col(1,1):col(1,2)]),fliplr(cont_points(:,[2:end-1]))];
+            elements{j}=[element(:,[1:col(1,1)]),controlPoints(:,[2:end-1]),element(:,[col(1,2):end])];
+            elements{j+1}=[element(:,[col(1,1):col(1,2)]),fliplr(controlPoints(:,[2:end-1]))];
             
         else
-            elements{j}=[element(:,[1:col(1,2)]),fliplr(cont_points(:,[2:end-1])),element(:,[col(1,1):end])];
-            elements{j+1}=[element(:,[col(1,2):col(1,1)]),cont_points(:,[2:end-1])];   
+            elements{j}=[element(:,[1:col(1,2)]),fliplr(controlPoints(:,[2:end-1])),element(:,[col(1,1):end])];
+            elements{j+1}=[element(:,[col(1,2):col(1,1)]),controlPoints(:,[2:end-1])];   
         end
         j=j+2;
     end
 end
 
 % control points in matrix form
-cp_w = cell2mat(cp_we);
+cp = cell2mat(controlPoints_coor);
 % intersection point coordinates in matrix form
-inter_coor = cell2mat(inter_coor);
-tol=1e-10;
+intersections_coor = cell2mat(intersections_coor);
+tol = 1e-10;
 % remove repeated control points
-cp_w = uniquetol(cp_w,tol,'ByRows',true);
+cp = uniquetol(cp,tol,'ByRows',true);
 
 % coordinates in matrix form
 coor = [coor{:}]';
-% remove repeated coordinates and rearrange them by increasing x coordiante
-% value
+% remove repeated coordinates and rearrange them by increasing x-coor value
 tmp_coor = uniquetol(coor,tol,'ByRows',true);
 
 % number of coordinates without counting scaling centers
@@ -259,55 +261,61 @@ for iel = 1:numel
     coor(numcoor0+iel,2:3) = [scx,scy];
 end
 
-% coor numbers and type
-coor(:,1) = (1:numcoor) ;
+% coor numbers 
+coor(:,1) = (1:numcoor);
+% type node
 coor(:,5) = 1;
+% node is initially outside
 coor(:,7) = -1; 
 
 % delete tmp_coor
 clearvars tmp_coor
 
-%Following loop is to find the control points and assign the weights
-for k=1:length(cp_w)
-    [a] = find ( abs(coor(:,2)-cp_w(k,1))<1e-10);
-    [b] = find ( abs(coor(:,3)-cp_w(k,2))<1e-10);
+% loop over control points
+for k=1:length(cp)
+    % search control point and assign weight
+    [a] = find ( abs(coor(:,2)-cp(k,1))<1e-10);
+    [b] = find ( abs(coor(:,3)-cp(k,2))<1e-10);
     row= intersect(a,b);
     if isempty(row)~=1
-        coor(row,4) = cp_w(k,3);
+        coor(row,4) = cp(k,3);
+        % type control point
         coor(row,5) = 2;
+        % control point is on the boundary
         coor(row,7) = 0;
     end
 end
-%Following loop is to find the intersectional coordintes number that will 
-% be used to establish knot vector number matrix
-rows=zeros(size(inter_coor,1),1);
-for k=1:size(inter_coor,1)
-    [a] = find ( abs(coor(:,2)-inter_coor(k,1))<1e-10);
-    [b] = find ( abs(coor(:,3)-inter_coor(k,2))<1e-10);
-    row= intersect(a,b);
+
+
+rows=zeros(size(intersections_coor,1),1);
+% loop over intersection points
+for k=1:size(intersections_coor,1)
+    % search for intersection point in coor 
+    % and get its index
+    [a] = find ( abs(coor(:,2)-intersections_coor(k,1))<1e-10);
+    [b] = find ( abs(coor(:,3)-intersections_coor(k,2))<1e-10);
+    row = intersect(a,b);
    rows(k,1)=row; 
 end
 
-%Element w.r.t node numbers in cells by using numel
+
 maxnel = 0;
+% loop over elements
 for iel = 1:numel
-    %Following loop for giving nodes to element coordintes by using
-    %coordinates row
-    
     % number of nodes per element
     nel = size(elements{iel},2); 
+    % search for element nodal coordinates in coor
+    % and get the corresponding node numbers
     for n = 1 : nel
         [a] = find ( abs(coor(:,2) - elements{iel}(1,n))<1e-10);
         [b] = find (abs(coor(:,3) - elements{iel}(2,n))<1e-10);
-        row= intersect(a,b);
-        connectivity{iel}(1,n) = row;
+        nodeNumber= intersect(a,b);
+        connectivity{iel}(1,n) = nodeNumber;
     end
-    
     % remove repeated values without changing the order
     connectivity{iel} = unique(connectivity{iel},'stable');
     % update number of nodes per element
     nel = size(connectivity{iel},2); 
-    
     % maximum number of nodes on any element
     maxnel = max(nel,maxnel);  
     
@@ -315,7 +323,7 @@ for iel = 1:numel
     
 end
 
-[kv_element,kv_num,maxnk]=knotv_element(Quadtree,connectivity,knot_v,numel,rows);
+[kv_element,kv_num,maxnk]=knotv_element(Quadtree,connectivity,knotVectors,numel,rows);
 
 end
 
