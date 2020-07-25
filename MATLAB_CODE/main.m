@@ -108,25 +108,25 @@ if f_splittElmtIntoSec == 1
         ecoor = coor( elmt(1:end), 2:3);
         wg = coor( elmt(1:end), 4);
         if kvno ~= 0
-            nKnot = kv_num{kvno}(5);
-            pgrad = kv_num{kvno}(2);
-            knotVector = kv_num{kvno}(6:end);
-            iknot = find( elmt == kv_num{kvno}(3) );
-            eknot = find( elmt == kv_num{kvno}(4) );
+            nKnot = knotVectors{kvno}(5);
+            pgrad = knotVectors{kvno}(2);
+            knotVector = knotVectors{kvno}(6:end);
+            icp = find( elmt == knotVectors{kvno}(3) );
+            ecp = find( elmt == knotVectors{kvno}(4) );
             
-            iknot_coor = ecoor(iknot,:);
-            eknot_coor = ecoor(eknot,:);
+            icp_coor = ecoor(icp,:);
+            ecp_coor = ecoor(ecp,:);
             sc_coor = ecoor(end,:);
             % determine orientation
             % ori =  1 for CCW
             % ori = -1 for CW
-            ori = orientation(iknot_coor,eknot_coor,sc_coor);
+            ori = orientation(icp_coor,ecp_coor,sc_coor);
             
-            % swap iknot and eknot
+            % swap icp and ecp
             if ori == -1
-                temp = iknot;
-                iknot = eknot;
-                eknot = temp;
+                temp = icp;
+                icp = ecp;
+                ecp = temp;
             end
             
             
@@ -149,10 +149,10 @@ if f_splittElmtIntoSec == 1
             end
 
         % plot polygon that have curve edges
-        elseif kvno ~= 0 && iknot < eknot && iknot == 1
+        elseif kvno ~= 0 && icp < ecp && icp == 1
             ii = 1;
             while ii <= nel
-                if (ii == eknot) && (iknot == 1)
+                if (ii == ecp) && (icp == 1)
                     a = ii;
                     b = 1;
                     ii = ii + pgrad - 1;
@@ -170,10 +170,10 @@ if f_splittElmtIntoSec == 1
                 hold on
                 ii = ii + 1;
             end
-        elseif kvno ~= 0 && iknot < eknot && iknot ~= 1
+        elseif kvno ~= 0 && icp < ecp && icp ~= 1
             ii = 1;
             while ii <= nel
-                if ii == iknot
+                if ii == icp
                     a = ii;
                     b = ii + pgrad;
                     ii = ii + pgrad - 1;
@@ -191,10 +191,10 @@ if f_splittElmtIntoSec == 1
                 hold on
                 ii = ii + 1;
             end
-        elseif kvno ~= 0 && iknot > eknot && eknot == 1
+        elseif kvno ~= 0 && icp > ecp && ecp == 1
             ii = 1;
             while ii <= nel
-                if (ii == iknot) && (eknot == 1)
+                if (ii == icp) && (ecp == 1)
                     a = ii;
                     b = 1;
                     ii = ii + pgrad - 1;
@@ -213,10 +213,10 @@ if f_splittElmtIntoSec == 1
                 ii = ii + 1;
             end
 
-        elseif kvno ~= 0 && iknot > eknot && eknot ~= 1
+        elseif kvno ~= 0 && icp > ecp && ecp ~= 1
             ii = 1;
             while ii <= nel
-                if ii == eknot
+                if ii == ecp
                     a = ii;
                     b = ii + pgrad;
                     ii = ii + pgrad - 1;
@@ -269,11 +269,11 @@ if f_plotPolyElmtCurvedEdges == 1
         sc_coor = coor( scno, 2:3);
         wg = coor( elmt(1:end), 4);
         if kvno ~= 0
-            nKnot = kv_num{kvno}(5);
-            pgrad = kv_num{kvno}(2);
-            knotVector = kv_num{kvno}(6:end);
-            iknot = find( elmt == kv_num{kvno}(3) );
-            eknot = find( elmt == kv_num{kvno}(4) );
+            nKnot = knotVectors{kvno}(5);
+            pgrad = knotVectors{kvno}(2);
+            knotVector = knotVectors{kvno}(6:end);
+            icp = find( elmt == knotVectors{kvno}(3) );
+            ecp = find( elmt == knotVectors{kvno}(4) );
         end
         
         % plot polygon that dont have curve edges
@@ -294,10 +294,10 @@ if f_plotPolyElmtCurvedEdges == 1
             patch(ecoor(:,1),ecoor(:,2), 'green','FaceAlpha',.5)
             
         % plot polygon that dont have curve edges
-        elseif kvno ~= 0 && iknot < eknot && iknot == 1
+        elseif kvno ~= 0 && icp < ecp && icp == 1
             ii = 1;
             while ii <= nel
-                if (ii == eknot) && (iknot == 1)
+                if (ii == ecp) && (icp == 1)
                     a = ii;
                     b = 1;
                     ii = ii + (nKnot-1)-pgrad-2;
@@ -316,10 +316,10 @@ if f_plotPolyElmtCurvedEdges == 1
                 ii = ii + 1;
             end
             
-        elseif kvno ~= 0 && iknot < eknot && iknot ~= 1
+        elseif kvno ~= 0 && icp < ecp && icp ~= 1
             ii = 1;
             while ii <= nel
-                if ii == iknot
+                if ii == icp
                     a = ii;
                     b = ii + (nKnot-1)-pgrad-1;
                     ii = ii + (nKnot-1)-pgrad-2;
@@ -338,10 +338,10 @@ if f_plotPolyElmtCurvedEdges == 1
                 ii = ii + 1;
             end
             
-        elseif kvno ~= 0 && iknot > eknot && eknot == 1
+        elseif kvno ~= 0 && icp > ecp && ecp == 1
             ii = 1;
             while ii <= nel
-                if (ii == iknot) && (eknot == 1)
+                if (ii == icp) && (ecp == 1)
                     a = ii;
                     b = 1;
                     ii = ii + (nKnot-1)-pgrad-2;
@@ -360,10 +360,10 @@ if f_plotPolyElmtCurvedEdges == 1
                 ii = ii + 1;
             end
             
-        elseif kvno ~= 0 && iknot > eknot && eknot ~= 1
+        elseif kvno ~= 0 && icp > ecp && ecp ~= 1
             ii = 1;
             while ii <= nel
-                if ii == eknot
+                if ii == ecp
                     a = ii;
                     b = ii +  (nKnot-1)-pgrad-1;
                     ii = ii + (nKnot-1)-pgrad-2;
