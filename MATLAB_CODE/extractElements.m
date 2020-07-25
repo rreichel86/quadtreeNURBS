@@ -1,10 +1,11 @@
-function [coor,connectivity,numcoor,maxnel,numel,kv_element,kv_num,maxnk]=extractElements(Quadtree)
+function [numcoor,coor,numel,connectivity,maxnel,kv_element,kv_num,maxnk]=extractElements(Quadtree)
 % extractElements: get polygonal elements from Quadtree data structure
 %
 % INPUT:
 % Quadtree Data
 %
 % OUTPUT:
+% numcoor -------------------- number of coordinates = number of nodes
 % coor ----------------------- nodes coordinates and weights 
 % coor = [number, x-coor, y-coor, weight, type, which_region, inside_region]
 %
@@ -15,13 +16,15 @@ function [coor,connectivity,numcoor,maxnel,numel,kv_element,kv_num,maxnk]=extrac
 %                                             1 - inside 
 %                                            -1 - outside
 %
-% connectivity --------------- elements connectivity matrix as nel-tupel of 
-%                              nodes, where nel is the number of nodes per elmt
-% connectivity = [number, nel, node_1,...,node_nel, scaling_center]
-%
-% numcoor -------------------- number of coordinates = number of nodes
-% maxnel --------------------- maximum number of nodes on any element
 % numel ---------------------- number of elements
+% connectivity --------------- elements connectivity matrix as nel-tupel of 
+%                              nodes, where the first three entries
+%                              iel - element number
+%                              ikv - knot vector number
+%                              nel - number of nodes per element
+%
+% connectivity = [iel, ikv, nel, node_1,...,node_nel, scaling_center]
+% maxnel --------------------- maximum number of nodes on any element
 %
 %
 % -----------------------------------------------------------------------------
