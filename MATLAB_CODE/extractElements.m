@@ -286,7 +286,7 @@ for iel = 1:numel
     % remove repeated values without changing the order
     connectivity{iel}(1,4:end) = unique(connectivity{iel}(1,4:end),'stable');
     % update number of nodes per element
-    nel = size(connectivity{iel},2); 
+    nel = size(connectivity{iel}(4:end),2); 
     connectivity{iel}(1,3) = nel;
     % maximum number of nodes on any element
     maxnel = max(nel,maxnel);  
