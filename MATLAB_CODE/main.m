@@ -124,6 +124,11 @@ for ielno = 1:numel
     maxnsec = max(maxnsec,nsec);
 end
 
+% sections = [isec, ikv, nsec, node_1,...,node_nsec]
+sections = zeros(numsec, maxnsec + 3);
+
+
+isec = 0;
 if f_splittElmtIntoSec == 1
     for ielno = 1:numel
         kvno = connectivity{ielno}(2);
@@ -179,8 +184,13 @@ if f_splittElmtIntoSec == 1
                     b = 1;
                 end
                 idx = [a,b,nel+1];
+                
+                isec = isec + 1;
+                sections(isec,1) = isec;
+                sections(isec,2) = 0;
+                sections(isec,3) = 3;
+                sections(isec,4:6) = elmt(idx);
                 patch(ecoor(idx,1).', ecoor(idx,2).', color, 'FaceAlpha',.5)
-
                 hold on
             end
 
@@ -193,14 +203,32 @@ if f_splittElmtIntoSec == 1
                     b = 1;
                     ii = ii + ncp-2;
                     idx = [a:nel,1,nel+1];
+                    
+                    isec = isec + 1;
+                    sections(isec,1) = isec;
+                    sections(isec,2) = kvno;
+                    sections(isec,3) = ncp + 1;
+                    sections(isec,4:4+ncp) = elmt(idx);
                 elseif ii ~= nel
                     a = ii;
                     b = ii+1;
                     idx = [a,b,nel+1];
+                    
+                    isec = isec + 1;
+                    sections(isec,1) = isec;
+                    sections(isec,2) = 0;
+                    sections(isec,3) = 3;
+                    sections(isec,4:6) = elmt(idx);
                 elseif ii == nel
                     a = nel;
                     b = 1;
                     idx = [a,b,nel+1];
+                    
+                    isec = isec + 1;
+                    sections(isec,1) = isec;
+                    sections(isec,2) = 0;
+                    sections(isec,3) = 3;
+                    sections(isec,4:6) = elmt(idx);
                 end
                 patch(ecoor(idx,1).', ecoor(idx,2).', color, 'FaceAlpha',.5)
                 hold on
@@ -214,14 +242,32 @@ if f_splittElmtIntoSec == 1
                     b = ii + ncp-1;
                     ii = ii + ncp-2;
                     idx = [a:b,nel+1];
+                    
+                    isec = isec + 1;
+                    sections(isec,1) = isec;
+                    sections(isec,2) = kvno;
+                    sections(isec,3) = ncp + 1;
+                    sections(isec,4:4+ncp) = elmt(idx);
                 elseif ii ~= nel
                     a = ii;
                     b = ii+1;
                     idx = [a,b,nel+1];
+                    
+                    isec = isec + 1;
+                    sections(isec,1) = isec;
+                    sections(isec,2) = 0;
+                    sections(isec,3) = 3;
+                    sections(isec,4:6) = elmt(idx);
                 elseif ii == nel
                     a = nel;
                     b = 1;
                     idx = [a,b,nel+1];
+                    
+                    isec = isec + 1;
+                    sections(isec,1) = isec;
+                    sections(isec,2) = 0;
+                    sections(isec,3) = 3;
+                    sections(isec,4:6) = elmt(idx);
                 end
                 patch(ecoor(idx,1).', ecoor(idx,2).', color, 'FaceAlpha',.5)
                 hold on
@@ -235,14 +281,32 @@ if f_splittElmtIntoSec == 1
                     b = 1;
                     ii = ii + ncp-2;
                     idx = [a:nel,1,nel+1];
+                    
+                    isec = isec + 1;
+                    sections(isec,1) = isec;
+                    sections(isec,2) = 0;
+                    sections(isec,3) = ncp + 1;
+                    sections(isec,4:4+ncp) = elmt(idx);
                 elseif ii ~= nel
                     a = ii;
                     b = ii+1;
                     idx = [a,b,nel+1];
+                    
+                    isec = isec + 1;
+                    sections(isec,1) = isec;
+                    sections(isec,2) = 0;
+                    sections(isec,3) = 3;
+                    sections(isec,4:6) = elmt(idx);
                 elseif ii == nel
                     a = nel;
                     b = 1;
                     idx = [a,b,nel+1];
+                    
+                    isec = isec + 1;
+                    sections(isec,1) = isec;
+                    sections(isec,2) = 0;
+                    sections(isec,3) = 3;
+                    sections(isec,4:6) = elmt(idx);
                 end
                 patch(ecoor(idx,1).', ecoor(idx,2).', color, 'FaceAlpha',.5)
                 hold on
@@ -257,14 +321,32 @@ if f_splittElmtIntoSec == 1
                     b = ii +  ncp-1;
                     ii = ii + ncp-2;
                     idx = [a:b,nel+1];
+                    
+                    isec = isec + 1;
+                    sections(isec,1) = isec;
+                    sections(isec,2) = kvno;
+                    sections(isec,3) = ncp + 1;
+                    sections(isec,4:4+ncp) = elmt(idx);
                 elseif ii ~= nel
                     a = ii;
                     b = ii+1;
                     idx = [a,b,nel+1];
+                    
+                    isec = isec + 1;
+                    sections(isec,1) = isec;
+                    sections(isec,2) = 0;
+                    sections(isec,3) = 3;
+                    sections(isec,4:6) = elmt(idx);
                 elseif ii == nel
                     a = nel;
                     b = 1;
                     idx = [a,b,nel+1];
+                    
+                    isec = isec + 1;
+                    sections(isec,1) = isec;
+                    sections(isec,2) = 0;
+                    sections(isec,3) = 3;
+                    sections(isec,4:6) = elmt(idx);
                 end
                 patch(ecoor(idx,1).', ecoor(idx,2).', color, 'FaceAlpha',.5)
                 hold on
