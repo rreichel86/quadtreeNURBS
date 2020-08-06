@@ -126,6 +126,10 @@ end
 
 % sections = [isec, ikv, nsec, node_1,...,node_nsec]
 sections = zeros(numsec, maxnsec + 3);
+% knots = [ikv, nknots, knot_1,...,knot_nknots]
+knots = zeros(numKnotVectors, maxnknots + 2);
+% ord = [isec, ikv, pgrad, qgrad]
+ord = zeros(numsec, 4);
 
 
 isec = 0;
@@ -139,10 +143,12 @@ if f_splittElmtIntoSec == 1
         if kvno ~= 0
             nKnot = knotVectors{kvno}(5);
             pgrad = knotVectors{kvno}(2);
-            knotVector = knotVectors{kvno}(6:end);
             icp = find( elmt == knotVectors{kvno}(3) );
             ecp = find( elmt == knotVectors{kvno}(4) );
             
+            knots(kvno,1) = kvno;
+            knots(kvno,3) = nKnot;
+            knots(kvno,3:2+nKnot) = knotVectors{kvno}(6:end);
             
             ncp = (nKnot - 1) - pgrad;
             
@@ -153,17 +159,13 @@ if f_splittElmtIntoSec == 1
             % ori =  1 for CCW
             % ori = -1 for CW
             ori = orientation(icp_coor,ecp_coor,sc_coor);
-            
             % swap icp and ecp
             if ori == -1
                 temp = icp;
                 icp = ecp;
                 ecp = temp;
-            end
-            
-            
+            end            
         end
-        
         % determine if a polygonal element is
         % inside or outside the region enclosed 
         % by the NURBS curve
@@ -190,6 +192,9 @@ if f_splittElmtIntoSec == 1
                 sections(isec,2) = 0;
                 sections(isec,3) = 3;
                 sections(isec,4:6) = elmt(idx);
+                
+                ord(isec,:) = [isec,0,1,1];
+                
                 patch(ecoor(idx,1).', ecoor(idx,2).', color, 'FaceAlpha',.5)
                 hold on
             end
@@ -209,6 +214,9 @@ if f_splittElmtIntoSec == 1
                     sections(isec,2) = kvno;
                     sections(isec,3) = ncp + 1;
                     sections(isec,4:4+ncp) = elmt(idx);
+                    
+                    ord(isec,:) = [isec,kvno,pgrad,1];
+                
                 elseif ii ~= nel
                     a = ii;
                     b = ii+1;
@@ -219,6 +227,9 @@ if f_splittElmtIntoSec == 1
                     sections(isec,2) = 0;
                     sections(isec,3) = 3;
                     sections(isec,4:6) = elmt(idx);
+                    
+                    ord(isec,:) = [isec,0,1,1];
+                    
                 elseif ii == nel
                     a = nel;
                     b = 1;
@@ -229,6 +240,9 @@ if f_splittElmtIntoSec == 1
                     sections(isec,2) = 0;
                     sections(isec,3) = 3;
                     sections(isec,4:6) = elmt(idx);
+                    
+                    ord(isec,:) = [isec,0,1,1];
+                    
                 end
                 patch(ecoor(idx,1).', ecoor(idx,2).', color, 'FaceAlpha',.5)
                 hold on
@@ -248,6 +262,9 @@ if f_splittElmtIntoSec == 1
                     sections(isec,2) = kvno;
                     sections(isec,3) = ncp + 1;
                     sections(isec,4:4+ncp) = elmt(idx);
+                    
+                    ord(isec,:) = [isec,kvno,pgrad,1];
+                    
                 elseif ii ~= nel
                     a = ii;
                     b = ii+1;
@@ -258,6 +275,9 @@ if f_splittElmtIntoSec == 1
                     sections(isec,2) = 0;
                     sections(isec,3) = 3;
                     sections(isec,4:6) = elmt(idx);
+                    
+                    ord(isec,:) = [isec,0,1,1];
+                    
                 elseif ii == nel
                     a = nel;
                     b = 1;
@@ -268,6 +288,9 @@ if f_splittElmtIntoSec == 1
                     sections(isec,2) = 0;
                     sections(isec,3) = 3;
                     sections(isec,4:6) = elmt(idx);
+                    
+                    ord(isec,:) = [isec,0,1,1];
+                    
                 end
                 patch(ecoor(idx,1).', ecoor(idx,2).', color, 'FaceAlpha',.5)
                 hold on
@@ -287,6 +310,9 @@ if f_splittElmtIntoSec == 1
                     sections(isec,2) = 0;
                     sections(isec,3) = ncp + 1;
                     sections(isec,4:4+ncp) = elmt(idx);
+                    
+                    ord(isec,:) = [isec,kvno,pgrad,1];
+                    
                 elseif ii ~= nel
                     a = ii;
                     b = ii+1;
@@ -297,6 +323,9 @@ if f_splittElmtIntoSec == 1
                     sections(isec,2) = 0;
                     sections(isec,3) = 3;
                     sections(isec,4:6) = elmt(idx);
+                    
+                    ord(isec,:) = [isec,0,1,1];
+                    
                 elseif ii == nel
                     a = nel;
                     b = 1;
@@ -307,6 +336,9 @@ if f_splittElmtIntoSec == 1
                     sections(isec,2) = 0;
                     sections(isec,3) = 3;
                     sections(isec,4:6) = elmt(idx);
+                    
+                    ord(isec,:) = [isec,0,1,1];
+                    
                 end
                 patch(ecoor(idx,1).', ecoor(idx,2).', color, 'FaceAlpha',.5)
                 hold on
@@ -327,6 +359,9 @@ if f_splittElmtIntoSec == 1
                     sections(isec,2) = kvno;
                     sections(isec,3) = ncp + 1;
                     sections(isec,4:4+ncp) = elmt(idx);
+                    
+                    ord(isec,:) = [isec,kvno,pgrad,1];
+                    
                 elseif ii ~= nel
                     a = ii;
                     b = ii+1;
@@ -337,6 +372,9 @@ if f_splittElmtIntoSec == 1
                     sections(isec,2) = 0;
                     sections(isec,3) = 3;
                     sections(isec,4:6) = elmt(idx);
+                    
+                    ord(isec,:) = [isec,0,1,1];
+                    
                 elseif ii == nel
                     a = nel;
                     b = 1;
@@ -347,6 +385,9 @@ if f_splittElmtIntoSec == 1
                     sections(isec,2) = 0;
                     sections(isec,3) = 3;
                     sections(isec,4:6) = elmt(idx);
+                    
+                    ord(isec,:) = [isec,0,1,1];
+                    
                 end
                 patch(ecoor(idx,1).', ecoor(idx,2).', color, 'FaceAlpha',.5)
                 hold on
