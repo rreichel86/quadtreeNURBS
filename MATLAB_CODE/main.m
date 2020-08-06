@@ -100,6 +100,30 @@ if f_plotLeaves == 1
 end
    
 %% Splitt polygonal elements into section
+
+% apply funtion to the 5. and 2. entry of knotVectors cell array. 
+% This entries correspond to the degree of the curve and the
+% number of knots, respectively.
+% ncpoints = (nknot-1) - degree
+ncpoints = cellfun(@(x) (x(5)-1)-x(2), knotVectors(1:numKnotVectors));
+
+% compute number of sections and max number of node on any section 
+numsec = 0; % number of section 
+maxnsec = 0; % max number of nodes on any section
+for ielno = 1:numel
+    ikv = connectivity{ielno}(2);
+    nel = connectivity{ielno}(3);
+    if ikv ~= 0
+       ncp = ncpoints(ikv); 
+       numsec = numsec + nel - ncp + 2;
+       nsec = ncp + 1;
+    else
+       numsec = numsec + nel;
+       nsec = 3;
+    end
+    maxnsec = max(maxnsec,nsec);
+end
+
 if f_splittElmtIntoSec == 1
     for ielno = 1:numel
         kvno = connectivity{ielno}(2);
