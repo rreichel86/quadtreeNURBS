@@ -138,6 +138,9 @@ if f_splittElmtIntoSec == 1
             icp = find( elmt == knotVectors{kvno}(3) );
             ecp = find( elmt == knotVectors{kvno}(4) );
             
+            
+            ncp = (nKnot - 1) - pgrad;
+            
             icp_coor = ecoor(icp,:);
             ecp_coor = ecoor(ecp,:);
             sc_coor = ecoor(end,:);
@@ -188,7 +191,7 @@ if f_splittElmtIntoSec == 1
                 if (ii == ecp) && (icp == 1)
                     a = ii;
                     b = 1;
-                    ii = ii + (nKnot-1)-pgrad-2;
+                    ii = ii + ncp-2;
                     idx = [a:nel,1,nel+1];
                 elseif ii ~= nel
                     a = ii;
@@ -208,8 +211,8 @@ if f_splittElmtIntoSec == 1
             while ii <= nel
                 if ii == icp
                     a = ii;
-                    b = ii + (nKnot-1)-pgrad-1;
-                    ii = ii + (nKnot-1)-pgrad-2;
+                    b = ii + ncp-1;
+                    ii = ii + ncp-2;
                     idx = [a:b,nel+1];
                 elseif ii ~= nel
                     a = ii;
@@ -230,7 +233,7 @@ if f_splittElmtIntoSec == 1
                 if (ii == icp) && (ecp == 1)
                     a = ii;
                     b = 1;
-                    ii = ii + (nKnot-1)-pgrad-2;
+                    ii = ii + ncp-2;
                     idx = [a:nel,1,nel+1];
                 elseif ii ~= nel
                     a = ii;
@@ -251,8 +254,8 @@ if f_splittElmtIntoSec == 1
             while ii <= nel
                 if ii == ecp
                     a = ii;
-                    b = ii +  (nKnot-1)-pgrad-1;
-                    ii = ii + (nKnot-1)-pgrad-2;
+                    b = ii +  ncp-1;
+                    ii = ii + ncp-2;
                     idx = [a:b,nel+1];
                 elseif ii ~= nel
                     a = ii;
