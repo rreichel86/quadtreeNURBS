@@ -37,22 +37,22 @@ while i<=length(Quadtree.Node)
     % if we have a NW Quad. Check_ functions compare the number of sons' 
     % generations for a current NW quad with it's neighbours and calls 
     % eventually the decomposition function
-    if P==[1 1]
+    if P(1) == 1 && P(2) ==  1
     [Quadtree,update_Location]=Check_NW(Quadtree, controlPoints,...
       knots, weights, degree,i,Location,nSons,Loc_Current,Boundary);   
     end    
     %if we have a SW Quad
-    if P==[2 1]
+    if P(1) == 2 && P(2) ==  1   
     [Quadtree,update_Location]=Check_SW(Quadtree, controlPoints,...
       knots, weights, degree,i,Location,nSons,Loc_Current,Boundary);
     end
     %if we have a NE Quad
-    if P==[1 2]
+    if P(1) == 1 && P(2) ==  2  
     [Quadtree,update_Location]=Check_NE(Quadtree, controlPoints,...
       knots, weights, degree,i,Location,nSons,Loc_Current,Boundary);
     end
     %if we have a SE Quad
-    if P==[2 2]
+    if P(1) == 2 && P(2) ==  2 
     [Quadtree,update_Location]=Check_SE(Quadtree, controlPoints,...
       knots, weights, degree,i,Location,nSons,Loc_Current,Boundary);
     end 
