@@ -11,7 +11,7 @@ function [s,flag] = findinterval(cond3,idx, index,degree,knots,...
 %
 % Input: 
 % cond3: x/y coordinate of the quad edge
-% index: array containing the indixes of the control poligon
+% index: array containing the indixes of the control polygon
 % Definition of the NURBS
 % Geometrical definition of the quad's segment
 % Output:
