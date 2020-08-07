@@ -4,7 +4,7 @@ clc;
 config;
 
 % Select example
-example_nro = 2;
+example_nro = 7;
 %      Nr.     |      Description        |    Section     
 %---------------------------------------------------------
 %       1      |       Moby-Dick         |      3         
@@ -18,7 +18,7 @@ example_nro = 2;
 
 % Plot options
 f_plotLeaves = 0; % Plots the NURBS contained in each leaf separately
-f_plotPolyElmt = 1; % Plot polygonal elements
+f_plotPolyElmt = 0; % Plot polygonal elements
 f_plotPolyElmtCurvedEdges = 0; % Plot polygonal elements curve edges
 f_splittElmtIntoSec = 0; % Splitt polygonal elements into section
 
