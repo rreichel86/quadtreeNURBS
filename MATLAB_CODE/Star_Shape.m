@@ -35,13 +35,6 @@ for i = 1:length(leaves)
             leaves(i) = 0; % delete Quad from the list
             continue
         end
-        % if algorithm 1 fails use algorithm 2
-        % check if the 2 Quad subregions are star-shaped
-        [Quadtree] = starAlgorithm2(Quadtree,leaves(i));
-        if ~isempty(Quadtree.Node{leaves(i),1}{12,1}) && ~isempty(Quadtree.Node{leaves(i),1}{13,1})
-            leaves(i) = 0; % delete Quad from the list
-            continue
-        end 
     end
 end
 % update leaves 
