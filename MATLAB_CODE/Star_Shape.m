@@ -1,4 +1,4 @@
-function [Quadtree]=Star_Shape(Quadtree, controlPoints, knots, weights, degree, Boundary, leaves)
+function [Quadtree] = Star_Shape(Quadtree, controlPoints, knots, weights, degree, Boundary, leaves)
 % Star_Shape: Check if Quadtree leaves are star-shaped. Only the Quadtree 
 % leaves that are splitted by the NURBS curve are checked. 
 %
@@ -26,12 +26,12 @@ for i = 1:length(leaves)
     intersections=Quadtree.Node{leaves(i),1}{5,1};
     % Quadtree leaves with 0 or 1 intersection
     if isempty(intersections) || length(intersections) == 1
-        leaves(i) = 0;      
+        leaves(i) = 0;
     else  % Quadtree leaves with 2 intersections 
         % use algorithm 1
         % check if the 2 Quad subregions are star-shaped
-        [Quadtree] = starAlgorithm1(Quadtree,leaves(i));
-        if ~isempty(Quadtree.Node{leaves(i),1}{12,1}) && ~isempty(Quadtree.Node{leaves(i),1}{13,1})
+        [star_shaped, Quadtree] = starAlgorithm1(Quadtree,leaves(i));
+        if star_shaped == 1
             leaves(i) = 0; % delete Quad from the list
             continue
         end

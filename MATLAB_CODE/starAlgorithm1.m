@@ -1,74 +1,104 @@
-function [Quadtree]=starAlgorithm1(Quadtree,f)
-
-% starAlgorithm1 finds kernels of a quadtree leaf
-% using the coresponding control polygon in the quad
-% for splitting into 2 subdomains
-
-% Input: 
-% Quadtree 
-% f: current leaf to be searched for kernel
-
-% Output: 
-% Quadtree: updated Quadtree, containing the coordinates of vertices of the
-% kernels at rows 12 and 13 for each leaf node in Quadtree
-
-% first obtain the control polygon and store in variable "points"
-points=round(Quadtree.Node{f,1}{7,1},5); % Store CPs in variable
-
-% Obtain intersections of control polygon with quad from data tree
-Int = [Quadtree.Node{f,1}{3,1}, Quadtree.Node{f,1}{4,1}];
-Int = round(Int,5);
-
-% Store coordinates of current quad in variable
-Quad_current = Quadtree.Node{f,1}{10,1}(:,1:length(Quadtree.Node{f,1}{10,1})-1);
-Quad_current = round(Quad_current,5);
-
-% Call the function starSplitPolygons, which will obtain the 2 subdomains
-% after their separation by the control polygon
-[polygon1, polygon2] = starSplitPolygons(Quad_current,points,Int);
-
-% Plot Leaves and control polygon
-% figure(7);
-% hold on
-% plot(points(1,:),points(2,:),'black')
-% Quad_current_closed = [Quad_current, Quad_current(:,1)];
-% plot(Quad_current_closed(1,:),Quad_current_closed(2,:),'black', 'LineWidth', 1.5)
-% title('Leaves and control polygon')
-
-% PLot polygons 1 and 2 in different colors
-% polygon1_closed = [polygon1, polygon1(:,1)];
-% polygon2_closed = [polygon2, polygon2(:,1)];
-% figure(8);
-% hold on
-% plot(polygon1_closed(1,:),polygon1_closed(2,:),'red')
-% plot(polygon2_closed(1,:),polygon2_closed(2,:),'green')
-% title('Polygon 1 and 2')
-
-% Runnung the kernel search for polygon 1 & 2
-K1 = starShapedCheck(polygon1);
-K2 = starShapedCheck(polygon2);
-
-% Plot the kernels 1 and 2 in different colors
-% figure(9)
-% hold on;
-% color_fill = [1.0000    0.3608    0.3608];
-% if ~isempty(K1)
-%     K1_closed = [K1, K1(:,1)];
-%     fill(K1_closed(1,:),K1_closed(2,:),'red')
-% end
-% if ~isempty(K2)
-%     K2_closed = [K2, K2(:,1)];
-%     fill(K2_closed(1,:),K2_closed(2,:),'green')
-% end
-% title('K1 and K2')
+function [star_shaped, Quadtree] = starAlgorithm1(Quadtree,idx)
+% starAlgorithm1: compute kernels of a Quadtree leaf
+% Only for Quadtree leaves that are splitted by the NURBS curve
 %
+% INPUT: 
+% Quadtree ------------------- Quadtree data structure
+% idx ------------------------ current leaf index
+%
+% OUTPUT: 
+% Quadtree ------------------- updated Quadtree data structure
+% star_shaped ---------------- 1: if and only ig both Quad subregions are 
+%                                 star-shaped
+%                              0: otherwise
+%
+% -------------------------------------------------------------------------
 
-% Store K1 and K2 in Quadtree
-data=Quadtree.Node{f,1};
-data{12}=K1;
-data{13}=K2;
-Quadtree = Quadtree.set(f, data);
+tol = 1e-10;
+% Quad vertices
+vertices = Quadtree.Node{idx,1}{10,1}(:,1:end-1)';
+% control points
+controlPoints = Quadtree.Node{idx,1}{7,1}';
+nControlPoints = size(controlPoints,1);
+% vertical intersections [left; right] 
+vertIntrsc = Quadtree.Node{idx,1}{4,1}';
+nVertIntrsc = size(vertIntrsc,1);
+% horizontal intersections [bottom; top]
+horzIntrsc = Quadtree.Node{idx,1}{3,1}';
+nHorzIntrsc = size(horzIntrsc,1);
+% intersections
+intrsc = [horzIntrsc;vertIntrsc];
 
+% Quad left corner
+Qxmin = min(vertices(:,1));
+Qymin = min(vertices(:,2));
+
+% intersection points indices
+iintrsc = zeros(2,1);
+poly = zeros(9,2) - 99;
+poly(1:2:8,:) = vertices;
+poly(9,:) = vertices(1,:);
+
+if nVertIntrsc == 2
+    poly(4,:) = intrsc(2,:);
+    poly(8,:) = intrsc(1,:); 
+    iintrsc = [4,8];
+elseif nHorzIntrsc == 2
+    poly(2,:) = intrsc(1,:); 
+    poly(6,:) = intrsc(2,:);
+    iintrsc = [2,6];
+else
+    % horizontal intersection
+    if abs(intrsc(1,2) - Qymin) < tol % bottom 
+        poly(2,:) = intrsc(1,:);
+        iintrsc(1) = 2;
+    else % top
+        poly(6,:) = intrsc(1,:);
+        iintrsc(1) = 6;
+    end
+    % vertical intersection
+    if abs(intrsc(2,1) - Qxmin) < tol % left 
+        poly(8,:) = intrsc(2,:);
+        iintrsc(2) = 8;
+    else % right
+        poly(4,:) = intrsc(2,:);
+        iintrsc(2) = 4;
+    end
+end
+
+% swap intersection points indices
+if iintrsc(1) > iintrsc(2) 
+    tmp = iintrsc(1);
+    iintrsc(1) = iintrsc(2);
+    iintrsc(2) = tmp;
+end
+
+% insert control point
+if norm( poly(iintrsc(1),:) - controlPoints(1,:) ) < tol 
+    polygon_1 = [poly(1:iintrsc(1),:);...
+                 controlPoints(2:end-1,:);...
+                 poly(iintrsc(2):end,:)];
+             
+    polygon_2 = [poly(iintrsc(1):iintrsc(2),:);...
+                 controlPoints(end-1:-1:1,:);...
+                ];
+else
+    polygon_1 = [poly(1:iintrsc(1),:);...
+                 controlPoints(end-1:-1:2,:);...
+                 poly(iintrsc(2):end,:)];
+             
+    polygon_2 = [poly(iintrsc(1):iintrsc(2),:);...
+                 controlPoints(2:end,:);...
+                ];
+end
+
+polygon_1 = polygon_1(polygon_1(:,1) ~= -99,:);
+polygon_2 = polygon_2(polygon_2(:,1) ~= -99,:);
+
+% Compute polygons kernel
+K1 = computePolygonKernel(polygon_1);
+K2 = computePolygonKernel(polygon_2);
+star_shaped = ~isempty(K1) && ~isempty(K2);
 end
 
 
