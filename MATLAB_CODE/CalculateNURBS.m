@@ -1,21 +1,25 @@
 function NURBS = CalculateNURBS(degree,knots,controlPoints,weights)
-%This function gives as output a NURBS matrix corresponding:
-%1st row: x coordinates physical space
-%2nd row: y coordinates physical space
-%3rd row: parametrical coordinates
-%Input: parameters that define the NURBS 
+% CalculateNURBS: Compute NURBS Curve points 
+%
+% INPUT:
+% degree --------------------- NURBS degree
+% knots ---------------------- NURBS knot vector
+% controlPoints -------------- NURBS control points 
+% weights -------------------- NURBS weights
+%
+% OUTPUT:
+% NURBS Curve points, where 
+% 1st column ----------------- x coordinates
+% 2nd column ----------------- y coordinates
+% 3rd column ----------------- parametric coordinates
+%
+% -------------------------------------------------------------------------
 
-n=length(controlPoints)-1; %number of knot spans
+n = length(controlPoints)-1;
 subs = knots(1):(knots(end)-knots(1))*0.001:knots(end);
-
 NURBS = zeros(length(subs),3);
 
 for i = 1:length(subs)
-    %loop over parametrical space defined by knot vector
-    %obtain each coordinate of the NURBS and store it 
-    [f] = curvePoint(n,degree,knots,controlPoints,subs(i),weights);
-    
-    NURBS(i,:) = [f(1);f(2);subs(i)];
-    
-    
+    f = curvePoint(n,degree,knots,controlPoints,subs(i),weights);
+    NURBS(i,:) = [f;subs(i)];
 end
