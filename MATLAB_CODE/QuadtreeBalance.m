@@ -200,22 +200,6 @@ else
 end
 end
 
-function nSubdivs = countSubdivs(references,refQ)
-
-% current Quad level
-levelQ = length(refQ);
-% get Quad, that are at least at the same depth
-idx = cellfun('length',references) >= levelQ;
-filterRef = references(idx);
-idx = cellfun(@(x) isequal(x(1:levelQ),refQ),filterRef);
-% list descendents
-descendents = filterRef(idx);
-% check how many descendents
-[~,d] = cellfun(@size,descendents);
-nSubdivs = max(d)-levelQ;
-
-end
-
 
 function locQ = ref2loc(refQ)
 
