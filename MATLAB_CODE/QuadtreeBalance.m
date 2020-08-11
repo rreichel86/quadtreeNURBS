@@ -11,7 +11,6 @@ references{1} = [];
 idxLeaves = Quadtree.findleaves';
 numLeaves = length(Leaves);
 
-%for l = 1 : numLeaves
 l = 1;
 while l <= numLeaves
     
