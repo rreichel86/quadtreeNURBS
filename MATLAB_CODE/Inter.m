@@ -20,7 +20,6 @@ tol = 1e-10;
 jk=[];
 index=[];
 n=length(knots)-degree-2;
-num_inter = 0;
 num_jk=0;
 
 % First we obtain if there is an intersection between an control poligon
@@ -77,10 +76,10 @@ for i = 1:num_inter
         idx2 = 2;
         
     end
-    % findinterval scans the part of the NURBS controlled by the control
+    % findIntrscApprox scans the part of the NURBS controlled by the control
     % points that define the intersected segment. It obtains the first
     % approximation of the solution as output (jj)
-    [jj,flag] = findinterval( cond3,idx2, index((2*i-1):2*i),degree,knots,...
+    [jj,flag] = findIntrscApprox(cond3,idx2, index((2*i-1):2*i),degree,knots,...
         controlPoints,weights,x1,x2,y1,y2,jk);
     if flag==1
         num_jk = num_jk + 1;
