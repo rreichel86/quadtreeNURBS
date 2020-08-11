@@ -9,7 +9,6 @@ references{1} = [];
 
 % Quadtree leaves
 idxLeaves = Quadtree.findleaves';
-Leaves = Quadtree.Node(idxLeaves);
 numLeaves = length(Leaves);
 
 %for l = 1 : numLeaves
@@ -20,7 +19,7 @@ while l <= numLeaves
     idxLeaves(l) = 0;
     % current Quad
     % current Quad reference
-    refLeaf = Leaves{l,1}{2,1}(1:end);
+    refLeaf = Quadtree.Node{idxLeaf,1}{2,1}(1:end);
     % current Quad location in 1:4 format (11 = 1, 21 = 2, 12 = 3, 22 = 4)
     locLeaf = ref2loc(refLeaf);
     leafSubdivs = countSubdivs(references,refLeaf);
@@ -28,8 +27,6 @@ while l <= numLeaves
     idxLeafFather = Quadtree.Parent(idxLeaf);
     
     % plot current Quad
-    LeafXcoor = Leaves{l,1}{10,1}(1,1:end);
-    LeafYcoor = Leaves{l,1}{10,1}(2,1:end);
     patch(LeafXcoor', LeafYcoor', 'red','FaceAlpha',.2)
     hold on;
     
@@ -65,7 +62,6 @@ while l <= numLeaves
                 idxNewLeaves = Quadtree.Node{idxLeaf,1}{11,1}';
                 newLeaves = Quadtree.Node(idxNewLeaves);
                 idxLeaves = [idxLeaves; idxNewLeaves];
-                Leaves(end+1:end+4) = newLeaves;
                 
                 numLeaves = numLeaves + 4;
                 
