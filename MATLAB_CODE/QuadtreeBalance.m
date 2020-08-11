@@ -220,24 +220,26 @@ end
 
 
 function splitt = splittQ(Quadtree,dir,idxNQ)
+% splittQ: check if Quad has to be splitted
 
 splitt = 0;
 
+% has neighbour Quad children ?
 children = Quadtree.Node{idxNQ,1}{11,1}';
 if isempty(children)
-    return
+    return % no
 end
-
-if dir == 1
-    idx = children([3,4]);
-elseif dir == 3
-    idx = children([1,2]);
-elseif dir == 2
-    idx = children([1,3]);
-elseif dir == 4
-    idx = children([2,4]);
+% neighbour Quad child children to be checked
+if dir == 1 % West NQ
+    idx = children([3,4]); % NE and SE children
+elseif dir == 3 % East NQ
+    idx = children([1,2]); % NW and SW children
+elseif dir == 2 % South NQ
+    idx = children([1,3]); % NW and NE children
+elseif dir == 4 % North NQ
+    idx = children([2,4]); % SW and SE children
 end
-
+% check if the corresponding neighbour Quad child has also children
 child_1 = Quadtree.Node{idx(1),1}{11,1};
 child_2 = Quadtree.Node{idx(2),1}{11,1};
 if ~isempty(child_1) || ~isempty(child_2)
