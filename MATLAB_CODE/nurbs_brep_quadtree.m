@@ -25,8 +25,10 @@ end
     degree, Boundary);
 
 
-[Quadtree] = Balance_Quadtree(Quadtree, controlPoints, knots, ...
+[Quadtree] = QuadtreeBalance(Quadtree, controlPoints, knots, ...
     weights, degree,Boundary);
+% [Quadtree] = Balance_Quadtree(Quadtree, controlPoints, knots, ...
+%     weights, degree,Boundary);
 
 
 end
