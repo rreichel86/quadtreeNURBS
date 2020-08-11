@@ -17,7 +17,8 @@ example_nro = 7;
 
 
 % Plot options
-f_plotLeaves = 0; % Plots the NURBS contained in each leaf separately
+f_plotNURBS = 0; % Plot NURBS curve
+f_plotLeaves = 0; % Plot the NURBS contained in each leaf separately
 f_plotPolyElmt = 0; % Plot polygonal elements
 f_plotPolyElmtCurvedEdges = 0; % Plot polygonal elements curve edges
 f_splittElmtIntoSec = 0; % Splitt polygonal elements into section
@@ -37,12 +38,14 @@ NURBS = CalculateNURBS(degree,knots,controlPoints,weights);
 
 %% Plot NURBS curve
 figure(1)
-plot(NURBS(:,1),NURBS(:,2),'r','LineWidth',3);
 hold on
-plot(controlPoints(1, :), controlPoints(2, :), 'ro','LineWidth',3);
-plot(controlPoints(1, :), controlPoints(2, :), '--','LineWidth',0.5);
+if f_plotNURBS == 1
+    plot(NURBS(:,1),NURBS(:,2),'r','LineWidth',3);
+    hold on
+    plot(controlPoints(1, :), controlPoints(2, :), 'ro','LineWidth',3);
+    plot(controlPoints(1, :), controlPoints(2, :), '--','LineWidth',0.5);
+end
 box on
-
 %% Quadtree decomposition
 [Quadtree] = nurbs_brep_quadtree(degree,knots,controlPoints,weights,Boundary);
 
