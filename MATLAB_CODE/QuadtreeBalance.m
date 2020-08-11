@@ -3,13 +3,12 @@ function [Quadtree] = QuadtreeBalance(Quadtree, controlPoints,...
 
 figure(1);
 
-
 references = cellfun(@(Q) Q(2),Quadtree.Node);
 references{1} = [];
 
 % Quadtree leaves
 idxLeaves = Quadtree.findleaves';
-numLeaves = length(Leaves);
+numLeaves = length(idxLeaves);
 
 l = 1;
 while l <= numLeaves
@@ -21,8 +20,6 @@ while l <= numLeaves
     refLeaf = Quadtree.Node{idxLeaf,1}{2,1}(1:end);
     % current Quad location in 1:4 format (11 = 1, 21 = 2, 12 = 3, 22 = 4)
     locLeaf = ref2loc(refLeaf);
-    leafSubdivs = countSubdivs(references,refLeaf);
-    leafFather = Quadtree.Node{Quadtree.Parent(idxLeaf),1};
     idxLeafFather = Quadtree.Parent(idxLeaf);
     
     % plot current Quad
@@ -30,7 +27,6 @@ while l <= numLeaves
     hold on;
     
     % search for current Quad neighbour
-    idxNeighbours = zeros(4,1);
     for dir = 1:4
         [exist_NQ, refNQ] = refNeighbour(refLeaf,dir);
         % neighbour Quad level
@@ -42,7 +38,6 @@ while l <= numLeaves
                 
                 if any(idx)
                     idxNQ = find(idx == 1);
-                    idxNeighbours(dir) = idxNQ;
                     NQ = Quadtree.Node(idx);
                     break
                 end
@@ -59,7 +54,6 @@ while l <= numLeaves
                     knots, weights, degree,idxLeaf,locLeaf,idxLeafFather,Boundary);
                 
                 idxNewLeaves = Quadtree.Node{idxLeaf,1}{11,1}';
-                newLeaves = Quadtree.Node(idxNewLeaves);
                 idxLeaves = [idxLeaves; idxNewLeaves];
                 
                 numLeaves = numLeaves + 4;
@@ -71,15 +65,8 @@ while l <= numLeaves
         end
     end
     
-    %
-    
-    
-    
-    
     l = l + 1;
-    
 end
-
 end
 
 function [exist_NQ, refNQ] = refNeighbour(refQ,dir)
