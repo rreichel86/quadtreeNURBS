@@ -23,8 +23,10 @@ while l <= numLeaves
     idxLeafFather = Quadtree.Parent(idxLeaf);
     
     % plot current Quad
-    patch(LeafXcoor', LeafYcoor', 'red','FaceAlpha',.2)
-    hold on;
+    % LeafXcoor = Quadtree.Node{idxLeaf,1}{10,1}(1,1:end);
+    % LeafYcoor = Quadtree.Node{idxLeaf,1}{10,1}(2,1:end);
+    % patch(LeafXcoor', LeafYcoor', 'red','FaceAlpha',.2)
+    % hold on;
     
     % search for current Quad neighbour
     for dir = 1:4
@@ -38,15 +40,16 @@ while l <= numLeaves
                 
                 if any(idx)
                     idxNQ = find(idx == 1);
-                    NQ = Quadtree.Node(idx);
                     break
                 end
                 
             end
-            NQXcoor = NQ{1,1}{10,1}(1,1:end);
-            NQYcoor = NQ{1,1}{10,1}(2,1:end);
-            plot(NQXcoor', NQYcoor', 'b-')
-            hold on;
+            % plot found neighbour Quad
+            % NQ = Quadtree.Node(idx);
+            % NQXcoor = NQ{1,1}{10,1}(1,1:end);
+            % NQYcoor = NQ{1,1}{10,1}(2,1:end);
+            % plot(NQXcoor', NQYcoor', 'b-')
+            % hold on;
             
             
             if splittQ(Quadtree,dir,idxNQ) == 1
