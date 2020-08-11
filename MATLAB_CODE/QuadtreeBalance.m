@@ -6,20 +6,23 @@ figure(1);
 references = cellfun(@(Q) Q(2),Quadtree.Node);
 references{1} = [];
 
-% Quadtree leaves
+% array with Quadtree leaves indices
 idxLeaves = Quadtree.findleaves';
 numLeaves = length(idxLeaves);
 
 l = 1;
 while l <= numLeaves
     
+    % get current Quad index
     idxLeaf = idxLeaves(l);
     idxLeaves(l) = 0;
     % current Quad
     % current Quad reference
     refLeaf = Quadtree.Node{idxLeaf,1}{2,1}(1:end);
+    levelLeaf = length(refLeaf);
     % current Quad location in 1:4 format (11 = 1, 21 = 2, 12 = 3, 22 = 4)
     locLeaf = ref2loc(refLeaf);
+    % current Quad father index
     idxLeafFather = Quadtree.Parent(idxLeaf);
     
     % plot current Quad
@@ -28,21 +31,33 @@ while l <= numLeaves
     % patch(LeafXcoor', LeafYcoor', 'red','FaceAlpha',.2)
     % hold on;
     
-    % search for current Quad neighbour
+    is_splitted = 0;
+    % array with found neighbours indices
+    iNQs = zeros(4,1);
+    % count found neighbours
+    niNQs = 0;
+    % search for current Quad neighbours
+    % Loop over directions:
+    % 1 - West
+    % 2 - South
+    % 3 - East
+    % 4 - North
     for dir = 1:4
+        % determine possible neighbour Quad in current direction 
         [exist_NQ, refNQ] = refNeighbour(refLeaf,dir);
-        % neighbour Quad level
-        levelNQ = length(refNQ);
-        
         if exist_NQ == 1
+            % look for neighbour Quad reference in reference array
+            % and get its position or its ancestor position
+            levelNQ = length(refNQ);
             for level = levelNQ:-2:2
                 idx = cellfun(@(x) isequal(x, refNQ(1:level)),references);
-                
                 if any(idx)
-                    idxNQ = find(idx == 1);
+                    idxNQ = find(idx,1,'first');
+                    % update array with found neighbours indices
+                    niNQs = niNQs + 1;
+                    iNQs(niNQs) = idxNQ;
                     break
                 end
-                
             end
             % plot found neighbour Quad
             % NQ = Quadtree.Node(idx);
@@ -51,23 +66,52 @@ while l <= numLeaves
             % plot(NQXcoor', NQYcoor', 'b-')
             % hold on;
             
+            if is_splitted == 1
+                continue
+            end
             
+            % check if current Quad has to be split
             if splittQ(Quadtree,dir,idxNQ) == 1
+                % split current Quad 
                 [Quadtree] = Decompose_balance(Quadtree,controlPoints, ...
                     knots, weights, degree,idxLeaf,locLeaf,idxLeafFather,Boundary);
                 
+                is_splitted = 1;
                 idxNewLeaves = Quadtree.Node{idxLeaf,1}{11,1}';
+                % insert current Quad children into array with leaves indices
                 idxLeaves = [idxLeaves; idxNewLeaves];
-                
                 numLeaves = numLeaves + 4;
                 
                 references = cellfun(@(Q) Q(2),Quadtree.Node);
                 references{1} = [];
-                
             end
         end
     end
-    
+
+    % if current quad was splitted
+    % check if current Quad has neighbours that need to be split.
+    if is_splitted == 1
+        
+        % Loop over array with indices of found neighbours
+        for i = 1: niNQs
+            
+            refNQ = Quadtree.Node{iNQs(i),1}{2,1}(1:end);
+            % neighbour Quad level
+            levelNQ = length(refNQ);
+            % is neighbour Quad a leaf?
+            children = Quadtree.Node{iNQs(i),1}{11,1}';
+            if isempty(children) % yes
+
+                % Check if neighbour Quad is larger than 
+                % the current Quad children 
+                if (levelLeaf + 2) - levelNQ > 2
+                    % insert neighbour Quad into array with leaves indices
+                    idxLeaves = [idxLeaves; iNQs(i)];
+                    numLeaves = numLeaves + 1;
+                end
+            end
+        end
+    end
     l = l + 1;
 end
 end
