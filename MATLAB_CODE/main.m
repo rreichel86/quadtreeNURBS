@@ -47,10 +47,7 @@ if f_plotNURBS == 1
 end
 box on
 %% Quadtree decomposition
-tic
 [Quadtree] = nurbs_brep_quadtree(degree,knots,controlPoints,weights,Boundary);
-toc
-return
 %% Extract polygonal elements 
 [nnode,coor,numel,connectivity,maxnel,...
  numKnotVectors,knotVectors,maxnknots] = extractElements(Quadtree);
