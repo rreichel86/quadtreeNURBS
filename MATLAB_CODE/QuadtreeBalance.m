@@ -118,21 +118,6 @@ end
 
 
 
-function lim = calcLim(level, N)
-% calcLim: calculate lim
-% working backwards through N, this is the level
-% at which N(i) first becomes not equal to N(i-1).
-
-for l = level:-1:1
-    if (l == 1)
-        lim = l;
-        break;
-    elseif N(l) ~= N(l-1)
-        lim = l;
-        break;
-    end
-end
-end
 
 function [exist_NQ, refNQ] = edgeNeighbour(posQ, dir, level, N, lim)
 % edgeNeighbour: perform binary transformation to obtain the
