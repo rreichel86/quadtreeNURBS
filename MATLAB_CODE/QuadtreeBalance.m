@@ -119,24 +119,6 @@ end
 
 
 
-
-function [status, N] = binaryTransformation(level, N, lim)
-% binaryTransformation: perform binary operation on N
-
-status = 1;
-
-if ~exist('lim','var')
-    N(level) = 1 - N(level); % on N(level)
-else
-    if lim == 1
-        status = 0;
-        return
-    end
-    N(level:-1:lim-1) = - N(level:-1:lim-1) + 1; % on N(level) to N(lim-1)
-end
-end
-
-
 function locQ = ref2loc(refQ)
 
 lenlocQ = length(refQ)/2;
