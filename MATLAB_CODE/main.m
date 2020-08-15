@@ -48,6 +48,10 @@ end
 box on
 %% Quadtree decomposition
 [Quadtree] = nurbs_brep_quadtree(degree,knots,controlPoints,weights,Boundary);
+%% Plots the NURBS contained in each leaf separately
+if f_plotLeaves == 1
+    plot_leaf(Quadtree,ax)
+end
 %% Extract polygonal elements 
 [nnode,coor,numel,connectivity,maxnel,...
  numKnotVectors,knotVectors,maxnknots] = extractElements(Quadtree);
@@ -96,10 +100,7 @@ for ii = find(coor(:,5) == 1)'
     end
 end
 
-%% Plots the NURBS contained in each leaf separately
-if f_plotLeaves == 1
-    plot_leaf(Quadtree,ax)
-end
+
    
 %% Splitt polygonal elements into section
 
