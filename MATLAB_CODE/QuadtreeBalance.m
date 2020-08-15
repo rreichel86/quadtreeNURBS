@@ -116,28 +116,7 @@ while l <= numLeaves
 end
 end
 
-function [exist_NQ, refNQ] = refNeighbour(refQ,dir)
-% refNeighbour: determine reference of searched neighbour
 
-posQ = refQ(end-1:end);
-level = length(refQ)/2;
-% convert into integer form N_x, N_y
-N = zeros(level,2);
-N(:,1) = refQ(2:2:end) - 1; % N_x
-N(:,2) = refQ(1:2:end) - 1; % N_y
-% compute lim_x, lim_y
-lim = zeros(2,1);
-lim(1) = calcLim(level, N(:,1)); % lim_x
-lim(2) = calcLim(level, N(:,2)); % lim_y
-% perform binary transformation to obtain the 4 possible edge neighbours
-%   1 - West
-%   2 - South
-%   3 - East
-%   4 - North
-% and determine reference of searched edge neighbour by interweaving
-% new N_x and N_y
-[exist_NQ, refNQ] = edgeNeighbour(posQ, dir, level, N, lim);
-end
 
 function lim = calcLim(level, N)
 % calcLim: calculate lim
