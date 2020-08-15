@@ -40,6 +40,9 @@ function [numcoor,coor,numel,connectivity,maxnel,...
 %
 % -----------------------------------------------------------------------------
 
+references = cellfun(@(Q) Q(2),Quadtree.Node);
+references{1} = [];
+
 % Get Quadtree leaves
 leaves = Quadtree.findleaves();
 numleaves = length(leaves);
@@ -65,9 +68,8 @@ for i = 1:numleaves
     
     % Check neighborhood of current leaf
     % get mid points if they exist
-    [midPoints] = extracting_element(Quadtree,leaves,i);
+    [midPoints] = getMidPoints(Quadtree,references,refLeaf);
 
-    
     if isempty(intersections) || length(intersections) == 1
         
         quad = Quadtree.Node{leaves(i),1}{10,1}(1:2,1:4);
