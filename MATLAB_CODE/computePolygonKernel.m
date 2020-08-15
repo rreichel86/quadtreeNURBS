@@ -254,9 +254,21 @@ end
 
 
 end
- ker;
- if ~isempty(ker)
-    %patch(x,y,'green');
- end 
+ker;
+nvertices = size(ker,1);
+
+% check if kernel is not empty or 
+% consist of at least 3 noncollinear vertices
+if nvertices < 3
+    ker = [];
+elseif nvertices == 3
+    if orientation(ker(1,:),ker(2,:),ker(3,:)) == 0
+        ker = [];
+    end
+end
+
+if ~isempty(ker)
+   %patch(x,y,'green');
+end
 
 end
