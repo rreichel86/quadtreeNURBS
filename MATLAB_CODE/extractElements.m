@@ -64,6 +64,8 @@ maxnknots = 0;% maximun number of knot on any knot vector
 % loop over leaves 
 for i = 1:numleaves
     
+     % current Quad reference
+    refLeaf = Quadtree.Node{leaves(i),1}{2,1}(1:end);
     intersections = Quadtree.Node{leaves(i),1}{5,1};
     
     % Check neighborhood of current leaf
