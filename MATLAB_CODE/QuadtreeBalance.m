@@ -8,10 +8,9 @@ references{1} = [];
 
 % array with Quadtree leaves indices
 idxLeaves = Quadtree.findleaves';
-numLeaves = length(idxLeaves);
 
 l = 1;
-while l <= numLeaves
+while l <= length(idxLeaves)
     
     % get current Quad index
     idxLeaf = idxLeaves(l);
@@ -71,7 +70,7 @@ while l <= numLeaves
             end
             
             % check if current Quad has to be split
-            if splittQ(Quadtree,dir,idxNQ) == 1
+            if splittQ(Quadtree,idxLeaf,dir,idxNQ) == 1
                 % split current Quad 
                 [Quadtree] = Decompose_balance(Quadtree,controlPoints, ...
                     knots, weights, degree,idxLeaf,locLeaf,idxLeafFather,Boundary);
@@ -80,7 +79,6 @@ while l <= numLeaves
                 idxNewLeaves = Quadtree.Node{idxLeaf,1}{11,1}';
                 % insert current Quad children into array with leaves indices
                 idxLeaves = [idxLeaves; idxNewLeaves];
-                numLeaves = numLeaves + 4;
                 
                 references = cellfun(@(Q) Q(2),Quadtree.Node);
                 references{1} = [];
@@ -107,7 +105,7 @@ while l <= numLeaves
                 if (levelLeaf + 2) - levelNQ > 2
                     % insert neighbour Quad into array with leaves indices
                     idxLeaves = [idxLeaves; iNQs(i)];
-                    numLeaves = numLeaves + 1;
+
                 end
             end
         end
@@ -142,10 +140,15 @@ end
 end
 
 
-function splitt = splittQ(Quadtree,dir,idxNQ)
+function splitt = splittQ(Quadtree,idxQ,dir,idxNQ)
 % splittQ: check if Quad has to be splitted
 
 splitt = 0;
+% check if current Quad is a leaf
+children = Quadtree.Node{idxQ,1}{11,1}';
+if ~isempty(children)
+    return % no
+end
 
 % has neighbour Quad children ?
 children = Quadtree.Node{idxNQ,1}{11,1}';
