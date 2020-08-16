@@ -48,7 +48,7 @@ leaves = Quadtree.findleaves();
 numleaves = length(leaves);
 
 % Get total number of elements
-[numel] = countElements(Quadtree);
+[numel] = countElements(Quadtree,leaves);
 
 % prealloc cell array
 coor = cell(numleaves,1);
