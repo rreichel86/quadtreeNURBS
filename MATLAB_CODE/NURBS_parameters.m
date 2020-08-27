@@ -11,11 +11,11 @@ end
 
 if flag==2
     degree=2;
-    controlPoints=[ 0 -4 -4 -4 0 4 4 4 0; -4 -4 0 4 4 4 0 -4 -4];
+    controlPoints=[ 0 -1 -1 -1 0 1 1 1 0; -1 -1 0 1 1 1 0 -1 -1];
     knots=[0 0 0 0.25 0.25 0.5 0.5 0.75 0.75 1 1 1];  
     weights=[1 0.707 1 0.707 1 0.707 1 0.707 1];
-    Boundary=[min(controlPoints(1,:))*1.2, min(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2;...
-        max(controlPoints(2,:))*1.2, min(controlPoints(2,:))*1.2, min(controlPoints(2,:))*1.2, max(controlPoints(2,:))*1.2];
+    Boundary=[-4 -4 4 4;...
+              4 -4 -4 4];
     axis=([min(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2,...
         min(controlPoints(2,:))*1.2, max(controlPoints(2,:))*1.2,]);
 end
