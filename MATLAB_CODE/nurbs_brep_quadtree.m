@@ -1,4 +1,4 @@
-function [Quadtree] = nurbs_brep_quadtree(degree,knots,controlPoints,weights,Boundary)
+function [Quadtree] = nurbs_brep_quadtree(k_min,degree,knots,controlPoints,weights,Boundary)
 
 
 
@@ -15,10 +15,11 @@ if nPoints > 1
     
     l=1; % l: 1 if quad NW, 2 SW, 3 NE, 4 SE. Initialize at 1
     k=0; % k: level of decomposition, equal to 0 at the root
+    % k_min = 2;
     pos_aux=[]; Q_aux=[0]; %auxiliar arrays
     
     [Quadtree] = decompose(Quadtree,Boundary,controlPoints, knots,...
-        weights, degree, l, k,pos_aux, Q_aux,Boundary);
+        weights, degree, l,k,pos_aux, Q_aux,Boundary,k_min);
 end
 
 [Quadtree] = Star_Shape(Quadtree,controlPoints, knots, weights,...

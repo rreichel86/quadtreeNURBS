@@ -47,7 +47,9 @@ if f_plotNURBS == 1
 end
 box on
 %% Quadtree decomposition
-[Quadtree] = nurbs_brep_quadtree(degree,knots,controlPoints,weights,Boundary);
+k_min = 2;
+[Quadtree] = nurbs_brep_quadtree(k_min,degree,knots,controlPoints,weights,Boundary);
+
 %% Plots the NURBS contained in each leaf separately
 if f_plotLeaves == 1
     plot_leaf(Quadtree,ax)
