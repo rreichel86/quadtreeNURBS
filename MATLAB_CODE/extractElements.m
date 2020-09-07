@@ -1,5 +1,5 @@
 function [numcoor,coor,numel,connectivity,maxnel,...
-          numKnotVectors,knotVectors,maxnknots] = extractElements(Quadtree)
+          numKnotVectors,knotVectors,maxnknots,idxControlPoints] = extractElements(Quadtree)
 % extractElements: get polygonal elements from Quadtree data structure
 %
 % INPUT:
@@ -57,6 +57,7 @@ knotVectors = cell(numleaves,1);
 elements = cell(numel,1);
 connectivity = cell(numel,1);
 intersections_coor = cell(numleaves,1);
+idxControlPoints = cell(numleaves,1);
 
 j = 1;
 countKnotVectors = 0;
@@ -75,7 +76,7 @@ for i = 1:numleaves
     if isempty(intersections) || length(intersections) == 1
         
         quad = Quadtree.Node{leaves(i),1}{10,1}(1:2,1:4);
-        cp = [];% control points and weight
+        % cp = [];% control points and weight
         intersectionPoints = [];
 
         coordinates = quad;
@@ -88,7 +89,8 @@ for i = 1:numleaves
         
         controlPoints = Quadtree.Node{leaves(i),1}{7,1};
         weights = Quadtree.Node{leaves(i),1}{9,1};
-        cp = [controlPoints',weights'];% control points and weights
+        ncp = length(controlPoints);
+        % cp = [controlPoints',weights'];% control points and weights
         
         countKnotVectors = countKnotVectors + 1;
         knots = Quadtree.Node{leaves(i),1}{8,1};
@@ -96,6 +98,10 @@ for i = 1:numleaves
         maxnknots = max(maxnknots,nknots);
         degree = Quadtree.Node{leaves(i),1}{6,1};
         knotVectors{countKnotVectors} = [countKnotVectors,degree,0,0,nknots,knots];
+        controlPoints_coor{countKnotVectors} = [controlPoints',weights'];
+        idxControlPoints{countKnotVectors} = zeros(1,ncp+2);
+        idxControlPoints{countKnotVectors}(1,1) = countKnotVectors;
+        idxControlPoints{countKnotVectors}(1,2) = ncp;
         
         coordinates = [quad,intersectionPoints,controlPoints];
         element = [quad,midPoints,intersectionPoints];
@@ -107,7 +113,8 @@ for i = 1:numleaves
         
         controlPoints = Quadtree.Node{leaves(i),1}{7,1};
         weights = Quadtree.Node{leaves(i),1}{9,1};
-        cp = [controlPoints',weights'];% control points and weights
+        ncp = length(controlPoints);
+        % cp = [controlPoints',weights'];% control points and weights
         
         countKnotVectors = countKnotVectors + 1;
         knots = Quadtree.Node{leaves(i),1}{8,1};
@@ -115,6 +122,10 @@ for i = 1:numleaves
         maxnknots = max(maxnknots,nknots);
         degree = Quadtree.Node{leaves(i),1}{6,1};
         knotVectors{countKnotVectors} = [countKnotVectors,degree,0,0,nknots,knots];
+        controlPoints_coor{countKnotVectors} = [controlPoints',weights'];
+        idxControlPoints{countKnotVectors} = zeros(1,ncp+2);
+        idxControlPoints{countKnotVectors}(1,1) = countKnotVectors;
+        idxControlPoints{countKnotVectors}(1,2) = ncp;
 
         coordinates = [quad,intersectionPoints,controlPoints];
         element = [quad,midPoints,intersectionPoints];
@@ -126,7 +137,8 @@ for i = 1:numleaves
         
         controlPoints = Quadtree.Node{leaves(i),1}{7,1};
         weights = Quadtree.Node{leaves(i),1}{9,1};
-        cp = [controlPoints',weights'];% control points and weights
+        ncp = length(controlPoints);
+        % cp = [controlPoints',weights'];% control points and weights
         
         countKnotVectors = countKnotVectors + 1;
         knots = Quadtree.Node{leaves(i),1}{8,1};
@@ -134,13 +146,16 @@ for i = 1:numleaves
         maxnknots = max(maxnknots,nknots);
         degree = Quadtree.Node{leaves(i),1}{6,1};
         knotVectors{countKnotVectors} = [countKnotVectors,degree,0,0,nknots,knots];
+        controlPoints_coor{countKnotVectors} = [controlPoints',weights'];
+        idxControlPoints{countKnotVectors} = zeros(1,ncp+2);
+        idxControlPoints{countKnotVectors}(1,1) = countKnotVectors;
+        idxControlPoints{countKnotVectors}(1,2) = ncp;
         
         coordinates = [quad,intersectionPoints,controlPoints];
         element = [quad,midPoints,intersectionPoints];
         
     end
     
-    controlPoints_coor{i} = cp;% control points and weights
     intersections_coor{i} = intersectionPoints';% intersection points
     coor{i} = coordinates;% nodal coordinates
     
@@ -201,7 +216,7 @@ for i = 1:numleaves
         connectivity{j+1}(1,2) = countKnotVectors;
         j = j+2;
     end
-end
+end % end loop over leaves
 
 % control points in matrix form
 cp = cell2mat(controlPoints_coor);
@@ -307,6 +322,23 @@ for ikv = 1:numKnotVectors
     % index last control point
     knotVectors{ikv}(1,4) = indices(idx + 1);
     idx = idx + 2;
+    
+end
+
+numIdxControlPoints = countKnotVectors;
+for ictrlp = 1:numIdxControlPoints
+    ctrlp = controlPoints_coor{ictrlp};
+    nctrlp = idxControlPoints{ictrlp}(1,2);
+    
+    for n = 1 : nctrlp
+    
+    a = find ( abs(coor(:,2)-ctrlp(n,1))<1e-10);
+    b = find ( abs(coor(:,3)-ctrlp(n,2))<1e-10);
+    indices = intersect(a,b);
+        
+   idxControlPoints{ictrlp}(1,n+2) = indices';
+   
+    end
     
 end
 
