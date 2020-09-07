@@ -44,34 +44,35 @@ for i=1:size(controlPoints,2)-1
     % segement and the number of intersections.
     if OI ~= OII && OIII ~= OIV        
         if OI ~= 0
-            index=[index i i+1];
-        end       
-        if OI == 0
-            if i==1
-            index=[index i i+1];
+            index = [index i i+1];
+        elseif OI == 0
+            if i == 1
+                index = [index i i+1];
             else
-                index(end) = i+1;
+                index =[index i+1];
             end
         end
     end    
 end
-num_inter=length(index)/2;
+num_inter = length(index)/2;
 % Correcting quad's segment coordinates
-if abs(x2-x1) < tol
-    y1=y1+aux;y2=y2-aux;
-elseif abs(y2-y1) < tol
-    x1=x1+aux;x2=x2-aux;
+if abs(x2 - x1) < tol
+    y1 = y1 + aux;
+    y2 = y2 - aux;
+elseif abs(y2 - y1) < tol
+    x1 = x1 + aux;
+    x2 = x2 - aux;
 end
 
 % Next step is to obtain the first aproximation of the solution
 for i = 1:num_inter
     % We loop over the segments of the control poligon that intersect the
     % quad's edge
-    if abs(x2-x1) < tol
+    if abs(x2 - x1) < tol
         cond3 = x1;
         idx2 = 1;
         
-    elseif abs(y2-y1) < tol
+    elseif abs(y2 - y1) < tol
         cond3 = y1;
         idx2 = 2;
         
@@ -81,9 +82,9 @@ for i = 1:num_inter
     % approximation of the solution as output (jj)
     [jj,flag] = findIntrscApprox(cond3,idx2, index((2*i-1):2*i),degree,knots,...
         controlPoints,weights,x1,x2,y1,y2,jk);
-    if flag==1
+    if flag == 1
         num_jk = num_jk + 1;
-        jk=[jk jj];
+        jk = [jk jj];
     end
 end
 
