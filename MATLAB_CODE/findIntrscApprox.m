@@ -36,6 +36,7 @@ elseif ~isempty(intrscArr)
 end
 
 % P = [x, y, s]
+P = zeros(nkts,3);
 n = length(knots)-degree-2;
 counter = 1;
 for k = kts
