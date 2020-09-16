@@ -55,7 +55,7 @@ if f_plotLeaves == 1
 end
 %% Extract polygonal elements 
 [nnode,coor,numel,connectivity,maxnel,...
- numKnotVectors,knotVectors,maxnknots] = extractElements(Quadtree);
+ numKnotVectors,knotVectors,maxnknots,idxControlPoints] = extractElements(Quadtree);
 %% Plot Nodes
 
 figure(2)

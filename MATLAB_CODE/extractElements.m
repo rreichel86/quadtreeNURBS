@@ -37,6 +37,8 @@ function [numcoor,coor,numel,connectivity,maxnel,...
 %
 % knotVectors = [ikv, degree, icp, ecp, nknots, knot_1,...,knot_nknots]
 % maxnknots ------------------ maximun number of knot on any knot vector
+% idxControlPoints ----------- control points indices
+% idxControlPoints = [icp, ncp, idx_1,...idx_ncp] 
 %
 % -----------------------------------------------------------------------------
 
