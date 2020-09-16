@@ -111,16 +111,24 @@ end
 % ncpoints = (nknot-1) - degree
 ncpoints = cellfun(@(x) (x(5)-1)-x(2), knotVectors(1:numKnotVectors));
 
-% compute number of sections and max number of node on any section 
-numsec = 0; % number of section 
+% compute number of sections, 
+% max number of node on any section and
+% max number of control points on any section 
+%     with boundary defined by a NURBS
+numsec = 0; % number of sections
+numsec_w_NURBS = 0; % number of sections 
+%                     with boundary defined by a NURBS
 maxnsec = 0; % max number of nodes on any section
+maxncp = 0; % max number of control points
 for ielno = 1:numel
     ikv = connectivity{ielno}(2);
     nel = connectivity{ielno}(3);
     if ikv ~= 0
        ncp = ncpoints(ikv); 
        numsec = numsec + nel - ncp + 2;
+       numsec_w_NURBS = numsec_w_NURBS + 1;
        nsec = ncp + 1;
+       maxncp = max(maxncp, ncp);
     else
        numsec = numsec + nel;
        nsec = 3;
@@ -130,46 +138,27 @@ end
 
 % sections = [isec, ikv, nsec, node_1,...,node_nsec]
 sections = zeros(numsec, maxnsec + 3);
-% knots = [ikv, nknots, knot_1,...,knot_nknots]
-knots = zeros(numKnotVectors, maxnknots + 2);
-% ord = [isec, ikv, pgrad, qgrad]
-ord = zeros(numsec, 4);
-
+% knots = [ikv, iw, nknots, iknot, jknot, knot_1,...,knot_nknots]
+knots = zeros(numsec_w_NURBS, maxnknots + 5);
+% ord = [isec, pgrad, qgrad]
+ord = zeros(numsec, 3);
+% weights = [iw, nweights, weight_1,...,weigth_nweigths]
+wgt = zeros(numsec_w_NURBS, maxncp + 2);
 
 isec = 0;
+isec_w_NURBS = 0;
 if f_splittElmtIntoSec == 1
+    
+    
+    
+    
     for ielno = 1:numel
-        kvno = connectivity{ielno}(2);
-        nel = connectivity{ielno}(3);
-        elmt = connectivity{ielno}(4:end);
+        kvno = connectivity{ielno}(2); % knot vector number
+        nel = connectivity{ielno}(3); % number of nodes per element
+        elmt = connectivity{ielno}(4:end); % element connectivity matrix
         ecoor = coor( elmt(1:end), 2:3);
         wg = coor( elmt(1:end), 4);
-        if kvno ~= 0
-            nKnot = knotVectors{kvno}(5);
-            pgrad = knotVectors{kvno}(2);
-            icp = find( elmt == knotVectors{kvno}(3) );
-            ecp = find( elmt == knotVectors{kvno}(4) );
-            
-            knots(kvno,1) = kvno;
-            knots(kvno,3) = nKnot;
-            knots(kvno,3:2+nKnot) = knotVectors{kvno}(6:end);
-            
-            ncp = (nKnot - 1) - pgrad;
-            
-            icp_coor = ecoor(icp,:);
-            ecp_coor = ecoor(ecp,:);
-            sc_coor = ecoor(end,:);
-            % determine orientation
-            % ori =  1 for CCW
-            % ori = -1 for CW
-            ori = orientation(icp_coor,ecp_coor,sc_coor);
-            % swap icp and ecp
-            if ori == -1
-                temp = icp;
-                icp = ecp;
-                ecp = temp;
-            end            
-        end
+       
         % determine if a polygonal element is
         % inside or outside the region enclosed 
         % by the NURBS curve
@@ -178,6 +167,62 @@ if f_splittElmtIntoSec == 1
         else % inside
           color = 'blue';
         end
+        
+        if kvno ~= 0
+            
+            
+            nKnot = knotVectors{kvno}(5);
+            pgrad = knotVectors{kvno}(2);
+            icp = find( elmt == knotVectors{kvno}(3) );
+            ecp = find( elmt == knotVectors{kvno}(4) );
+            
+            
+            
+            % number of control points
+            ncp = (nKnot - 1) - pgrad;
+            
+            % scaling center coordinates
+            sc_coor = ecoor(end,:);
+            
+            % control points indices
+            idxCtrlP = idxControlPoints{kvno}(3:end);
+            
+            poly = zeros(ncp+1,2);
+            
+            
+            poly(1:ncp,:) = coor(idxCtrlP,2:3);
+            poly(ncp+1,:) = sc_coor; 
+            
+            % determine signed polygon area
+            % area =  1 for CCW
+            % area = -1 for CW
+            area = poly(ncp+1,1) * poly(1,2) - poly(1,1) * poly(ncp+1,2);
+            
+            for i = 1: ncp
+                area = area + poly(i,1) * poly(i+1,2);
+                area = area - poly(i+1,1) * poly(i,2);
+            end
+            
+            % - area is positive, OP = 1. 
+            % vertices are arranged CCW
+            % - area is negative, OP = -1. 
+            % vertices are arranged CW
+            if area > 0
+                OP = 1
+            else
+                OP = -1
+            end
+            
+            % if vertices are arranged CW, 
+            % swap icp and ecp 
+            if OP == -1
+                temp = icp;
+                icp = ecp;
+                ecp = temp;
+            end            
+        end
+        
+      
         
         % plot polygon that dont have curve edges
         if kvno == 0
@@ -192,47 +237,70 @@ if f_splittElmtIntoSec == 1
                 idx = [a,b,nel+1];
                 
                 isec = isec + 1;
-                sections(isec,1) = isec;
-                sections(isec,2) = 0;
-                sections(isec,3) = 3;
-                sections(isec,4:6) = elmt(idx);
+                sections(isec,1) = isec; % section number (isec)
+                sections(isec,2) = 0; % knot vector number (ikv)
+                sections(isec,3) = 3; % number of nodes per section (nsec)
+                sections(isec,4:6) = elmt(idx); 
                 
-                ord(isec,:) = [isec,0,1,1];
+                ord(isec,:) = [isec,1,1];
                 
                 patch(ecoor(idx,1).', ecoor(idx,2).', color, 'FaceAlpha',.5)
                 hold on
             end
 
+            
+            
         % plot polygon that have curve edges
         elseif kvno ~= 0 && icp < ecp && icp == 1
             ii = 1;
             while ii <= nel
-                if (ii == ecp) && (icp == 1)
-                    a = ii;
-                    b = 1;
+                if ii == icp
+                    a = 1;
+                    b = ii + ncp-1;
                     ii = ii + ncp-2;
-                    idx = [a:nel,1,nel+1];
+                    idx = [a:b,nel+1];
                     
                     isec = isec + 1;
-                    sections(isec,1) = isec;
-                    sections(isec,2) = kvno;
-                    sections(isec,3) = ncp + 1;
+                    isec_w_NURBS = isec_w_NURBS + 1;
+                    sections(isec,1) = isec; % section number (isec)
+                    sections(isec,2) = isec_w_NURBS; % knot vector number (ikv)
+                    sections(isec,3) = ncp + 1; % number of nodes per section (nsec)
                     sections(isec,4:4+ncp) = elmt(idx);
                     
-                    ord(isec,:) = [isec,kvno,pgrad,1];
-                
+                    ord(isec,:) = [isec,pgrad,1];
+                    
+                    % knot vector number (ikv)
+                    knots(isec_w_NURBS,1) = isec_w_NURBS;
+                    % weights number (iw)
+                    knots(isec_w_NURBS,2) = isec_w_NURBS;
+                    % number of knots (nknots)
+                    knots(isec_w_NURBS,3) = nKnot;
+                    % initial knot value (iknot)
+                    knots(isec_w_NURBS,4) = knotVectors{kvno}(6);
+                    % final knot value (jknot)
+                    knots(isec_w_NURBS,5) = knotVectors{kvno}(end);
+                    % knots
+                    knots(isec_w_NURBS,6:5+nKnot) = knotVectors{kvno}(6:end);
+                    
+                    % weights number (iw)
+                    wgt(isec_w_NURBS,1) = isec_w_NURBS;
+                    % number of control points / weights (nweights)
+                    wgt(isec_w_NURBS,2) = ncp;
+                    % weights
+                    wgt(isec_w_NURBS,3:2+ncp) = coor(elmt(idx(1:end-1)),4);
+                    
                 elseif ii ~= nel
                     a = ii;
                     b = ii+1;
                     idx = [a,b,nel+1];
                     
                     isec = isec + 1;
-                    sections(isec,1) = isec;
-                    sections(isec,2) = 0;
-                    sections(isec,3) = 3;
+                    sections(isec,1) = isec; % section number (isec)
+                    sections(isec,2) = 0; % knot vector number (ikv)
+                    sections(isec,3) = 3; % number of nodes per section (nsec)
                     sections(isec,4:6) = elmt(idx);
                     
-                    ord(isec,:) = [isec,0,1,1];
+                    ord(isec,:) = [isec,1,1];
                     
                 elseif ii == nel
                     a = nel;
@@ -240,12 +308,12 @@ if f_splittElmtIntoSec == 1
                     idx = [a,b,nel+1];
                     
                     isec = isec + 1;
-                    sections(isec,1) = isec;
-                    sections(isec,2) = 0;
-                    sections(isec,3) = 3;
+                    sections(isec,1) = isec; % section number (isec)
+                    sections(isec,2) = 0; % knot vector number (ikv)
+                    sections(isec,3) = 3; % number of nodes per section (nsec)
                     sections(isec,4:6) = elmt(idx);
                     
-                    ord(isec,:) = [isec,0,1,1];
+                    ord(isec,:) = [isec,1,1];
                     
                 end
                 patch(ecoor(idx,1).', ecoor(idx,2).', color, 'FaceAlpha',.5)
@@ -262,12 +330,33 @@ if f_splittElmtIntoSec == 1
                     idx = [a:b,nel+1];
                     
                     isec = isec + 1;
-                    sections(isec,1) = isec;
-                    sections(isec,2) = kvno;
-                    sections(isec,3) = ncp + 1;
+                    isec_w_NURBS = isec_w_NURBS + 1;
+                    sections(isec,1) = isec; % section number (isec)
+                    sections(isec,2) = isec_w_NURBS; % knot vector number (ikv)
+                    sections(isec,3) = ncp + 1; % number of nodes per section (nsec)
                     sections(isec,4:4+ncp) = elmt(idx);
                     
-                    ord(isec,:) = [isec,kvno,pgrad,1];
+                    ord(isec,:) = [isec,pgrad,1];
+                    
+                    % knot vector number (ikv)
+                    knots(isec_w_NURBS,1) = isec_w_NURBS;
+                    % weights number (iw)
+                    knots(isec_w_NURBS,2) = isec_w_NURBS;
+                    % number of knots (nknots)
+                    knots(isec_w_NURBS,3) = nKnot;
+                    % initial knot value (iknot)
+                    knots(isec_w_NURBS,4) = knotVectors{kvno}(6);
+                    % final knot value (jknot)
+                    knots(isec_w_NURBS,5) = knotVectors{kvno}(end);
+                    % knots
+                    knots(isec_w_NURBS,6:5+nKnot) = knotVectors{kvno}(6:end);
+                    
+                    % weights number (iw)
+                    wgt(isec_w_NURBS,1) = isec_w_NURBS;
+                    % number of control points / weights (nweights)
+                    wgt(isec_w_NURBS,2) = ncp;
+                    % weights
+                    wgt(isec_w_NURBS,3:2+ncp) = coor(elmt(idx(1:end-1)),4);
                     
                 elseif ii ~= nel
                     a = ii;
@@ -275,12 +364,12 @@ if f_splittElmtIntoSec == 1
                     idx = [a,b,nel+1];
                     
                     isec = isec + 1;
-                    sections(isec,1) = isec;
-                    sections(isec,2) = 0;
-                    sections(isec,3) = 3;
+                    sections(isec,1) = isec; % section number (isec)
+                    sections(isec,2) = 0; % knot vector number (ikv)
+                    sections(isec,3) = 3; % number of nodes per section (nsec)
                     sections(isec,4:6) = elmt(idx);
                     
-                    ord(isec,:) = [isec,0,1,1];
+                    ord(isec,:) = [isec,1,1];
                     
                 elseif ii == nel
                     a = nel;
@@ -288,12 +377,12 @@ if f_splittElmtIntoSec == 1
                     idx = [a,b,nel+1];
                     
                     isec = isec + 1;
-                    sections(isec,1) = isec;
-                    sections(isec,2) = 0;
-                    sections(isec,3) = 3;
+                    sections(isec,1) = isec; % section number (isec)
+                    sections(isec,2) = 0; % knot vector number (ikv)
+                    sections(isec,3) = 3; % number of nodes per section (nsec)
                     sections(isec,4:6) = elmt(idx);
                     
-                    ord(isec,:) = [isec,0,1,1];
+                    ord(isec,:) = [isec,1,1];
                     
                 end
                 patch(ecoor(idx,1).', ecoor(idx,2).', color, 'FaceAlpha',.5)
@@ -303,19 +392,41 @@ if f_splittElmtIntoSec == 1
         elseif kvno ~= 0 && icp > ecp && ecp == 1
             ii = 1;
             while ii <= nel
-                if (ii == icp) && (ecp == 1)
+                if (ii == icp)  % && (ecp == 1)
                     a = ii;
                     b = 1;
                     ii = ii + ncp-2;
                     idx = [a:nel,1,nel+1];
                     
                     isec = isec + 1;
-                    sections(isec,1) = isec;
-                    sections(isec,2) = 0;
-                    sections(isec,3) = ncp + 1;
+                    isec_w_NURBS = isec_w_NURBS + 1;
+                    sections(isec,1) = isec; % section number (isec)
+                    sections(isec,2) = isec_w_NURBS; % knot vector number (ikv)
+                    sections(isec,3) = ncp + 1; % number of nodes per section (nsec)
                     sections(isec,4:4+ncp) = elmt(idx);
                     
-                    ord(isec,:) = [isec,kvno,pgrad,1];
+                    ord(isec,:) = [isec,pgrad,1];
+                    
+                    
+                    % knot vector number (ikv)
+                    knots(isec_w_NURBS,1) = isec_w_NURBS;
+                    % weights number (iw)
+                    knots(isec_w_NURBS,2) = isec_w_NURBS;
+                    % number of knots (nknots)
+                    knots(isec_w_NURBS,3) = nKnot;
+                    % initial knot value (iknot)
+                    knots(isec_w_NURBS,4) = knotVectors{kvno}(6);
+                    % final knot value (jknot)
+                    knots(isec_w_NURBS,5) = knotVectors{kvno}(end);
+                    % knots
+                    knots(isec_w_NURBS,6:5+nKnot) = knotVectors{kvno}(6:end);
+                    
+                    % weights number (iw)
+                    wgt(isec_w_NURBS,1) = isec_w_NURBS;
+                    % number of control points / weights (nweights)
+                    wgt(isec_w_NURBS,2) = ncp;
+                    % weights
+                    wgt(isec_w_NURBS,3:2+ncp) = coor(elmt(idx(1:end-1)),4);
                     
                 elseif ii ~= nel
                     a = ii;
@@ -323,12 +434,12 @@ if f_splittElmtIntoSec == 1
                     idx = [a,b,nel+1];
                     
                     isec = isec + 1;
-                    sections(isec,1) = isec;
-                    sections(isec,2) = 0;
-                    sections(isec,3) = 3;
+                    sections(isec,1) = isec; % section number (isec)
+                    sections(isec,2) = 0; % knot vector number (ikv)
+                    sections(isec,3) = 3; % number of nodes per section (nsec)
                     sections(isec,4:6) = elmt(idx);
                     
-                    ord(isec,:) = [isec,0,1,1];
+                    ord(isec,:) = [isec,1,1];
                     
                 elseif ii == nel
                     a = nel;
@@ -336,12 +447,12 @@ if f_splittElmtIntoSec == 1
                     idx = [a,b,nel+1];
                     
                     isec = isec + 1;
-                    sections(isec,1) = isec;
-                    sections(isec,2) = 0;
-                    sections(isec,3) = 3;
+                    sections(isec,1) = isec; % section number (isec)
+                    sections(isec,2) = 0; % knot vector number (ikv)
+                    sections(isec,3) = 3; % number of nodes per section (nsec)
                     sections(isec,4:6) = elmt(idx);
                     
-                    ord(isec,:) = [isec,0,1,1];
+                    ord(isec,:) = [isec,1,1];
                     
                 end
                 patch(ecoor(idx,1).', ecoor(idx,2).', color, 'FaceAlpha',.5)
@@ -359,12 +470,34 @@ if f_splittElmtIntoSec == 1
                     idx = [a:b,nel+1];
                     
                     isec = isec + 1;
-                    sections(isec,1) = isec;
-                    sections(isec,2) = kvno;
-                    sections(isec,3) = ncp + 1;
+                    isec_w_NURBS = isec_w_NURBS + 1;
+                    sections(isec,1) = isec; % section number (isec)
+                    sections(isec,2) = isec_w_NURBS; % knot vector number (ikv)
+                    sections(isec,3) = ncp + 1; % number of nodes per section (nsec)
                     sections(isec,4:4+ncp) = elmt(idx);
                     
-                    ord(isec,:) = [isec,kvno,pgrad,1];
+                    ord(isec,:) = [isec,pgrad,1];
+                    
+                   
+                    % knot vector number (ikv)
+                    knots(isec_w_NURBS,1) = isec_w_NURBS;
+                    % weights number (iw)
+                    knots(isec_w_NURBS,2) = isec_w_NURBS;
+                    % number of knots (nknots)
+                    knots(isec_w_NURBS,3) = nKnot;
+                    % initial knot value (iknot)
+                    knots(isec_w_NURBS,4) = knotVectors{kvno}(6);
+                    % final knot value (jknot)
+                    knots(isec_w_NURBS,5) = knotVectors{kvno}(end);
+                    % knots
+                    knots(isec_w_NURBS,6:5+nKnot) = knotVectors{kvno}(6:end);
+                    
+                    % weights number (iw)
+                    wgt(isec_w_NURBS,1) = isec_w_NURBS;
+                    % number of control points / weights (nweights)
+                    wgt(isec_w_NURBS,2) = ncp;
+                    % weights
+                    wgt(isec_w_NURBS,3:2+ncp) = coor(elmt(idx(1:end-1)),4);
                     
                 elseif ii ~= nel
                     a = ii;
@@ -372,12 +505,12 @@ if f_splittElmtIntoSec == 1
                     idx = [a,b,nel+1];
                     
                     isec = isec + 1;
-                    sections(isec,1) = isec;
-                    sections(isec,2) = 0;
-                    sections(isec,3) = 3;
+                    sections(isec,1) = isec; % section number (isec)
+                    sections(isec,2) = 0; % knot vector number (ikv)
+                    sections(isec,3) = 3; % number of nodes per section (nsec)
                     sections(isec,4:6) = elmt(idx);
                     
-                    ord(isec,:) = [isec,0,1,1];
+                    ord(isec,:) = [isec,1,1];
                     
                 elseif ii == nel
                     a = nel;
@@ -385,12 +518,12 @@ if f_splittElmtIntoSec == 1
                     idx = [a,b,nel+1];
                     
                     isec = isec + 1;
-                    sections(isec,1) = isec;
-                    sections(isec,2) = 0;
-                    sections(isec,3) = 3;
+                    sections(isec,1) = isec; % section number (isec)
+                    sections(isec,2) = 0; % knot vector number (ikv)
+                    sections(isec,3) = 3; % number of nodes per section (nsec)
                     sections(isec,4:6) = elmt(idx);
                     
-                    ord(isec,:) = [isec,0,1,1];
+                    ord(isec,:) = [isec,1,1];
                     
                 end
                 patch(ecoor(idx,1).', ecoor(idx,2).', color, 'FaceAlpha',.5)
