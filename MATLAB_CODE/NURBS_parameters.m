@@ -11,7 +11,8 @@ end
 
 if flag==2
     degree=2;
-    controlPoints=[ 0 -1 -1 -1 0 1 1 1 0; -1 -1 0 1 1 1 0 -1 -1];
+    controlPoints=[ 0 -1 -1 -1 0 1 1 1 0;...
+                   -1 -1 0 1 1 1 0 -1 -1];
     knots=[0 0 0 0.25 0.25 0.5 0.5 0.75 0.75 1 1 1];  
     weights=[1 0.707 1 0.707 1 0.707 1 0.707 1];
     Boundary=[-5 -5 5 5;...
@@ -57,7 +58,8 @@ end
 
 if flag==6
     degree=2;
-    controlPoints=[ 0 -4 -4 -4 0 4 4 4 0; -0.9 -4 0 4 -0.9 4 0 -4 -0.9];
+    controlPoints=[ 0 -4 -4 -4 0 4 4 4 0; 
+                  -0.9 -4 0 4 -0.9 4 0 -4 -0.9];
     knots=[0 0 0 0.25 0.25 0.5 0.5 0.75 0.75 1 1 1];  
     weights=[1 0.707 1 0.707 1 0.707 1 0.707 1];
     Boundary=[min(controlPoints(1,:))*1.2, min(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2;...
@@ -74,6 +76,18 @@ if flag==7
     weights=[1 2 2 1 2 2 1];
     Boundary=[min(controlPoints(1,:))*1.2, min(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2;...
         max(controlPoints(2,:))*1.2, min(controlPoints(2,:))*1.2, min(controlPoints(2,:))*1.2, max(controlPoints(2,:))*1.2];
+    axis=([min(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2,...
+        min(controlPoints(2,:))*1.2, max(controlPoints(2,:))*1.2,]);
+end
+
+if flag==8
+    degree=2;
+    controlPoints=[  0  1 1;...
+                     1  1 0];
+    knots=[0.25 0.25 0.25 0.5 0.5 0.5];  
+    weights=[1 0.707 1];
+    Boundary=[0 0 5 5;...
+              5 0 0 5];
     axis=([min(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2,...
         min(controlPoints(2,:))*1.2, max(controlPoints(2,:))*1.2,]);
 end
