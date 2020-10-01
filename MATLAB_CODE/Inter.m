@@ -19,18 +19,22 @@ index=[];
 tol = 1e-10;
 jk=[];
 index=[];
-n=length(knots)-degree-2;
 num_jk=0;
+
+
+% number of control points / basis functions - 1
+n = length(knots)-degree-2;
+% ncp number of control points 
+ncp = size(controlPoints,2);
 
 % First we obtain if there is an intersection between an control poligon
 % segment and the quad's edge
-for i=1:size(controlPoints,2)-1
+for i = 1:ncp-1
     % loop over the control points. Each segment of the control poligon is
     % defined by two consecutive control points.
     Px = controlPoints(1,i);
     Py = controlPoints(2,i);
-    if ( i == size(controlPoints,2) )
-    else
+    if i ~= ncp 
         Qx = controlPoints(1,i+1);
         Qy = controlPoints(2,i+1);
     end
@@ -69,18 +73,18 @@ for i = 1:num_inter
     % We loop over the segments of the control poligon that intersect the
     % quad's edge
     if abs(x2 - x1) < tol
-        cond3 = x1;
-        idx2 = 1;
+        coorVal = x1;
+        coorIdx = 1;
         
     elseif abs(y2 - y1) < tol
-        cond3 = y1;
-        idx2 = 2;
+        coorVal = y1;
+        coorIdx = 2;
         
     end
     % findIntrscApprox scans the part of the NURBS controlled by the control
     % points that define the intersected segment. It obtains the first
     % approximation of the solution as output (jj)
-    [jj,flag] = findIntrscApprox(cond3,idx2, index((2*i-1):2*i),degree,knots,...
+    [jj,flag] = findIntrscApprox(coorVal,coorIdx, index((2*i-1):2*i),degree,knots,...
         controlPoints,weights,x1,x2,y1,y2,jk);
     if flag == 1
         num_jk = num_jk + 1;
@@ -102,11 +106,11 @@ for i=1:num_jk
         if err < tol
             %Avoiding to obtain multiplicities,
             if any(abs(U-a)>tol) || isempty(U)
-                if idx2==1 && f(2,1)>y1 && f(2,1)<y2
+                if coorIdx==1 && f(2,1)>y1 && f(2,1)<y2
                     Pint=[Pint f(:)];
                     U=[U a];
                 end
-                if idx2==2 && f(1,1)>x1 && f(1,1)<x2
+                if coorIdx==2 && f(1,1)>x1 && f(1,1)<x2
                     Pint=[Pint f(:)];
                     U=[U a];
                 end
@@ -126,11 +130,11 @@ for i=1:num_jk
         if ii==20
             %Avoiding to obtain multiplicities
             if any(abs(U-a)>tol) || isempty(U)
-                if idx2==1 && f(2,1)>y1 && f(2,1)<y2
+                if coorIdx==1 && f(2,1)>y1 && f(2,1)<y2
                     Pint=[Pint f(:)];
                     U=[U a];
                 end
-                if idx2==2 && f(1,1)>x1 && f(1,1)<x2
+                if coorIdx==2 && f(1,1)>x1 && f(1,1)<x2
                     Pint=[Pint f(:)];
                     U=[U a];
                 end
