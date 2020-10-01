@@ -38,11 +38,12 @@ end
 % P = [x, y, s]
 P = zeros(nkts,3);
 n = length(knots)-degree-2;
-counter = 1;
+counter = 0;
 for k = kts
     point = curvePoint(n,degree,knots,controlPoints,k,weights);
-    P(counter,:) = [point' k];
     counter = counter + 1;
+    P(counter,:) = [point' k];
+    
 end
 
 g = P(:,idx)-coor;
