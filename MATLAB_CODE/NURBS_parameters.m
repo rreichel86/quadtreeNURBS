@@ -82,10 +82,16 @@ end
 
 if flag==8
     degree=2;
-    controlPoints=[  0  1 1;...
-                     1  1 0];
-    knots=[0.25 0.25 0.25 0.5 0.5 0.5];  
-    weights=[1 0.707 1];
+%     controlPoints=[  0  1 1;...
+%                      1  1 0];
+%     knots=[0.25 0.25 0.25 0.5 0.5 0.5];  
+%     weights=[1 0.707 1];
+    
+    controlPoints=[ 0 -1 -1 -1 0 1 1 1 0;...
+                   -1 -1 0 1 1 1 0 -1 -1];
+    knots=[0 0 0 0.25 0.25 0.5 0.5 0.75 0.75 1 1 1];  
+    weights=[1 0.707 1 0.707 1 0.707 1 0.707 1];
+    
     Boundary=[0 0 5 5;...
               5 0 0 5];
     axis=([min(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2,...
