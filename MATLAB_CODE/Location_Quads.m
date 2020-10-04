@@ -7,10 +7,15 @@ for i=2:l
     Current=Quadtree.Node{i,1}{2};
     for j=1:length(Current)/2
         aux=[Current(2*(j-1)+1) Current(2*(j-1)+2)];
-        if aux==[1 1];Location{i}=[Location{i} 1];end
-        if aux==[2 1];Location{i}=[Location{i} 2];end
-        if aux==[1 2];Location{i}=[Location{i} 3];end
-        if aux==[2 2];Location{i}=[Location{i} 4];end                  
+        if isequal(aux,[1 1])
+            Location{i}=[Location{i} 1];
+        elseif isequal(aux,[2 1])
+            Location{i}=[Location{i} 2];
+        elseif isequal(aux,[1 2])
+            Location{i}=[Location{i} 3];
+        elseif isequal(aux,[2 2])
+            Location{i}=[Location{i} 4];
+        end                  
     end    
 end
 end
