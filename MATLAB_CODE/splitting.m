@@ -31,13 +31,21 @@ aux=0.9*max(abs(Quad(1,:)));
     ,max(Quad(2,:))+aux,degree,knots,controlPoints,weights,aux); 
 Px = [Px0, Px1]; %[x1,x2;y1,y2]
 Ux = [Ux0, Ux1];
-if ~isempty(Px);plot(Px(1,:),Px(2,:),'bo', 'LineWidth',1.5);end
+if ~isempty(Px)
+    plot(Px(1,:),Px(2,:),'bo', 'LineWidth',1.5);
+end
 Py = [Py0, Py1]; %[x1,x2;y1,y2]
 Uy = [Uy0, Uy1];
-if ~isempty(Py);plot(Py(1,:),Py(2,:),'bo','LineWidth',1.5);end
+if ~isempty(Py)
+    plot(Py(1,:),Py(2,:),'bo','LineWidth',1.5);
+end
 
 U = [Ux Uy];
-if any(U==0);if any((U-0.65)>0);U(U==0)=1;end;end
+if any(U == 0)
+    if any((U-0.65) > 0)
+        U(U == 0)=1;
+    end
+end
 
 % After determining the intersection points we perform a knot insertion,
 % beeing the knots the parametrical coordinates of the intersection points
