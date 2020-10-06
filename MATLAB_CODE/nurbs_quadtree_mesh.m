@@ -112,18 +112,6 @@ for ielno = 1:numel
     ecoor = coor( elmt(1:end), 2:3);
     wg = coor( elmt(1:end), 4);
 
-    % determine if a polygonal element is
-    % inside or outside the region enclosed 
-    % by the NURBS curve
-    if sum(coor( elmt, 7)) < 0 % outside / region-nro: 1
-      color = 'red';
-      region_nro = 1;
-    else % inside / region-nro: 2
-%       continue
-      color = 'blue';
-      region_nro = 2;
-    end
-
     if kvno ~= 0
 
         nKnot = knotVectors{kvno}(5);
