@@ -18,8 +18,9 @@ function [nnode,coor,numsec,maxnsec,sections,ord,knots,wgt] = nurbs_quadtree_mes
 %                               nodes, where the first three entries
 %                               isec - section number
 %                               ikv - knot vector number
+%                               region - region number 
 %                               nsec - number of nodes per section
-% sections = [isec, ikv, nsec, node_1,...,node_nsec]
+% sections = [isec, ikv, region, nsec, node_1,...,node_nsec]
 % 
 % ord ------------------------- section polynomial order
 % ord = [isec, pgrad, qgrad]
@@ -92,8 +93,8 @@ for ielno = 1:numel
     maxnsec = max(maxnsec,nsec);
 end
 
-% sections = [isec, ikv, nsec, node_1,...,node_nsec]
-sections = zeros(numsec, maxnsec + 3);
+% sections = [isec, ikv, region, nsec, node_1,...,node_nsec]
+sections = zeros(numsec, maxnsec + 4);
 % knots = [ikv, iw, nknots, iknot, jknot, knot_1,...,knot_nknots]
 knots = zeros(numsec_w_NURBS, maxnknots + 5);
 % ord = [isec, pgrad, qgrad]
@@ -113,10 +114,13 @@ for ielno = 1:numel
     % determine if a polygonal element is
     % inside or outside the region enclosed 
     % by the NURBS curve
-    if sum(coor( elmt, 7)) < 0 % outside
+    if sum(coor( elmt, 7)) < 0 % outside / region-nro: 1
       color = 'red';
-    else % inside
+      region_nro = 1;
+    else % inside / region-nro: 2
+%       continue
       color = 'blue';
+      region_nro = 2;
     end
 
     if kvno ~= 0
@@ -191,7 +195,8 @@ for ielno = 1:numel
             sections(isec,1) = isec; % section number (isec)
             sections(isec,2) = 0; % knot vector number (ikv)
             sections(isec,3) = 3; % number of nodes per section (nsec)
-            sections(isec,4:6) = elmt(idx); 
+            sections(isec,4) = region_nro; % region number
+            sections(isec,5:7) = elmt(idx); 
 
             ord(isec,:) = [isec,1,1];
 
@@ -216,7 +221,8 @@ for ielno = 1:numel
                 sections(isec,1) = isec; % section number (isec)
                 sections(isec,2) = isec_w_NURBS; % knot vector number (ikv)
                 sections(isec,3) = ncp + 1; % number of nodes per section (nsec)
-                sections(isec,4:4+ncp) = elmt(idx);
+                sections(isec,4) = region_nro; % region number
+                sections(isec,5:5+ncp) = elmt(idx);
 
                 ord(isec,:) = [isec,pgrad,1];
 
@@ -249,7 +255,8 @@ for ielno = 1:numel
                 sections(isec,1) = isec; % section number (isec)
                 sections(isec,2) = 0; % knot vector number (ikv)
                 sections(isec,3) = 3; % number of nodes per section (nsec)
-                sections(isec,4:6) = elmt(idx);
+                sections(isec,4) = region_nro; % region number
+                sections(isec,5:7) = elmt(idx);
 
                 ord(isec,:) = [isec,1,1];
 
@@ -262,7 +269,8 @@ for ielno = 1:numel
                 sections(isec,1) = isec; % section number (isec)
                 sections(isec,2) = 0; % knot vector number (ikv)
                 sections(isec,3) = 3; % number of nodes per section (nsec)
-                sections(isec,4:6) = elmt(idx);
+                sections(isec,4) = region_nro; % region number
+                sections(isec,5:7) = elmt(idx);
 
                 ord(isec,:) = [isec,1,1];
 
@@ -285,7 +293,8 @@ for ielno = 1:numel
                 sections(isec,1) = isec; % section number (isec)
                 sections(isec,2) = isec_w_NURBS; % knot vector number (ikv)
                 sections(isec,3) = ncp + 1; % number of nodes per section (nsec)
-                sections(isec,4:4+ncp) = elmt(idx);
+                sections(isec,4) = region_nro; % region number
+                sections(isec,5:5+ncp) = elmt(idx);
 
                 ord(isec,:) = [isec,pgrad,1];
 
@@ -318,7 +327,8 @@ for ielno = 1:numel
                 sections(isec,1) = isec; % section number (isec)
                 sections(isec,2) = 0; % knot vector number (ikv)
                 sections(isec,3) = 3; % number of nodes per section (nsec)
-                sections(isec,4:6) = elmt(idx);
+                sections(isec,4) = region_nro; % region number
+                sections(isec,5:7) = elmt(idx);
 
                 ord(isec,:) = [isec,1,1];
 
@@ -331,7 +341,8 @@ for ielno = 1:numel
                 sections(isec,1) = isec; % section number (isec)
                 sections(isec,2) = 0; % knot vector number (ikv)
                 sections(isec,3) = 3; % number of nodes per section (nsec)
-                sections(isec,4:6) = elmt(idx);
+                sections(isec,4) = region_nro; % region number
+                sections(isec,5:7) = elmt(idx);
 
                 ord(isec,:) = [isec,1,1];
 
@@ -354,7 +365,8 @@ for ielno = 1:numel
                 sections(isec,1) = isec; % section number (isec)
                 sections(isec,2) = isec_w_NURBS; % knot vector number (ikv)
                 sections(isec,3) = ncp + 1; % number of nodes per section (nsec)
-                sections(isec,4:4+ncp) = elmt(idx);
+                sections(isec,4) = region_nro; % region number
+                sections(isec,5:5+ncp) = elmt(idx);
 
                 ord(isec,:) = [isec,pgrad,1];
 
@@ -388,7 +400,8 @@ for ielno = 1:numel
                 sections(isec,1) = isec; % section number (isec)
                 sections(isec,2) = 0; % knot vector number (ikv)
                 sections(isec,3) = 3; % number of nodes per section (nsec)
-                sections(isec,4:6) = elmt(idx);
+                sections(isec,4) = region_nro; % region number
+                sections(isec,5:7) = elmt(idx);
 
                 ord(isec,:) = [isec,1,1];
 
@@ -401,7 +414,8 @@ for ielno = 1:numel
                 sections(isec,1) = isec; % section number (isec)
                 sections(isec,2) = 0; % knot vector number (ikv)
                 sections(isec,3) = 3; % number of nodes per section (nsec)
-                sections(isec,4:6) = elmt(idx);
+                sections(isec,4) = region_nro; % region number
+                sections(isec,5:7) = elmt(idx);
 
                 ord(isec,:) = [isec,1,1];
 
@@ -425,7 +439,8 @@ for ielno = 1:numel
                 sections(isec,1) = isec; % section number (isec)
                 sections(isec,2) = isec_w_NURBS; % knot vector number (ikv)
                 sections(isec,3) = ncp + 1; % number of nodes per section (nsec)
-                sections(isec,4:4+ncp) = elmt(idx);
+                sections(isec,4) = region_nro; % region number
+                sections(isec,5:5+ncp) = elmt(idx);
 
                 ord(isec,:) = [isec,pgrad,1];
 
@@ -459,7 +474,8 @@ for ielno = 1:numel
                 sections(isec,1) = isec; % section number (isec)
                 sections(isec,2) = 0; % knot vector number (ikv)
                 sections(isec,3) = 3; % number of nodes per section (nsec)
-                sections(isec,4:6) = elmt(idx);
+                sections(isec,4) = region_nro; % region number
+                sections(isec,5:7) = elmt(idx);
 
                 ord(isec,:) = [isec,1,1];
 
@@ -472,7 +488,8 @@ for ielno = 1:numel
                 sections(isec,1) = isec; % section number (isec)
                 sections(isec,2) = 0; % knot vector number (ikv)
                 sections(isec,3) = 3; % number of nodes per section (nsec)
-                sections(isec,4:6) = elmt(idx);
+                sections(isec,4) = region_nro; % region number
+                sections(isec,5:7) = elmt(idx);
 
                 ord(isec,:) = [isec,1,1];
 
