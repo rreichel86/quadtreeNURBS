@@ -16,7 +16,7 @@ function NURBS = CalculateNURBS(degree,knots,controlPoints,weights)
 % -------------------------------------------------------------------------
 
 n = length(controlPoints)-1;
-subs = knots(1):(knots(end)-knots(1))*0.001:knots(end);
+subs = knots(1):(knots(end)-knots(1))*0.01:knots(end);
 NURBS = zeros(length(subs),3);
 
 for i = 1:length(subs)
