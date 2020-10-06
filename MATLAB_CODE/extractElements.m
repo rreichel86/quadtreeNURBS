@@ -231,13 +231,9 @@ for i = 1:numleaves
     end
 end % end loop over leaves
 
-% control points in matrix form
-cp = cell2mat(controlPoints_coor);
 % intersection point coordinates in matrix form
 intersections_coor = cell2mat(intersections_coor);
 tol = 1e-10;
-% remove repeated control points
-cp = uniquetol(cp,tol,'ByRows',true);
 
 % coordinates in matrix form
 coor = [coor{:}]';
@@ -268,28 +264,14 @@ end
 
 % coor numbers 
 coor(:,1) = (1:numcoor);
-% type node
-coor(:,5) = 1;
-% node is initially outside
-coor(:,7) = -1; 
+% nodes are initially outside
+coor(:,7) = -1;
+% control point are at the boundary
+coor(coor(:,5) == 2, 7) =  0;
+ 
 
 % delete tmp_coor
 clearvars tmp_coor
-
-% loop over control points
-for k = 1:length(cp)
-    % search control point and assign weight
-    [a] = find ( abs(coor(:,2)-cp(k,1))<1e-10);
-    [b] = find ( abs(coor(:,3)-cp(k,2))<1e-10);
-    row = intersect(a,b);
-    if isempty(row)~=1
-        coor(row,4) = cp(k,3);
-        % type control point
-        coor(row,5) = 2;
-        % control point is on the boundary
-        coor(row,7) = 0;
-    end
-end
 
 indices = zeros(size(intersections_coor,1),1);
 % loop over intersection points
