@@ -79,7 +79,7 @@ maxnsec = 0; % max number of nodes on any section
 maxncp = 0; % max number of control points
 for ielno = 1:numel
     ikv = connectivity{ielno}(2);
-    nel = connectivity{ielno}(3);
+    nel = connectivity{ielno}(4);
     if ikv ~= 0
        ncp = ncpoints(ikv); 
        numsec = numsec + nel - ncp + 2;
@@ -106,8 +106,9 @@ isec = 0;
 isec_w_NURBS = 0;
 for ielno = 1:numel
     kvno = connectivity{ielno}(2); % knot vector number
-    nel = connectivity{ielno}(3); % number of nodes per element
-    elmt = connectivity{ielno}(4:end); % element connectivity matrix
+    region_nro = connectivity{ielno}(3); % region number 
+    nel = connectivity{ielno}(4); % number of nodes per element
+    elmt = connectivity{ielno}(5:end); % element connectivity matrix
     ecoor = coor( elmt(1:end), 2:3);
     wg = coor( elmt(1:end), 4);
 
@@ -125,13 +126,10 @@ for ielno = 1:numel
 
     if kvno ~= 0
 
-
         nKnot = knotVectors{kvno}(5);
         pgrad = knotVectors{kvno}(2);
         icp = find( elmt == knotVectors{kvno}(3) );
         ecp = find( elmt == knotVectors{kvno}(4) );
-
-
 
         % number of control points
         ncp = (nKnot - 1) - pgrad;
@@ -143,7 +141,6 @@ for ielno = 1:numel
         idxCtrlP = idxControlPoints{kvno}(3:end);
 
         poly = zeros(ncp+1,2);
-
 
         poly(1:ncp,:) = coor(idxCtrlP,2:3);
         poly(ncp+1,:) = sc_coor; 
@@ -177,8 +174,6 @@ for ielno = 1:numel
         end            
     end
 
-
-
     % plot polygon that dont have curve edges
     if kvno == 0
         for ii = 1:nel
@@ -203,8 +198,6 @@ for ielno = 1:numel
 %                 patch(ecoor(idx,1).', ecoor(idx,2).', color, 'FaceAlpha',.5)
 %                 hold on
         end
-
-
 
     % plot polygon that have curve edges
     elseif kvno ~= 0 && icp < ecp && icp == 1
@@ -370,7 +363,6 @@ for ielno = 1:numel
 
                 ord(isec,:) = [isec,pgrad,1];
 
-
                 % knot vector number (ikv)
                 knots(isec_w_NURBS,1) = isec_w_NURBS;
                 % weights number (iw)
@@ -443,7 +435,6 @@ for ielno = 1:numel
                 sections(isec,5:5+ncp) = elmt(idx);
 
                 ord(isec,:) = [isec,pgrad,1];
-
 
                 % knot vector number (ikv)
                 knots(isec_w_NURBS,1) = isec_w_NURBS;

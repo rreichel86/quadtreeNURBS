@@ -22,9 +22,10 @@ function [numcoor,coor,numel,connectivity,maxnel,...
 %                              nodes, where the first three entries
 %                              iel - element number
 %                              ikv - knot vector number
+%                              which_region - region number
 %                              nel - number of nodes per element
 %
-% connectivity = [iel, ikv, nel, node_1,...,node_nel, scaling_center]
+% connectivity = [iel, ikv, which_region, nel, node_1,...,node_nel, scaling_center]
 % maxnel --------------------- maximum number of nodes on any element
 %
 % numKnotVectors ------------- number of knot vectors
@@ -202,6 +203,8 @@ for i = 1:numleaves
         connectivity{j}(1,1) = j;
         % knot vector number
         connectivity{j}(1,2) = 0;
+        % region number 
+        connectivity{j}(1,3) = 1;
         j = j+1;
     else
         % loop over intersection points 
@@ -224,9 +227,12 @@ for i = 1:numleaves
         % element numbers
         connectivity{j}(1,1) = j;
         connectivity{j+1}(1,1) = j+1;
-        connectivity{j}(1,2) = countKnotVectors;
         % knot vector number
+        connectivity{j}(1,2) = countKnotVectors;
         connectivity{j+1}(1,2) = countKnotVectors;
+        % region number 
+        connectivity{j}(1,3) = 1;
+        connectivity{j+1}(1,3) = 1;
         j = j+2;
     end
 end % end loop over leaves
@@ -295,13 +301,13 @@ for iel = 1:numel
         [a] = find ( abs(coor(:,2) - elements{iel}(1,n))<1e-10);
         [b] = find ( abs(coor(:,3) - elements{iel}(2,n))<1e-10);
         nodeNumber = intersect(a,b);
-        connectivity{iel}(1,3+n) = nodeNumber;
+        connectivity{iel}(1,4+n) = nodeNumber;
     end
     % remove repeated values without changing the order
-    connectivity{iel}(1,4:end) = unique(connectivity{iel}(1,4:end),'stable');
+    connectivity{iel}(1,5:end) = unique(connectivity{iel}(1,5:end),'stable');
     % update number of nodes per element
-    nel = size(connectivity{iel}(4:end),2); 
-    connectivity{iel}(1,3) = nel;
+    nel = size(connectivity{iel}(5:end),2); 
+    connectivity{iel}(1,4) = nel;
     % maximum number of nodes on any element
     maxnel = max(nel,maxnel);  
     % append correspondig scaling center index
