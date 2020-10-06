@@ -275,6 +275,31 @@ coor(:,7) = -1;
 % control point are at the boundary
 coor(coor(:,5) == 2, 7) =  0;
  
+data = Quadtree.Node{1,1};
+NURBS_degree = data{3};
+NURBS_knots  = data{4};
+NURBS_controlPoints = data{5};
+NURBS_weights = data{6};
+
+% compute point of the NURBS curve
+NURBS = CalculateNURBS(NURBS_degree,NURBS_knots, NURBS_controlPoints, NURBS_weights);
+
+% Compute bounding box that enclosed the NURBS curve
+x_min = min(NURBS(:,1));
+x_max = max(NURBS(:,1));
+y_min = min(NURBS(:,2));
+y_max = max(NURBS(:,2));
+
+% loop over nodes, excluding control points
+for ii = find(coor(:,5) == 1)'
+    % Check if current node is inside the bounding box
+    if ( isPointInQuad([x_min,y_min], [x_max,y_max], coor(ii,2:3)) == 1 )
+        % Check if current node is also inside 
+        % the region enclosed by the NURBS curve
+        pointInPoly = isPointInPolygon(NURBS(1:end-1,1:2), coor(ii,2:3));
+        coor(ii,7) = pointInPoly;
+    end
+end
 
 % delete tmp_coor
 clearvars tmp_coor
@@ -300,13 +325,20 @@ for iel = 1:numel
     for n = 1 : nel
         [a] = find ( abs(coor(:,2) - elements{iel}(1,n))<1e-10);
         [b] = find ( abs(coor(:,3) - elements{iel}(2,n))<1e-10);
-        nodeNumber = intersect(a,b);
+        nodeNumber = intersect(a,b);   
         connectivity{iel}(1,4+n) = nodeNumber;
     end
     % remove repeated values without changing the order
     connectivity{iel}(1,5:end) = unique(connectivity{iel}(1,5:end),'stable');
     % update number of nodes per element
     nel = size(connectivity{iel}(5:end),2); 
+    
+    if sum(coor( connectivity{iel}(1,5:4+nel), 7)) < 0 % outside
+          connectivity{iel}(1,3) = 1;
+        else % inside
+          connectivity{iel}(1,3) = 2;
+    end
+    
     connectivity{iel}(1,4) = nel;
     % maximum number of nodes on any element
     maxnel = max(nel,maxnel);  
