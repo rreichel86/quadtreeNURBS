@@ -81,7 +81,9 @@ for i = 1:numleaves
         % cp = [];% control points and weight
         intersectionPoints = [];
 
-        coordinates = quad;
+        coordinates = [quad;...       % nodal x-coor and y-coor
+                       ones(1,4);...  % weights
+                       ones(1,4)];    % type 
         element = [quad,midPoints];
         
     elseif isempty(Quadtree.Node{leaves(i),1}{3,1}) == 1
@@ -105,7 +107,10 @@ for i = 1:numleaves
         idxControlPoints{countKnotVectors}(1,1) = countKnotVectors;
         idxControlPoints{countKnotVectors}(1,2) = ncp;
         
-        coordinates = [quad,intersectionPoints,controlPoints];
+        coordinates = [quad, controlPoints;...   % nodal/ctrlPts x-coor and y-coor
+                       ones(1,4), weights;...    % weights
+                       ones(1,4), 2*ones(1,ncp)];  % type
+                   
         element = [quad,midPoints,intersectionPoints];
         
     elseif isempty(Quadtree.Node{leaves(i),1}{4,1}) == 1
@@ -129,7 +134,10 @@ for i = 1:numleaves
         idxControlPoints{countKnotVectors}(1,1) = countKnotVectors;
         idxControlPoints{countKnotVectors}(1,2) = ncp;
 
-        coordinates = [quad,intersectionPoints,controlPoints];
+        coordinates = [quad, controlPoints;...   % nodal/ctrlPts x-coor and y-coor
+                       ones(1,4), weights;...    % weights
+                       ones(1,4), 2*ones(1,ncp)];  % type
+                   
         element = [quad,midPoints,intersectionPoints];
         
     else
@@ -153,7 +161,10 @@ for i = 1:numleaves
         idxControlPoints{countKnotVectors}(1,1) = countKnotVectors;
         idxControlPoints{countKnotVectors}(1,2) = ncp;
         
-        coordinates = [quad,intersectionPoints,controlPoints];
+        coordinates = [quad, controlPoints;...   % nodal/ctrlPts x-coor and y-coor
+                       ones(1,4), weights;...    % weights
+                       ones(1,4), 2*ones(1,ncp)];  % type
+                   
         element = [quad,midPoints,intersectionPoints];
         
     end
@@ -243,7 +254,7 @@ numcoor = numcoor0 + numsc;
 % prealloc coor matrix 
 coor = zeros(numcoor, 7);
 % coordinates 
-coor(1:numcoor0,2:3) = tmp_coor;
+coor(1:numcoor0,2:5) = tmp_coor;
 
 % compute scaling center of polygonal elements
 for iel = 1:numel
@@ -252,7 +263,7 @@ for iel = 1:numel
     % compute scaling center
     % compute centroid of the kernel
     [scx,scy] = centroid(polyshape(kernel,'Simplify',false));
-    coor(numcoor0+iel,2:3) = [scx,scy];
+    coor(numcoor0+iel,2:5) = [scx,scy,1,1];
 end
 
 % coor numbers 
