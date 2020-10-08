@@ -27,7 +27,7 @@ flag = 0;
 s = -99;
 tol = 1e-10;
 % If we have a second intersection we start from the other side of the
-% curve, that means going backwards through the knot parametrical space
+% curve, that means going backwards through the parametrical space
 if isempty(intrscArr)
     kts = kN(1):(kN(end)-kN(1))*0.01:kN(end);
     nkts = length(kts);
