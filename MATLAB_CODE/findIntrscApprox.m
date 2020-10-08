@@ -23,7 +23,8 @@ function [s,flag] = findIntrscApprox(coorVal,coorIdx,interval,degree,knots,...
 % -------------------------------------------------------------------------
 
 kN = knots(interval(1):(interval(end)+degree+1));
-flag = 1;
+flag = 0;
+s = -99;
 tol = 1e-10;
 % If we have a second intersection we start from the other side of the
 % curve, that means going backwards through the knot parametrical space
