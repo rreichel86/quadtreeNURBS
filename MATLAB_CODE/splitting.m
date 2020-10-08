@@ -45,6 +45,12 @@ end
 U = [Ux Uy];
 U = unique(U);
 
+% if any(U == 0)
+%     if any((U-0.65) > 0)
+%         U(U == 0)=1;
+%     end
+% end
+
 % After determining the intersection points we perform a knot insertion,
 % beeing the knots the parametrical coordinates of the intersection points
 newKnots=sort(U); 
