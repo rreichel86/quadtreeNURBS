@@ -1,4 +1,4 @@
-function [Pint,U] = Inter(x1,y1,x2,y2,degree,knots,controlPoints,weights,aux)
+function [Pint,U] = Inter(x1,y1,x2,y2,degree,knots,controlPoints,weights)
 % Inter functions obtains the intersection between a NURBS and a given 
 % segment. If it exists, the control poligon will also intersect the
 % NURBS. The routine first obtains this segment of the control poligon.
