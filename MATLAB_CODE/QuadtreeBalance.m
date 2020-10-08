@@ -1,8 +1,6 @@
 function [Quadtree] = QuadtreeBalance(Quadtree, controlPoints,...
     knots, weights, degree,Boundary)
 
-figure(1);
-
 references = cellfun(@(Q) Q(2),Quadtree.Node);
 references{1} = [];
 
@@ -23,12 +21,6 @@ while l <= length(idxLeaves)
     locLeaf = ref2loc(refLeaf);
     % current Quad father index
     idxLeafFather = Quadtree.Parent(idxLeaf);
-    
-    % plot current Quad
-    % LeafXcoor = Quadtree.Node{idxLeaf,1}{10,1}(1,1:end);
-    % LeafYcoor = Quadtree.Node{idxLeaf,1}{10,1}(2,1:end);
-    % patch(LeafXcoor', LeafYcoor', 'red','FaceAlpha',.2)
-    % hold on;
     
     is_splitted = 0;
     % array with found neighbours indices
@@ -58,12 +50,6 @@ while l <= length(idxLeaves)
                     break
                 end
             end
-            % plot found neighbour Quad
-            % NQ = Quadtree.Node(idx);
-            % NQXcoor = NQ{1,1}{10,1}(1,1:end);
-            % NQYcoor = NQ{1,1}{10,1}(2,1:end);
-            % plot(NQXcoor', NQYcoor', 'b-')
-            % hold on;
             
             if is_splitted == 1
                 continue
