@@ -28,20 +28,22 @@ if k==1
         k0 = find( abs(knots_new - newKnots(2*(j-1)+1)) < 1e-10, 1, 'First');
         k1 = find( abs(knots_new - newKnots(2*(j-1)+2)) < 1e-10, 1, 'Last');
         
-        if k0==1
+        if k0 == 1 && k1 ~= length(knots_new)
             controlPoints2 = controlPoints(1:2,k0:(k1-degree));
             knots_new2= [knots_new(k0:k1) knots_new(k1)];
             weights2= weights(k0:(k1-degree));
-        end
-        if k1==length(knots_new)
+        elseif k0 ~= 1 && k1 == length(knots_new)
             controlPoints2 = controlPoints(1:2,(k0-1):(k1-degree-1));
             knots_new2= [knots_new(k0) knots_new(k0:k1)];
             weights2= weights((k0-1):(k1-degree-1));
-        end
-        if k0~=1 && k1~=length(knots_new)
+        elseif k0~=1 && k1~=length(knots_new)
             controlPoints2 = controlPoints(1:2,(k0-1):(k1-degree));
             knots_new2= [knots_new(k0) knots_new(k0:k1) knots_new(k1)];
             weights2= weights((k0-1):(k1-degree));
+        else    
+            controlPoints2 = controlPoints;
+            knots_new2 = knots_new;
+            weights2= weights;
         end
     end
     % Storing information at tree's new node and attaching to root
@@ -61,20 +63,22 @@ else
         k1 = find( abs(knots_new - newKnots(2*(j-1)+2)) < 1e-10, 1, 'Last');
         
         
-        if k0==1
+        if k0 == 1 && k1 ~= length(knots_new)
             controlPoints2 = controlPoints(1:2,k0:(k1-degree));
             knots_new2= [knots_new(k0:k1) knots_new(k1)];
             weights2= weights(k0:(k1-degree));
-        end
-        if k1==length(knots_new)
+        elseif  k0 ~= 1 && k1 == length(knots_new)
             controlPoints2 = controlPoints(1:2,(k0-1):(k1-degree-1));
             knots_new2= [knots_new(k0) knots_new(k0:k1)];
             weights2= weights((k0-1):(k1-degree-1));
-        end
-        if k0~=1 && k1~=length(knots_new)
+        elseif k0~=1 && k1~=length(knots_new)
             controlPoints2 = controlPoints(1:2,(k0-1):(k1-degree));
             knots_new2= [knots_new(k0) knots_new(k0:k1) knots_new(k1)];
             weights2= weights((k0-1):(k1-degree));
+        else    
+            controlPoints2 = controlPoints;
+            knots_new2 = knots_new;
+            weights2 = weights;    
         end
     end
     
