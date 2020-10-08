@@ -14,38 +14,36 @@ function [Q_aux, Quadtree,numInterPoints] = splitting(Quadtree, Q_aux, Quad, ...
 % Output:
 % Quadtree data structure cointining the splitted segment of the NURBS
 
+Q_xmin = Quad(1,1);
+Q_xmax = Quad(1,2);
+Q_ymin = Quad(2,1);
+Q_ymax = Quad(2,3);
 
-% First we obtain the possible intersections with the four quad's edges
-% Intersection down horizontal
-aux=0.9*max(abs(Quad(1,:)));
-[Px0, Ux0] = Inter(min(Quad(1,:))-aux,min(Quad(2,:)),max(Quad(1,:))+aux,...
-    min(Quad(2,:)),degree,knots,controlPoints,weights,aux); 
-%Intersection up horizontal
-[Px1, Ux1] = Inter(min(Quad(1,:))-aux,max(Quad(2,:)),max(Quad(1,:))+aux,...
-    max(Quad(2,:)),degree,knots,controlPoints,weights,aux); 
-%Intersection left vertical
-[Py0,Uy0] = Inter(min(Quad(1,:)),min(Quad(2,:))-aux,min(Quad(1,:)),...
-    max(Quad(2,:))+aux,degree,knots,controlPoints,weights,aux); 
-%Intersection right vertical
-[Py1,Uy1] = Inter(max(Quad(1,:)),min(Quad(2,:))-aux,max(Quad(1,:))...
-    ,max(Quad(2,:))+aux,degree,knots,controlPoints,weights,aux); 
-Px = [Px0, Px1]; %[x1,x2;y1,y2]
+% Possible intersections with one of the 4 quad's edges
+% Intersection with quad's bottom edge
+[Px0, Ux0] = Inter(Q_xmin,Q_ymin,Q_xmax,Q_ymin,degree,knots,controlPoints,weights); 
+% Intersection with quad's top edge
+[Px1, Ux1] = Inter(Q_xmin,Q_ymax,Q_xmax,Q_ymax,degree,knots,controlPoints,weights); 
+% Intersection with quad's left edge
+[Py0,Uy0] = Inter(Q_xmin,Q_ymin,Q_xmin,Q_ymax,degree,knots,controlPoints,weights); 
+% Intersection with quad's right edge
+[Py1,Uy1] = Inter(Q_xmax,Q_ymin,Q_xmax,Q_ymax,degree,knots,controlPoints,weights); 
+
+
+Px = [Px0, Px1]; % [x1,x2;y1,y2]
 Ux = [Ux0, Ux1];
 if ~isempty(Px)
     plot(Px(1,:),Px(2,:),'bo', 'LineWidth',1.5);
 end
-Py = [Py0, Py1]; %[x1,x2;y1,y2]
+Py = [Py0, Py1]; % [x1,x2;y1,y2]
 Uy = [Uy0, Uy1];
 if ~isempty(Py)
     plot(Py(1,:),Py(2,:),'bo','LineWidth',1.5);
 end
 
+% avoid duplicated knots values
 U = [Ux Uy];
-if any(U == 0)
-    if any((U-0.65) > 0)
-        U(U == 0)=1;
-    end
-end
+U = unique(U);
 
 % After determining the intersection points we perform a knot insertion,
 % beeing the knots the parametrical coordinates of the intersection points
