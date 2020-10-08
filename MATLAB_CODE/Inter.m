@@ -71,11 +71,12 @@ end
 
 if isempty(intrsc_2) && isempty(intrsc_1)
     return
-elseif  ~isempty(intrsc_2)
+end
+if  ~isempty(intrsc_2)
     
     num_intrsc_2 = length(intrsc_2)/2;
-    
-elseif  ~isempty(intrsc_1)  
+end  
+if  ~isempty(intrsc_1)  
     
     intrsc_1 = unique(intrsc_1,'stable');
     num_intrsc_1 = length(intrsc_1);
@@ -122,8 +123,6 @@ a_knots_array = a_array(3,:);
 a_knots_array = unique(a_knots_array);
 num_a = length(a_knots_array);
 
-
-hold on;
 % Based on Steffensen's method obtains the closest solution for a
 % given tolerance
 for i=1:num_a
