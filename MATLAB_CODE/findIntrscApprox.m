@@ -46,41 +46,11 @@ for k = kts
     
 end
 
-g = P(:,idx)-coor;
-for i = 1: (length(P)-1)
-    if idx == 1
-        % y2 > y1 always, from Inter input at reparametrize
-        if(g(i)*g(i+1))<=0 && P(i,2)+tol>y1 && P(i,2)-tol<y2 || ...
-                ((g(i)*g(i+1))<=0 && P(i+1,2)+tol>y1 && P(i+1,2)-tol<y2)
-            break
         end
     end
-    if idx == 2
-        % x2 > x1 always, from Inter input at reparametrize
-        if((g(i)*g(i+1))<=0 && P(i,1)+tol>x1 && P(i,1)-tol<x2) || ...
-                ((g(i)*g(i+1))<=0 && P(i+1,1)+tol>x1 && P(i+1,1)-tol<x2)
-            break
         end
+end
     end
+    
 end
 
-% avoiding duplicites
-if i == (length(P) - 1)
-    flag = 0;
-end
-if ~isempty(intrscArr)
-    if any(abs(intrscArr-P(i,3))<1e-10)
-        flag = 0;
-    end
-end
-if ~isempty(intrscArr) && i~=1 && any(abs(intrscArr-P(i-1,3))<1e-10)
-    flag = 0;
-end
-if ~isempty(intrscArr) && i~=length(P) && any(abs(intrscArr-P(i+1,3))<1e-10)
-    flag = 0;
-end
-if any(abs(intrscArr)<1e-10) && abs(P(i,3)-1)<1e-10
-    flag = 0;
-end
-
-s = P(i,3);
