@@ -10,7 +10,7 @@ if nPoints > 1
     %Setting tree
     Quadtree = tree('root');
     data=Quadtree.Node{1,1};
-    data={data;[]};
+    data={data;[];degree;knots;controlPoints;weights};
     Quadtree = Quadtree.set(1, data);
     
     l=1; % l: 1 if quad NW, 2 SW, 3 NE, 4 SE. Initialize at 1
