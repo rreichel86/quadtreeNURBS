@@ -157,6 +157,9 @@ for i=1:num_a
             end
             break
         end    
+        if ( abs( a - knots(end) ) < 1e-16 ) ||  ( a > knots(end) )
+            break;
+        end     
         
         if (a+hh) > knots(end)
             hh=hh/10;
