@@ -156,9 +156,10 @@ for i=1:num_a
                 end
             end
             break
-        end
-        if (a+hh) > 1
-            hh=hh/10  ;
+        end    
+        
+        if (a+hh) > knots(end)
+            hh=hh/10;
         end
         [g] = curvePoint(n,degree,knots,controlPoints,a+hh,weights);
         [O3] = lfunc(g(1),g(2),x1,y1,x2,y2);
