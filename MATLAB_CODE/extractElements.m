@@ -79,7 +79,6 @@ for i = 1:numleaves
     if isempty(intersections) || length(intersections) == 1
         
         quad = Quadtree.Node{leaves(i),1}{10,1}(1:2,1:4);
-        % cp = [];% control points and weight
         intersectionPoints = [];
 
         coordinates = [quad;...       % nodal x-coor and y-coor
@@ -95,7 +94,6 @@ for i = 1:numleaves
         controlPoints = Quadtree.Node{leaves(i),1}{7,1};
         weights = Quadtree.Node{leaves(i),1}{9,1};
         ncp = length(controlPoints);
-        % cp = [controlPoints',weights'];% control points and weights
         
         countKnotVectors = countKnotVectors + 1;
         knots = Quadtree.Node{leaves(i),1}{8,1};
@@ -122,7 +120,6 @@ for i = 1:numleaves
         controlPoints = Quadtree.Node{leaves(i),1}{7,1};
         weights = Quadtree.Node{leaves(i),1}{9,1};
         ncp = length(controlPoints);
-        % cp = [controlPoints',weights'];% control points and weights
         
         countKnotVectors = countKnotVectors + 1;
         knots = Quadtree.Node{leaves(i),1}{8,1};
@@ -149,7 +146,6 @@ for i = 1:numleaves
         controlPoints = Quadtree.Node{leaves(i),1}{7,1};
         weights = Quadtree.Node{leaves(i),1}{9,1};
         ncp = length(controlPoints);
-        % cp = [controlPoints',weights'];% control points and weights
         
         countKnotVectors = countKnotVectors + 1;
         knots = Quadtree.Node{leaves(i),1}{8,1};
