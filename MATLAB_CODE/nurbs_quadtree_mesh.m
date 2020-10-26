@@ -38,7 +38,7 @@ function [nnode,coor,numsec,maxnsec,sections,ord,knots,wgt] = nurbs_quadtree_mes
 
 %% Splitt polygonal elements into section
 
-[coor,numsec,maxnsec,sections,ord,knots,wgt] = splittIntoSections(coor,numel,connectivity,...
+[nnode,coor,numsec,maxnsec,sections,ord,knots,wgt] = splittIntoSections(nnode,coor,numel,connectivity,...
                                                                     numKnotVectors,knotVectors,maxnknots,idxControlPoints);
 
 end
