@@ -36,30 +36,6 @@ function [nnode,coor,numsec,maxnsec,sections,ord,knots,wgt] = nurbs_quadtree_mes
 [nnode,coor,numel,connectivity,maxnel,...
  numKnotVectors,knotVectors,maxnknots,idxControlPoints] = extractElements(Quadtree);
 
-%% 
-% compute discrete points of NURBS curve
-NURBS = CalculateNURBS(degree,knots,controlPoints,weights);
-% Compute bounding box that enclosed the NURBS curve
-x_min = min(NURBS(:,1));
-x_max = max(NURBS(:,1));
-y_min = min(NURBS(:,2));
-y_max = max(NURBS(:,2));
-
-
-% loop over nodes, excluding control points
-for ii = find(coor(:,5) == 1)'
-    
-    % Check if current node is inside the bounding box
-    if ( isPointInQuad([x_min,y_min], [x_max,y_max], coor(ii,2:3)) == 1 )
-        
-        % Check if current node is also inside 
-        % the region enclosed by the NURBS curve
-        pointInPoly = isPointInPolygon(NURBS(1:end-1,1:2), coor(ii,2:3));
-        coor(ii,7) = pointInPoly;
-    end
-end
-
-
 %% Splitt polygonal elements into section
 
 % apply funtion to the 5. and 2. entry of knotVectors cell array. 
