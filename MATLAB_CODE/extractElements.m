@@ -88,7 +88,9 @@ for i = 1:numleaves
         
         coordinates = [quad;...       % nodal x-coor and y-coor
                        ones(1,4);...  % weights
-                       ones(1,4)];    % type 
+                       ones(1,4);...  % type 
+                       zeros(1,4);... % which_region
+                       -1*ones(1,4)]; % inside_region
                    
         element = [quad,midPoints];
         
@@ -133,8 +135,10 @@ for i = 1:numleaves
         
         coordinates = [quad, controlPoints;...   % nodal/ctrlPts x-coor and y-coor
                        ones(1,4), weights;...    % weights
-                       ones(1,4), 2*ones(1,ncp)];  % type
-                   
+                       ones(1,4), 2*ones(1,ncp);... % type
+                       zeros(1,4), zeros(1,ncp);... % which_region
+                       -1*ones(1,4), zeros(1,ncp)]; % inside_region
+                       
         element = [quad,midPoints,intersectionPoints];
         
     elseif isempty(Quadtree.Node{leaves(i),1}{4,1}) == 1
@@ -178,7 +182,9 @@ for i = 1:numleaves
 
         coordinates = [quad, controlPoints;...   % nodal/ctrlPts x-coor and y-coor
                        ones(1,4), weights;...    % weights
-                       ones(1,4), 2*ones(1,ncp)];  % type
+                       ones(1,4), 2*ones(1,ncp);... % type
+                       zeros(1,4), zeros(1,ncp);... % which_region
+                       -1*ones(1,4), zeros(1,ncp)]; % inside_region
                    
         element = [quad,midPoints,intersectionPoints];
         
@@ -223,7 +229,9 @@ for i = 1:numleaves
         
         coordinates = [quad, controlPoints;...   % nodal/ctrlPts x-coor and y-coor
                        ones(1,4), weights;...    % weights
-                       ones(1,4), 2*ones(1,ncp)];  % type
+                       ones(1,4), 2*ones(1,ncp);... % type
+                       zeros(1,4), zeros(1,ncp);... % which_region
+                       -1*ones(1,4), zeros(1,ncp)]; % inside_region
                    
         element = [quad,midPoints,intersectionPoints];
         
@@ -277,8 +285,6 @@ for i = 1:numleaves
         if col(1,1) < col(1,2)
             elements{j} = [element(:,[1:col(1,1)]),controlPoints(:,[2:end-1]),element(:,[col(1,2):end])];
             elements{j+1} = [element(:,[col(1,1):col(1,2)]),fliplr(controlPoints(:,[2:end-1]))];
-            
-            
         else
             elements{j} = [element(:,[1:col(1,2)]),fliplr(controlPoints(:,[2:end-1])),element(:,[col(1,1):end])];
             elements{j+1} = [element(:,[col(1,2):col(1,1)]),controlPoints(:,[2:end-1])];   
@@ -315,7 +321,7 @@ numcoor = numcoor0 + numsc;
 % prealloc coor matrix 
 coor = zeros(numcoor, 7);
 % coordinates 
-coor(1:numcoor0,2:5) = tmp_coor;
+coor(1:numcoor0,2:7) = tmp_coor;
 
 % compute scaling center of polygonal elements
 for iel = 1:numel
@@ -324,7 +330,7 @@ for iel = 1:numel
     % compute scaling center
     % compute centroid of the kernel
     [scx,scy] = centroid(polyshape(kernel,'Simplify',false));
-    coor(numcoor0+iel,2:5) = [scx,scy,1,1];
+    coor(numcoor0+iel,2:7) = [scx,scy,1,1,0,-1];
 end
 
 % coor numbers 
@@ -359,6 +365,8 @@ for ii = find(coor(:,5) == 1)'
         coor(ii,7) = pointInPoly;
     end
 end
+
+
 
 % delete tmp_coor
 clearvars tmp_coor
