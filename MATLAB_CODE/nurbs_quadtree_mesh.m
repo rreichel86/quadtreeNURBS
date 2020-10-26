@@ -38,35 +38,51 @@ function [nnode,coor,numsec,maxnsec,sections,ord,knots,wgt] = nurbs_quadtree_mes
 
 %% Splitt polygonal elements into section
 
-% apply funtion to the 5. and 2. entry of knotVectors cell array. 
+% Compute:
+% numsec         --- number of sections 
+% numsec_w_NURBS --- number of sections with boundary defined by a NURBS
+% maxnsec        --- max number of node on any section 
+% maxncp         --- max number of control points on any section 
+%                    with boundary defined by a NURBS
+% ncpoints       --- list containing the number of control points every 
+%                    NURBS curve segment
+
+% number of sections
+numsec = 0; 
+% number of sections with boundary defined by a NURBS
+numsec_w_NURBS = 0; 
+% max number of nodes on any section        
+maxnsec = 0; 
+% max number of control points
+maxncp = 0; 
+% list containing the number of control points every NURBS curve segment
+% apply function to the 5. and 2. entry of knotVectors cell array. 
 % This entries correspond to the degree of the curve and the
 % number of knots, respectively.
 % ncpoints = (nknot-1) - degree
 ncpoints = cellfun(@(x) (x(5)-1)-x(2), knotVectors(1:numKnotVectors));
 
-% compute number of sections, 
-% max number of node on any section and
-% max number of control points on any section 
-%     with boundary defined by a NURBS
-numsec = 0; % number of sections
-numsec_w_NURBS = 0; % number of sections 
-%                     with boundary defined by a NURBS
-maxnsec = 0; % max number of nodes on any section
-maxncp = 0; % max number of control points
+
 for ielno = 1:numel
-    ikv = connectivity{ielno}(2);
-    nel = connectivity{ielno}(4);
+    ikv = connectivity{ielno}(2); % knot vector number 
+    nel = connectivity{ielno}(4); % number of node per element
+    
+    % polygon that have curve edges
     if ikv ~= 0
-       ncp = ncpoints(ikv); 
-       numsec = numsec + nel - ncp + 2;
-       numsec_w_NURBS = numsec_w_NURBS + 1;
-       nsec = ncp + 1;
-       maxncp = max(maxncp, ncp);
+       ncp = ncpoints(ikv); % number of control points
+       numsec = numsec + nel - ncp + 2; % number of sections
+       numsec_w_NURBS = numsec_w_NURBS + 1; % number of sections with 
+                                            % boundary defined by a NURBS
+       nsec = ncp + 1; % number of nodes per section
+       maxncp = max(maxncp, ncp); % max number of control points
+       
+    % polygon that dont have curve edges   
     else
-       numsec = numsec + nel;
-       nsec = 3;
+       numsec = numsec + nel; % number of sections
+       nsec = 3; % number of nodes per section
     end
-    maxnsec = max(maxnsec,nsec);
+    
+    maxnsec = max(maxnsec,nsec); % max number of nodes on any section 
 end
 
 % sections = [isec, ikv, region, nsec, node_1,...,node_nsec]
