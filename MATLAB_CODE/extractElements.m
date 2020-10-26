@@ -46,6 +46,24 @@ function [numcoor,coor,numel,connectivity,maxnel,...
 references = cellfun(@(Q) Q(2),Quadtree.Node);
 references{1} = [];
 
+%% 
+% Get NURBS curve 
+data = Quadtree.Node{1,1};
+NURBS_degree = data{3};
+NURBS_knots  = data{4};
+NURBS_controlPoints = data{5};
+NURBS_weights = data{6};
+
+% compute point of the NURBS curve
+NURBS = CalculateNURBS(NURBS_degree,NURBS_knots, NURBS_controlPoints, NURBS_weights);
+
+% Compute bounding box that enclosed the NURBS curve
+x_min = min(NURBS(:,1));
+x_max = max(NURBS(:,1));
+y_min = min(NURBS(:,2));
+y_max = max(NURBS(:,2));
+
+%%
 % Get Quadtree leaves
 leaves = Quadtree.findleaves();
 numleaves = length(leaves);
@@ -53,6 +71,7 @@ numleaves = length(leaves);
 % Get total number of elements
 [numel] = countElements(Quadtree,leaves);
 
+%%
 % prealloc cell array
 coor = cell(numleaves,1);
 controlPoints_coor = cell(numleaves,1);
@@ -302,6 +321,7 @@ for i = 1:numleaves
     end
 end % end loop over leaves
 
+%%
 % intersection point coordinates in matrix form
 intersections_coor = cell2mat(intersections_coor);
 tol = 1e-10;
@@ -335,20 +355,6 @@ end
 
 % coor numbers 
 coor(:,1) = (1:numcoor);
-data = Quadtree.Node{1,1};
-NURBS_degree = data{3};
-NURBS_knots  = data{4};
-NURBS_controlPoints = data{5};
-NURBS_weights = data{6};
-
-% compute point of the NURBS curve
-NURBS = CalculateNURBS(NURBS_degree,NURBS_knots, NURBS_controlPoints, NURBS_weights);
-
-% Compute bounding box that enclosed the NURBS curve
-x_min = min(NURBS(:,1));
-x_max = max(NURBS(:,1));
-y_min = min(NURBS(:,2));
-y_max = max(NURBS(:,2));
 
 % loop over nodes, excluding control points
 for ii = find(coor(:,5) == 1)'
