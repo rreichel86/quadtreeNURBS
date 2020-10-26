@@ -335,11 +335,6 @@ end
 
 % coor numbers 
 coor(:,1) = (1:numcoor);
-% nodes are initially outside
-coor(:,7) = -1;
-% control point are at the boundary
-coor(coor(:,5) == 2, 7) =  0;
- 
 data = Quadtree.Node{1,1};
 NURBS_degree = data{3};
 NURBS_knots  = data{4};
