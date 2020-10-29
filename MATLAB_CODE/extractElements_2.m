@@ -19,13 +19,15 @@ function [numcoor,coor,numel,connectivity,maxnel,...
 %
 % numel ---------------------- number of elements
 % connectivity --------------- elements connectivity matrix as nel-tupel of 
-%                              nodes, where the first three entries
+%                              nodes, where the first six entries
 %                              iel - element number
 %                              ikv - knot vector number
+%                              inode - index initial node 
+%                              jnode - index last node
 %                              which_region - region number
 %                              nel - number of nodes per element
 %
-% connectivity = [iel, ikv, which_region, nel, node_1,...,node_nel, scaling_center]
+% connectivity = [iel, ikv, inode, jnode, which_region, nel, node_1,...,node_nel, scaling_center]
 % maxnel --------------------- maximum number of nodes on any element
 %
 % numKnotVectors ------------- number of knot vectors
