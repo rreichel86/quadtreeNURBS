@@ -82,13 +82,35 @@ else
         end
     end
     
-    % Storing information at tree's new node and attaching to father
-    data={['Quad' num2str(Q_aux)];Q_aux; Px ;Py; newKnots; degree;...
-        controlPoints2; knots_new2; weights2;QS;[]};
     for i=1:length(Quadtree.Node);Pos{i}=Quadtree.Node{i,1}{2};end
     Q_aux=Q_aux(1:end-2);
     idx = cellfun('length',Pos)==length(Q_aux);
     for j=1:length(idx);tf=isequal(Pos{j},Q_aux);if tf;Parent=j;end;end
+    % Store information at tree's new node 
+    % and attach it to its father
+    
+    % Quad name 
+    % Quad location
+    % horizontal intersections (physical space)
+    % vertical intersections (physical space)
+    % intersection in parametric space of the curve
+    % NURBS degree
+    % NURBS control points 
+    % NURBS Knot vector 
+    % NURBS weights
+    % Quad definition 
+    % Pointer to the children
+    data = {['Quad' num2str(Q_aux)];...
+            Q_aux;...
+            Px;...
+            Py;...
+            newKnots;...
+            degree;...
+            controlPoints2;...
+            knots_new2;...
+            weights2;...
+            QS;...
+            []};
     [Quadtree, node2] = Quadtree.addnode(Parent, data);
     
     % Adding pointer to father's new child
