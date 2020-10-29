@@ -1,5 +1,5 @@
 function [numcoor,coor,numel,connectivity,maxnel,...
-          numKnotVectors,knotVectors,maxnknots,idxControlPoints] = extractElements_2(Quadtree)
+          numKnotVectors,knotVectors,idxControlPoints] = extractElements_2(Quadtree)
 % extractElements: get polygonal elements from Quadtree data structure
 %
 % INPUT:
@@ -37,7 +37,6 @@ function [numcoor,coor,numel,connectivity,maxnel,...
 %                              nkonts - number of knots per knot vector
 %
 % knotVectors = [ikv, degree, icp, ecp, nknots, knot_1,...,knot_nknots]
-% maxnknots ------------------ maximun number of knot on any knot vector
 % idxControlPoints ----------- control points indices
 % idxControlPoints = [icp, ncp, idx_1,...idx_ncp] 
 %
@@ -84,7 +83,6 @@ idxControlPoints = cell(numleaves,1);
 j = 1;
 % counter for the number of knot vectors
 countKnotVectors = 0;
-maxnknots = 0;% maximun number of knot on any knot vector
 % loop over leaves 
 for i = 1:numleaves
     
@@ -139,8 +137,6 @@ for i = 1:numleaves
         % number of control points / weights 
         ncp = length(controlPoints);
        
-        % maximun number of knots on any knot vector
-        maxnknots = max(maxnknots,nknots);
         
         % counter for the number of knot vectors
         countKnotVectors = countKnotVectors + 1;
@@ -186,8 +182,6 @@ for i = 1:numleaves
         % number of control points / weights
         ncp = length(controlPoints);
         
-        % maximun number of knots on any knot vector  
-        maxnknots = max(maxnknots,nknots);
         
         % counter for the number of knot vectors
         countKnotVectors = countKnotVectors + 1;
@@ -232,9 +226,6 @@ for i = 1:numleaves
         
         % number of control points / weights
         ncp = length(controlPoints);
-       
-        % maximun number of knots on any knot vector
-        maxnknots = max(maxnknots,nknots);
         
         % counter for the number of knot vectors
         countKnotVectors = countKnotVectors + 1;
