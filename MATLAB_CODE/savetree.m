@@ -82,10 +82,6 @@ else
         end
     end
     
-    for i=1:length(Quadtree.Node);Pos{i}=Quadtree.Node{i,1}{2};end
-    Q_aux=Q_aux(1:end-2);
-    idx = cellfun('length',Pos)==length(Q_aux);
-    for j=1:length(idx);tf=isequal(Pos{j},Q_aux);if tf;Parent=j;end;end
     % Store information at tree's new node 
     % and attach it to its father
     
@@ -111,18 +107,33 @@ else
             weights2;...
             QS;...
             []};
+       
+    for i = 1:length(Quadtree.Node)
+        Pos{i} = Quadtree.Node{i,1}{2};
+    end
+    Q_aux = Q_aux(1:end-2);
+    idx = cellfun('length',Pos) == length(Q_aux);
+    for j = 1:length(idx)
+        tf = isequal(Pos{j},Q_aux);
+        if tf
+            Parent = j;
+        end
+    end
     [Quadtree, node2] = Quadtree.addnode(Parent, data);
     
     % Adding pointer to father's new child
-    data=Quadtree.Node{Parent,1};
-    data{11}=[data{11} node2];
+    data = Quadtree.Node{Parent,1};
+    data{11} = [data{11} node2];
     Quadtree = Quadtree.set(Parent, data);
     
     % Deleting information of the father, information contained in leafs
-    if length(Quadtree.Node{Parent,1}{11})==4
-    data=Quadtree.Node{Parent,1};
-    data{6}=[];data{7}=[];data{8}=[];data{9}=[];
-    Quadtree = Quadtree.set(Parent, data);      
+    if length(Quadtree.Node{Parent,1}{11}) == 4
+        data = Quadtree.Node{Parent,1};
+        data{6} = [];
+        data{7} = [];
+        data{8} = [];
+        data{9} = [];
+        Quadtree = Quadtree.set(Parent, data);
     end
     
 end
