@@ -119,29 +119,12 @@ for i = 1:numleaves
         quad = Quadtree.Node{leaves(i),1}{10,1}(1:2,1:4);
         
         % intersection points
-        intersectionPoints = [Quadtree.Node{leaves(i),1}{7,1}(:,1),Quadtree.Node{leaves(i),1}{7,1}(:,end)];
-        
-        % degree
-        degree = Quadtree.Node{leaves(i),1}{6,1};
-        
-        % knot vector 
-        knots = Quadtree.Node{leaves(i),1}{8,1};
-        
-        % number of knots 
-        nknots = length(knots);
-        
-        % control points
-        controlPoints = Quadtree.Node{leaves(i),1}{7,1};
-        
-        % weights
-        weights = Quadtree.Node{leaves(i),1}{9,1};
-        
-        % number of control points / weights 
-        ncp = length(controlPoints);
-       
+        intersectionPoints = [Quadtree.Node{leaves(i),1}{7,1}(:,1), Quadtree.Node{leaves(i),1}{7,1}(:,end)];
         
         % counter for the number of knot vectors
         countKnotVectors = countKnotVectors + 1;
+        % intersection points weights 
+        weights = [Quadtree.Node{leaves(i),1}{9,1}(:,1), Quadtree.Node{leaves(i),1}{9,1}(:,end)];
         
         knotVectors{countKnotVectors} = [countKnotVectors,degree,0,0,nknots,knots];
         controlPoints_coor{countKnotVectors} = [controlPoints',weights'];
@@ -164,25 +147,11 @@ for i = 1:numleaves
         quad = Quadtree.Node{leaves(i),1}{10,1}(1:2,1:4);
         
         % intersection points
-        intersectionPoints = [Quadtree.Node{leaves(i),1}{7,1}(:,1),Quadtree.Node{leaves(i),1}{7,1}(:,end)];
+        intersectionPoints = [Quadtree.Node{leaves(i),1}{7,1}(:,1), Quadtree.Node{leaves(i),1}{7,1}(:,end)];
         
-        % degree
-        degree = Quadtree.Node{leaves(i),1}{6,1};
+        % intersection points weights 
+        weights = [Quadtree.Node{leaves(i),1}{9,1}(:,1), Quadtree.Node{leaves(i),1}{9,1}(:,end)];
         
-        % knot vector 
-        knots = Quadtree.Node{leaves(i),1}{8,1};
-        
-        % number of knots 
-        nknots = length(knots);
-        
-        % control points 
-        controlPoints = Quadtree.Node{leaves(i),1}{7,1};
-        
-        % weights
-        weights = Quadtree.Node{leaves(i),1}{9,1};
-        
-        % number of control points / weights
-        ncp = length(controlPoints);
         
         
         % counter for the number of knot vectors
@@ -209,25 +178,10 @@ for i = 1:numleaves
         quad = Quadtree.Node{leaves(i),1}{10,1}(1:2,1:4);
         
         % intersection points
-        intersectionPoints = [Quadtree.Node{leaves(i),1}{7,1}(:,1),Quadtree.Node{leaves(i),1}{7,1}(:,end)];
+        intersectionPoints = [Quadtree.Node{leaves(i),1}{7,1}(:,1), Quadtree.Node{leaves(i),1}{7,1}(:,end)];
         
-        % degree
-        degree = Quadtree.Node{leaves(i),1}{6,1};
-        
-        % knot vector
-        knots = Quadtree.Node{leaves(i),1}{8,1};
-        
-         % number of knots
-        nknots = length(knots);
-        
-        % control points 
-        controlPoints = Quadtree.Node{leaves(i),1}{7,1};
-        
-        % weights
-        weights = Quadtree.Node{leaves(i),1}{9,1};
-        
-        % number of control points / weights
-        ncp = length(controlPoints);
+        % intersection points weights 
+        weights = [Quadtree.Node{leaves(i),1}{9,1}(:,1), Quadtree.Node{leaves(i),1}{9,1}(:,end)];
         
         % counter for the number of knot vectors
         countKnotVectors = countKnotVectors + 1;
