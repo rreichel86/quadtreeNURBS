@@ -55,6 +55,11 @@ NURBS_knots  = data{4};
 NURBS_controlPoints = data{5};
 NURBS_weights = data{6};
 
+% number of control points
+NURBS_ncp = length(NURBS_controlPoints);
+
+
+
 % compute point of the NURBS curve
 NURBS = CalculateNURBS(NURBS_degree,NURBS_knots, NURBS_controlPoints, NURBS_weights);
 
@@ -131,14 +136,14 @@ for i = 1:numleaves
         
         idxControlPoints{countKnotVectors} = zeros(1,ncp+2);
         idxControlPoints{countKnotVectors}(1,1) = countKnotVectors;
-        idxControlPoints{countKnotVectors}(1,2) = ncp;
-        
-        coordinates = [quad, controlPoints;...   % nodal/ctrlPts x-coor and y-coor
-                       ones(1,4), weights;...    % weights
-                       ones(1,4), 2*ones(1,ncp);... % type
-                       zeros(1,4), zeros(1,ncp);... % which_region
-                       -1*ones(1,4), zeros(1,ncp)]; % inside_region
-                       
+        idxControlPoints{countKnotVectors}(1,2) = NURBS_ncp;
+
+        coordinates = [     quad, intersectionPoints, NURBS_controlPoints;... % nodal/ctrlPts x-coor and y-coor
+                        ones(1,4),           weights,       NURBS_weights;... % weights
+                        ones(1,4),       2*ones(1,2), 2*ones(1,NURBS_ncp);... % type
+                        zeros(1,4),       zeros(1,2),  zeros(1,NURBS_ncp);... % which_region
+                       -1*ones(1,4),      zeros(1,2),  zeros(1,NURBS_ncp)];   % inside_region
+                   
         element = [quad,midPoints,intersectionPoints];
         
     elseif isempty(Quadtree.Node{leaves(i),1}{4,1}) == 1
@@ -162,13 +167,13 @@ for i = 1:numleaves
         
         idxControlPoints{countKnotVectors} = zeros(1,ncp+2);
         idxControlPoints{countKnotVectors}(1,1) = countKnotVectors;
-        idxControlPoints{countKnotVectors}(1,2) = ncp;
+        idxControlPoints{countKnotVectors}(1,2) = NURBS_ncp;
 
-        coordinates = [quad, controlPoints;...   % nodal/ctrlPts x-coor and y-coor
-                       ones(1,4), weights;...    % weights
-                       ones(1,4), 2*ones(1,ncp);... % type
-                       zeros(1,4), zeros(1,ncp);... % which_region
-                       -1*ones(1,4), zeros(1,ncp)]; % inside_region
+        coordinates = [     quad, intersectionPoints, NURBS_controlPoints;... % nodal/ctrlPts x-coor and y-coor
+                        ones(1,4),           weights,       NURBS_weights;... % weights
+                        ones(1,4),       2*ones(1,2), 2*ones(1,NURBS_ncp);... % type
+                        zeros(1,4),       zeros(1,2),  zeros(1,NURBS_ncp);... % which_region
+                       -1*ones(1,4),      zeros(1,2),  zeros(1,NURBS_ncp)];   % inside_region
                    
         element = [quad,midPoints,intersectionPoints];
         
@@ -191,13 +196,13 @@ for i = 1:numleaves
         
         idxControlPoints{countKnotVectors} = zeros(1,ncp+2);
         idxControlPoints{countKnotVectors}(1,1) = countKnotVectors;
-        idxControlPoints{countKnotVectors}(1,2) = ncp;
-        
-        coordinates = [quad, controlPoints;...   % nodal/ctrlPts x-coor and y-coor
-                       ones(1,4), weights;...    % weights
-                       ones(1,4), 2*ones(1,ncp);... % type
-                       zeros(1,4), zeros(1,ncp);... % which_region
-                       -1*ones(1,4), zeros(1,ncp)]; % inside_region
+        idxControlPoints{countKnotVectors}(1,2) = NURBS_ncp;
+
+        coordinates = [     quad, intersectionPoints, NURBS_controlPoints;... % nodal/ctrlPts x-coor and y-coor
+                        ones(1,4),           weights,       NURBS_weights;... % weights
+                        ones(1,4),       2*ones(1,2), 2*ones(1,NURBS_ncp);... % type
+                        zeros(1,4),       zeros(1,2),  zeros(1,NURBS_ncp);... % which_region
+                       -1*ones(1,4),      zeros(1,2),  zeros(1,NURBS_ncp)];   % inside_region
                    
         element = [quad,midPoints,intersectionPoints];
         
