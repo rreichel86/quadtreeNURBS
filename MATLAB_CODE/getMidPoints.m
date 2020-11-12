@@ -17,6 +17,11 @@ for dir = 1:4
     if exist_NQ == 1
         % look for neighbour Quad reference in reference array
         % and get its position or its ancestor position
+        
+        
+        idxNQ = findNeighbour(Quadtree,idxQ,refQ, refNQ);
+        levelNQ = length( Quadtree.Node{idxNQ,1}{2,1}(1:end) );
+        
 %         for level = levelNQ:-2:2
 %             idx = cellfun(@(x) isequal(x, refNQ(1:level)),references);
 %             if any(idx)
@@ -26,7 +31,7 @@ for dir = 1:4
 %         end
         
         % are both of the same size ?
-        if levelQ == level
+        if levelQ == levelNQ
             
             % has neighbour Quad children ?
             children = Quadtree.Node{idxNQ,1}{11,1}';
