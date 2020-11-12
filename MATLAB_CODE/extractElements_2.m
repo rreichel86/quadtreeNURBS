@@ -21,13 +21,13 @@ function [numcoor,coor,numel,connectivity,maxnel,...
 % connectivity --------------- elements connectivity matrix as nel-tupel of 
 %                              nodes, where the first six entries
 %                              iel - element number
-%                              ikv - knot vector number
+%                              ikv - knot vector number 
+%                              which_region - region number
 %                              inode - index initial node 
 %                              jnode - index last node
-%                              which_region - region number
 %                              nel - number of nodes per element
 %
-% connectivity = [iel, ikv, inode, jnode, which_region, nel, node_1,...,node_nel, scaling_center]
+% connectivity = [iel, ikv, which_region, inode, jnode, nel, node_1,...,node_nel, scaling_center]
 % maxnel --------------------- maximum number of nodes on any element
 %
 % numKnotVectors ------------- number of knot vectors
@@ -347,20 +347,20 @@ for iel = 1:numel
         [a] = find ( abs(coor(:,2) - elements{iel}(1,n))<1e-10);
         [b] = find ( abs(coor(:,3) - elements{iel}(2,n))<1e-10);
         nodeNumber = intersect(a,b);   
-        connectivity{iel}(1,4+n) = nodeNumber;
+        connectivity{iel}(1,6+n) = nodeNumber;
     end
     % remove repeated values without changing the order
-    connectivity{iel}(1,5:end) = unique(connectivity{iel}(1,5:end),'stable');
+    connectivity{iel}(1,7:end) = unique(connectivity{iel}(1,7:end),'stable');
     % update number of nodes per element
-    nel = size(connectivity{iel}(5:end),2); 
+    nel = size(connectivity{iel}(7:end),2); 
     
-    if sum(coor( connectivity{iel}(1,5:4+nel), 7)) < 0 % outside
-          connectivity{iel}(1,3) = 1;
-        else % inside
-          connectivity{iel}(1,3) = 2;
+    if sum(coor( connectivity{iel}(1,7:6+nel), 7)) < 0 % outside
+        connectivity{iel}(1,3) = 1;
+    else % inside
+        connectivity{iel}(1,3) = 2;
     end
     
-    connectivity{iel}(1,4) = nel;
+    connectivity{iel}(1,6) = nel;
     % maximum number of nodes on any element
     maxnel = max(nel,maxnel);  
     % append correspondig scaling center index
@@ -377,6 +377,25 @@ for ikv = 1:numKnotVectors
     knotVectors{ikv}(1,4) = indices(idx + 1);
     idx = idx + 2;
     
+    ikv = connectivity{iel}(1,2);
+    
+    if ikv ~= 0
+        
+        elmt = connectivity{iel}(1,7:end);
+        ecoor = coor( elmt(1:end), 2:3);
+        inode = find( elmt == indices(2*ikv-1) );
+        jnode = find( elmt == indices(2*ikv) );
+       
+        OP = orientation( ecoor(end,:), ecoor(inode,:) ,ecoor(jnode,:) );
+        
+        if OP == 1
+            connectivity{iel}(1,4) = inode;
+            connectivity{iel}(1,5) = jnode;
+        else     
+            connectivity{iel}(1,4) = jnode;
+            connectivity{iel}(1,5) = inode;
+        end 
+    end 
 end
 
 numKnotVectors = countKnotVectors;
