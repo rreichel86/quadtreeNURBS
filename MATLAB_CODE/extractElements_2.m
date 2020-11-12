@@ -44,9 +44,6 @@ function [numcoor,coor,numel,connectivity,maxnel,...
 %
 % -----------------------------------------------------------------------------
 
-references = cellfun(@(Q) Q(2),Quadtree.Node);
-references{1} = [];
-
 %% 
 % Get NURBS curve 
 data = Quadtree.Node{1,1};
@@ -320,8 +317,6 @@ for ii = find(coor(:,5) == 1)'
     end
 end
 
-
-
 % delete tmp_coor
 clearvars tmp_coor
 
@@ -365,17 +360,6 @@ for iel = 1:numel
     maxnel = max(nel,maxnel);  
     % append correspondig scaling center index
     connectivity{iel}(1,end+1) = numcoor0+iel;  
-end
-
-numKnotVectors = countKnotVectors;
-idx = 1;
-% loop over knotVectors
-for ikv = 1:numKnotVectors
-    % index initial control point
-    knotVectors{ikv}(1,3) = indices(idx);
-    % index last control point
-    knotVectors{ikv}(1,4) = indices(idx + 1);
-    idx = idx + 2;
     
     ikv = connectivity{iel}(1,2);
     

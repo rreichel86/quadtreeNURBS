@@ -43,9 +43,6 @@ function [numcoor,coor,numel,connectivity,maxnel,...
 %
 % -----------------------------------------------------------------------------
 
-references = cellfun(@(Q) Q(2),Quadtree.Node);
-references{1} = [];
-
 %% 
 % Get NURBS curve 
 data = Quadtree.Node{1,1};
