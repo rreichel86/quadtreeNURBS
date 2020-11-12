@@ -40,6 +40,12 @@ while l <= length(idxLeaves)
             % look for neighbour Quad reference in reference array
             % and get its position or its ancestor position
             levelNQ = length(refNQ);
+            
+            idxNQ = findNeighbour(Quadtree,idxLeaf,refLeaf, refNQ);
+            % update array with found neighbours indices
+            niNQs = niNQs + 1;
+            iNQs(niNQs) = idxNQ;
+            
 %             for level = levelNQ:-2:2
 %                 idx = cellfun(@(x) isequal(x, refNQ(1:level)),references);
 %                 if any(idx)
