@@ -179,11 +179,11 @@ for ielno = 1:numel
                 sections(isec,2) = isec_w_NURBS; % knot vector number (ikv)
                 sections(isec,4) = ncp + 1; % number of nodes per section (nsec)
                 sections(isec,3) = region_nro; % region number
-%                 if OP == -1
-%                     sections(isec,5:4+ncp) = fliplr(idxCtrlP);
-%                 else
+                if OP == -1
+                    sections(isec,5:4+ncp) = fliplr(idxCtrlP);
+                else
                     sections(isec,5:4+ncp) = idxCtrlP;
-%                 end
+                end
                 sections(isec,5+ncp) = elmt(end);
                 
                 ord(isec,:) = [isec,pgrad,1,0,0];
@@ -216,11 +216,11 @@ for ielno = 1:numel
                 % number of control points / weights (nweights)
                 wgt(isec_w_NURBS,2) = ncp;
                 % weights
-%                 if OP == -1
-%                     wgt(isec_w_NURBS,3:2+ncp) = coor(fliplr(idxCtrlP),4);
-%                 else
+                if OP == -1
+                    wgt(isec_w_NURBS,3:2+ncp) = coor(fliplr(idxCtrlP),4);
+                else
                     wgt(isec_w_NURBS,3:2+ncp) = coor(idxCtrlP,4);
-%                 end
+                end
                 
             elseif ii == icp - 1
                 a = ii;
@@ -353,11 +353,11 @@ for ielno = 1:numel
                 sections(isec,2) = isec_w_NURBS; % knot vector number (ikv)
                 sections(isec,4) = ncp + 1; % number of nodes per section (nsec)
                 sections(isec,3) = region_nro; % region number
-%                 if OP == -1
-%                     sections(isec,5:4+ncp) = fliplr(idxCtrlP);
-%                 else
+                if OP == -1
+                    sections(isec,5:4+ncp) = fliplr(idxCtrlP);
+                else
                     sections(isec,5:4+ncp) = idxCtrlP;
-%                 end
+                end
                 sections(isec,5+ncp) = elmt(end);
                 
                 ord(isec,:) = [isec,pgrad,1,0,0];
@@ -389,11 +389,11 @@ for ielno = 1:numel
                 % number of control points / weights (nweights)
                 wgt(isec_w_NURBS,2) = ncp;
                 % weights
-%                 if OP == -1
-%                     wgt(isec_w_NURBS,3:2+ncp) = coor(fliplr(idxCtrlP),4);
-%                 else
+                if OP == -1
+                    wgt(isec_w_NURBS,3:2+ncp) = coor(fliplr(idxCtrlP),4);
+                else
                     wgt(isec_w_NURBS,3:2+ncp) = coor(idxCtrlP,4);
-%                 end
+                end
                 
             elseif ii == icp - 1
                 a = ii;
