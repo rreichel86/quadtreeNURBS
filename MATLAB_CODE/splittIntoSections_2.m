@@ -515,4 +515,33 @@ for ielno = 1:numel
     end
 end
 
+for isec = 1:numsec
+    nsec = sections(isec,4);
+    elmt = sections(isec,5:4+nsec)';
+    coor(elmt,1) = 1;
+end 
+
+idx = 0;
+for i = 1:nnode
+   
+    if coor(i,1) == 1
+        idx = idx + 1;
+        coor(i,1) = idx;
+    else
+        coor(i,1) = -99;
+    end     
+    
+end    
+
+% update element connectivity 
+for isec = 1:numsec
+    nsec = sections(isec,4);
+    new_elmt = coor(sections(isec,5:4+nsec), 1)';
+    sections(isec,5:4+nsec) = new_elmt;
+end 
+
+nnode = idx;
+coor = coor(coor(:,1) ~= -99,:);
+
+
 end
