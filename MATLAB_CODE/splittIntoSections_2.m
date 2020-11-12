@@ -195,12 +195,17 @@ for ielno = 1:numel
                 % number of knots (nknots)
                 knots(isec_w_NURBS,3) = nKnot;
                 
-                
-                % initial knot value (iknot)
-                knots(isec_w_NURBS,4) = iKnot;
-                % final knot value (jknot)
-                knots(isec_w_NURBS,5) = jKnot;
-                
+                if OP == -1
+                    % initial knot value (iknot)
+                    knots(isec_w_NURBS,4) = 1-jKnot;
+                    % final knot value (jknot)
+                    knots(isec_w_NURBS,5) = 1-iKnot;
+                else
+                    % initial knot value (iknot)
+                    knots(isec_w_NURBS,4) = iKnot;
+                    % final knot value (jknot)
+                    knots(isec_w_NURBS,5) = jKnot;
+                end
                 
                 
                 % knots
@@ -364,11 +369,17 @@ for ielno = 1:numel
                 % number of knots (nknots)
                 knots(isec_w_NURBS,3) = nKnot;
                 
-                % initial knot value (iknot)
-                knots(isec_w_NURBS,4) = iKnot;
-                % final knot value (jknot)
-                knots(isec_w_NURBS,5) = jKnot;
-                
+                if OP == -1
+                    % initial knot value (iknot)
+                    knots(isec_w_NURBS,4) = 1-jKnot;
+                    % final knot value (jknot)
+                    knots(isec_w_NURBS,5) = 1-iKnot;
+                else
+                    % initial knot value (iknot)
+                    knots(isec_w_NURBS,4) = iKnot;
+                    % final knot value (jknot)
+                    knots(isec_w_NURBS,5) = jKnot;
+                end
                 
                 % knots
                 knots(isec_w_NURBS,6:5+nKnot) = knotVectors{kvno}(6:end);
