@@ -17,14 +17,13 @@ for dir = 1:4
     if exist_NQ == 1
         % look for neighbour Quad reference in reference array
         % and get its position or its ancestor position
-        levelNQ = length(refNQ);
-        for level = levelNQ:-2:2
-            idx = cellfun(@(x) isequal(x, refNQ(1:level)),references);
-            if any(idx)
-                idxNQ = find(idx,1,'first');
-                break
-            end
-        end
+%         for level = levelNQ:-2:2
+%             idx = cellfun(@(x) isequal(x, refNQ(1:level)),references);
+%             if any(idx)
+%                 idxNQ = find(idx,1,'first');
+%                 break
+%             end
+%         end
         
         % are both of the same size ?
         if levelQ == level
