@@ -1,5 +1,5 @@
 function [nnode,coor,numsec,maxnsec,sections,ord,knots,wgt] = splittIntoSections_2(nnode,coor,numel,connectivity,...
-    numKnotVectors,knotVectors,idxControlPoints,indices)
+    numKnotVectors,knotVectors,idxControlPoints)
 % splittIntoSections: Splitt polygonal elements into section
 %
 % INPUT:
