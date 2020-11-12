@@ -94,7 +94,7 @@ for i = 1:numleaves
     
     % Check neighborhood of current leaf
     % get mid points if they exist
-    [midPoints] = getMidPoints(Quadtree,references,refLeaf);
+    [midPoints] = getMidPoints(Quadtree,leaves(i),refLeaf);
 
     if isempty(intersections) || length(intersections) == 1
         

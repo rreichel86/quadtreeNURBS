@@ -1,4 +1,4 @@
-function [midPoints] = getMidPoints(Quadtree,references,refQ)
+function [midPoints] = getMidPoints(Quadtree,idxQ,refQ)
 % getMidPoints: get current Quad mid points
 
 % current Quad level
