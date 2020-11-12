@@ -1,8 +1,8 @@
 function [Quadtree] = QuadtreeBalance(Quadtree, controlPoints,...
     knots, weights, degree,Boundary)
 
-references = cellfun(@(Q) Q(2),Quadtree.Node);
-references{1} = [];
+% references = cellfun(@(Q) Q(2),Quadtree.Node);
+% references{1} = [];
 
 % array with Quadtree leaves indices
 idxLeaves = Quadtree.findleaves';
@@ -40,16 +40,16 @@ while l <= length(idxLeaves)
             % look for neighbour Quad reference in reference array
             % and get its position or its ancestor position
             levelNQ = length(refNQ);
-            for level = levelNQ:-2:2
-                idx = cellfun(@(x) isequal(x, refNQ(1:level)),references);
-                if any(idx)
-                    idxNQ = find(idx,1,'first');
-                    % update array with found neighbours indices
-                    niNQs = niNQs + 1;
-                    iNQs(niNQs) = idxNQ;
-                    break
-                end
-            end
+%             for level = levelNQ:-2:2
+%                 idx = cellfun(@(x) isequal(x, refNQ(1:level)),references);
+%                 if any(idx)
+%                     idxNQ = find(idx,1,'first');
+%                     % update array with found neighbours indices
+%                     niNQs = niNQs + 1;
+%                     iNQs(niNQs) = idxNQ;
+%                     break
+%                 end
+%             end
             
             if is_splitted == 1
                 continue
@@ -66,8 +66,8 @@ while l <= length(idxLeaves)
                 % insert current Quad children into array with leaves indices
                 idxLeaves = [idxLeaves; idxNewLeaves];
                 
-                references = cellfun(@(Q) Q(2),Quadtree.Node);
-                references{1} = [];
+%                 references = cellfun(@(Q) Q(2),Quadtree.Node);
+%                 references{1} = [];
             end
         end
     end
