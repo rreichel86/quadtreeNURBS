@@ -255,11 +255,11 @@ for i = 1:numleaves
         end
         % for the control points in Clockwise direction 
         if col(1,1) < col(1,2)
-            elements{j} = [element(:,[1:col(1,1)]),controlPoints(:,[2:end-1]),element(:,[col(1,2):end])];
-            elements{j+1} = [element(:,[col(1,1):col(1,2)]),fliplr(controlPoints(:,[2:end-1]))];
+            elements{j} = [element(:,[1:col(1,1)]),element(:,[col(1,2):end])];
+            elements{j+1} = [element(:,[col(1,1):col(1,2)])];
         else
-            elements{j} = [element(:,[1:col(1,2)]),fliplr(controlPoints(:,[2:end-1])),element(:,[col(1,1):end])];
-            elements{j+1} = [element(:,[col(1,2):col(1,1)]),controlPoints(:,[2:end-1])];   
+            elements{j} = [element(:,[1:col(1,2)]),element(:,[col(1,1):end])];
+            elements{j+1} = [element(:,[col(1,2):col(1,1)])];   
         end
         % element numbers
         connectivity{j}(1,1) = j;
