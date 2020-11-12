@@ -40,7 +40,7 @@ for i = 1:4
     Current = [child(1,2*i-1),child(1,2*i);child(2,2*i-1),child(2,2*i)];
     Quad = [Current(1,1),Current(1,2),Current(1,2),Current(1,1),Current(1,1);...
         Current(2,1),Current(2,1),Current(2,2),Current(2,2),Current(2,1)];
-    plot([Quad(1,:), Quad(1,1)],[Quad(2,:), Quad(2,1)],'k')
+    plot([Quad(1,:), Quad(1,1)],[Quad(2,:), Quad(2,1)],'k.-')
     
     %Call the splitting function. Get the tree data structure after
     %performing the splitting at the given quad and an auxiliary array
