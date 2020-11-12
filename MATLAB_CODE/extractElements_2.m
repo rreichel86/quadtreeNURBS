@@ -34,11 +34,11 @@ function [numcoor,coor,numel,connectivity,maxnel,...
 % knotVectors ---------------- contains knot vectors and following information
 %                              ikv - knot vektor number
 %                              degree - NURBS curve degree
-%                              icp - index initial control point
-%                              ecp - last control point
+%                              iknot - initial knot value
+%                              jknot - end knot value
 %                              nkonts - number of knots per knot vector
 %
-% knotVectors = [ikv, degree, icp, ecp, nknots, knot_1,...,knot_nknots]
+% knotVectors = [ikv, degree, iknot, jknot, nknots, knot_1,...,knot_nknots]
 % idxControlPoints ----------- control points indices
 % idxControlPoints = [icp, ncp, idx_1,...idx_ncp] 
 %
@@ -54,6 +54,9 @@ NURBS_degree = data{3};
 NURBS_knots  = data{4};
 NURBS_controlPoints = data{5};
 NURBS_weights = data{6};
+
+% number of knots
+NURBS_nknots = length(NURBS_knots);
 
 % number of control points
 NURBS_ncp = length(NURBS_controlPoints);
@@ -131,10 +134,10 @@ for i = 1:numleaves
         % intersection points weights 
         weights = [Quadtree.Node{leaves(i),1}{9,1}(:,1), Quadtree.Node{leaves(i),1}{9,1}(:,end)];
         
-        knotVectors{countKnotVectors} = [countKnotVectors,degree,0,0,nknots,knots];
-        controlPoints_coor{countKnotVectors} = [controlPoints',weights'];
+        knotVectors{countKnotVectors} = [countKnotVectors,NURBS_degree,intersections,NURBS_nknots,NURBS_knots];
+        controlPoints_coor{countKnotVectors} = [NURBS_controlPoints',NURBS_weights'];
         
-        idxControlPoints{countKnotVectors} = zeros(1,ncp+2);
+        idxControlPoints{countKnotVectors} = zeros(1,NURBS_ncp+2);
         idxControlPoints{countKnotVectors}(1,1) = countKnotVectors;
         idxControlPoints{countKnotVectors}(1,2) = NURBS_ncp;
 
@@ -157,15 +160,13 @@ for i = 1:numleaves
         % intersection points weights 
         weights = [Quadtree.Node{leaves(i),1}{9,1}(:,1), Quadtree.Node{leaves(i),1}{9,1}(:,end)];
         
-        
-        
         % counter for the number of knot vectors
         countKnotVectors = countKnotVectors + 1;
         
-        knotVectors{countKnotVectors} = [countKnotVectors,degree,0,0,nknots,knots];
-        controlPoints_coor{countKnotVectors} = [controlPoints',weights'];
+        knotVectors{countKnotVectors} = [countKnotVectors,NURBS_degree,intersections,NURBS_nknots,NURBS_knots];
+        controlPoints_coor{countKnotVectors} = [NURBS_controlPoints',NURBS_weights'];
         
-        idxControlPoints{countKnotVectors} = zeros(1,ncp+2);
+        idxControlPoints{countKnotVectors} = zeros(1,NURBS_ncp+2);
         idxControlPoints{countKnotVectors}(1,1) = countKnotVectors;
         idxControlPoints{countKnotVectors}(1,2) = NURBS_ncp;
 
@@ -191,10 +192,10 @@ for i = 1:numleaves
         % counter for the number of knot vectors
         countKnotVectors = countKnotVectors + 1;
         
-        knotVectors{countKnotVectors} = [countKnotVectors,degree,0,0,nknots,knots];
-        controlPoints_coor{countKnotVectors} = [controlPoints',weights'];
+        knotVectors{countKnotVectors} = [countKnotVectors,NURBS_degree,intersections,NURBS_nknots,NURBS_knots];
+        controlPoints_coor{countKnotVectors} = [NURBS_controlPoints',NURBS_weights'];
         
-        idxControlPoints{countKnotVectors} = zeros(1,ncp+2);
+        idxControlPoints{countKnotVectors} = zeros(1,NURBS_ncp+2);
         idxControlPoints{countKnotVectors}(1,1) = countKnotVectors;
         idxControlPoints{countKnotVectors}(1,2) = NURBS_ncp;
 
@@ -378,21 +379,19 @@ for ikv = 1:numKnotVectors
     
 end
 
+numKnotVectors = countKnotVectors;
 numIdxControlPoints = countKnotVectors;
 for ictrlp = 1:numIdxControlPoints
     ctrlp = controlPoints_coor{ictrlp};
     nctrlp = idxControlPoints{ictrlp}(1,2);
     
     for n = 1 : nctrlp
-    
-    a = find ( abs(coor(:,2)-ctrlp(n,1))<1e-10);
-    b = find ( abs(coor(:,3)-ctrlp(n,2))<1e-10);
-    indices = intersect(a,b);
         
-   idxControlPoints{ictrlp}(1,n+2) = indices';
-   
-    end
-    
+        a = find ( abs(coor(:,2)-ctrlp(n,1))<1e-10);
+        b = find ( abs(coor(:,3)-ctrlp(n,2))<1e-10);
+        index = intersect(a,b);
+        idxControlPoints{ictrlp}(1,n+2) = index';
+    end   
 end
 
 end
