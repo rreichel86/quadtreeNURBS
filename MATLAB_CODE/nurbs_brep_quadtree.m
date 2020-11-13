@@ -3,7 +3,7 @@ function [Quadtree] = nurbs_brep_quadtree(k_min,degree,knots,controlPoints,weigh
 
 
 % Count of control points in the root
-nPoints = checkQuad( Boundary(:,2)',  Boundary(:,4)',controlPoints);
+nPoints = checkQuad( [min(Boundary(1,:)) min(Boundary(2,:))], [max(Boundary(1,:)) max(Boundary(2,:))],controlPoints);
 
 % Split the root if there is more than one point in the root
 if nPoints > 1
