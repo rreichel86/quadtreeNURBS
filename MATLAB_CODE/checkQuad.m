@@ -1,4 +1,4 @@
-function nPoints = checkQuad( minCoords, maxCoords, controlPoints )
+function nPoints = checkQuad( minCoords, maxCoords, Points )
 %CHECKQUAD counts the control points in given area
 %   The area is defined with the inputs minCoords and maxCoords
 %   If a control point (given with the input controlPoints) is between
@@ -8,22 +8,22 @@ function nPoints = checkQuad( minCoords, maxCoords, controlPoints )
 %   points in the area
 counter = 0;
 currentPoints = [];
-for ii = 1:size(controlPoints,2)
+nPoints = size(Points,1);
+
+
+for ii = 1:nPoints
     
-    
-    
-    if  isPointInQuad(minCoords, maxCoords, controlPoints(:,ii)) == 1
+    if  isPointInQuad(minCoords, maxCoords, Points(ii,:)) == 1
         
         counter = counter + 1;
-        currentPoints(:,counter) = controlPoints(:,ii);
+        currentPoints(counter,:) = Points(ii,:);
     
     end
-    
     
 end
 
 % Check for dublicated control point 
-counter = size(unique(currentPoints','rows'),1);
+counter = size(unique(currentPoints,'rows'),1);
 
 nPoints = counter;
 end
