@@ -23,11 +23,11 @@ if nPoints > 1
     k = 0; % k: level of decomposition, equal to 0 at the root
     pos_aux = []; Q_aux = [0]; %auxiliar arrays
     
-    [Quadtree] = decompose(Quadtree,Boundary,NURBS,l,k,pos_aux,Q_aux,Boundary,k_min);
+    [Quadtree] = decompose(Quadtree,Boundary,NURBS,l,k,pos_aux,Q_aux,k_min);
 end
 
-[Quadtree] = Star_Shape(Quadtree,NURBS,Boundary);
+[Quadtree] = Star_Shape(Quadtree,NURBS);
 
-[Quadtree] = QuadtreeBalance(Quadtree,NURBS,Boundary);
+[Quadtree] = QuadtreeBalance(Quadtree,NURBS);
 
 end

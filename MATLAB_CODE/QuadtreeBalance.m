@@ -1,4 +1,4 @@
-function [Quadtree] = QuadtreeBalance(Quadtree,NURBS,Boundary)
+function [Quadtree] = QuadtreeBalance(Quadtree,NURBS)
 
 % references = cellfun(@(Q) Q(2),Quadtree.Node);
 % references{1} = [];
@@ -63,7 +63,7 @@ while l <= length(idxLeaves)
             % check if current Quad has to be split
             if splittQ(Quadtree,idxLeaf,dir,idxNQ) == 1
                 % split current Quad 
-                [Quadtree] = Decompose_balance(Quadtree,NURBS,idxLeaf,locLeaf,idxLeafFather,Boundary);
+                [Quadtree] = Decompose_balance(Quadtree,NURBS,idxLeaf,locLeaf,idxLeafFather);
                 
                 is_splitted = 1;
                 idxNewLeaves = Quadtree.Node{idxLeaf,1}{11,1}';

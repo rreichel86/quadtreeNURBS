@@ -1,4 +1,4 @@
-function [Quadtree]=Decompose_balance(Quadtree,NURBS,i,Loc_Current,idx_Father,Boundary)
+function [Quadtree]=Decompose_balance(Quadtree,NURBS,i,Loc_Current,idx_Father)
 % Decompose_balance functions prepares input for decompose function. It
 % creates the auxiliar variables needed for calling the decompose function
 
@@ -11,7 +11,7 @@ pos_aux=Loc_Current;
 
 
 
-[Quadtree] = decompose(Quadtree,Quad,NURBS,l,k,pos_aux,Q_aux,Boundary);
+[Quadtree] = decompose(Quadtree,Quad,NURBS,l,k,pos_aux,Q_aux);
 
 
 end
