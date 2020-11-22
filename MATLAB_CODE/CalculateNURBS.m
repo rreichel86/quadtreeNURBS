@@ -2,13 +2,13 @@ function NURBS_pts = CalculateNURBS(NURBS)
 % CalculateNURBS: Compute NURBS Curve points
 %
 % INPUT:
-% degree --------------------- NURBS degree
-% knots ---------------------- NURBS knot vector
-% controlPoints -------------- NURBS control points 
-% weights -------------------- NURBS weights
+% NURBS.degree --------------------- NURBS degree
+% NURBS.knots ---------------------- NURBS knot vector
+% NURBS.controlPoints -------------- NURBS control points
+% NURBS.weights -------------------- NURBS weights
 %
 % OUTPUT:
-% NURBS Curve points, where 
+% NURBS Curve points, where
 % 1st column ----------------- x coordinates
 % 2nd column ----------------- y coordinates
 % 3rd column ----------------- parametric coordinates
