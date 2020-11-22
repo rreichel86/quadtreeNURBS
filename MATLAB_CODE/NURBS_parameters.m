@@ -1,5 +1,5 @@
-function [degree,knots,controlPoints,weights,axis,Boundary]=NURBS_parameters(flag)
 if flag==1
+function [NURBS,Boundary] = NURBS_parameters(flag)
     degree = 3;
     controlPoints = [0 -0.2 -0.5 -0.7 -1.7 -4 -4 -3.75 0 4 4 4  2.5 0;...
         -2 -1.8 -1.3 -1.4 0.2 -3.5  0  3.5 4 4 0 -4 -0.1 -2];
@@ -81,4 +81,9 @@ if flag==8
     
     Boundary=[0 0 5 5;...
               5 0 0 5];
+    NURBS.degree = degree;
+    NURBS.knots = knots;
+    NURBS.controlPoints = controlPoints;
+    NURBS.weigths = weights;
+
 end
