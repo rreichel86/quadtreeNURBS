@@ -90,7 +90,7 @@ end
     NURBS.degree = degree;
     NURBS.knots = knots;
     NURBS.controlPoints = controlPoints;
-    NURBS.weigths = weights;
+    NURBS.weights = weights;
 
 end
  

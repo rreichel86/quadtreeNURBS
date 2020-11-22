@@ -18,7 +18,7 @@ function NURBS_pts = CalculateNURBS(NURBS)
 degree = NURBS.degree;
 knots = NURBS.knots;
 controlPoints = NURBS.controlPoints;
-weights = NURBS.weigths;
+weights = NURBS.weights;
 
 n = length(controlPoints)-1;
 subs = knots(1):(knots(end)-knots(1))*0.01:knots(end);
