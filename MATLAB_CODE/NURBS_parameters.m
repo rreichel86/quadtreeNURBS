@@ -5,7 +5,6 @@ if flag==1
         -2 -1.8 -1.3 -1.4 0.2 -3.5  0  3.5 4 4 0 -4 -0.1 -2];
     knots = [0 0 0 0 0.25 0.3 0.4 0.5 0.6 0.75 0.75 0.75 0.8 0.9 1 1 1 1];
     weights = [1 0.707 1 0.707 1 0.5 1 0.707 1 0.707 1 1 2 1];
-    axis=([-6 6 -5 5]);
     Boundary=[-6 -6 6 6;5 -5 -5 5];
 end
 
@@ -17,8 +16,6 @@ if flag==2
     weights=[1 0.707 1 0.707 1 0.707 1 0.707 1];
     Boundary=[-2.5 -2.5 2.5 2.5;...
               2.5 -2.5 -2.5 2.5];
-    axis=([min(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2,...
-        min(controlPoints(2,:))*1.2, max(controlPoints(2,:))*1.2,]);
 end
 
 if flag==3
@@ -28,8 +25,6 @@ if flag==3
     weights=[1 0.707 1 0.707 1 0.707 1 0.707 1];
     Boundary=[min(controlPoints(1,:))*1.2, min(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2;...
         max(controlPoints(2,:))*1.2, min(controlPoints(2,:))*1.2, min(controlPoints(2,:))*1.2, max(controlPoints(2,:))*1.2];
-    axis=([min(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2,...
-        min(controlPoints(2,:))*1.2, max(controlPoints(2,:))*1.2,]);
 end
 
 if flag==4
@@ -40,8 +35,6 @@ if flag==4
     weights=[1 0.707 1 0.707 1 0.707 1 0.707 1 0.707 1 1];
     Boundary=[min(controlPoints(1,:))*1.2, min(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2;...
         max(controlPoints(1,:))*1.2, min(controlPoints(1,:))*1.2, min(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2];
-    axis=([min(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2,...
-        min(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2,]);
 end
 
 if flag==5
@@ -51,8 +44,6 @@ if flag==5
     weights=[1 0.707 1 0.707 1 0.707 1 0.707 1];
     Boundary=[min(controlPoints(1,:))*1.2, min(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2;...
         max(controlPoints(2,:))*1.2, min(controlPoints(2,:))*1.2, min(controlPoints(2,:))*1.2, max(controlPoints(2,:))*1.2];
-    axis=([min(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2,...
-        min(controlPoints(2,:))*1.2, max(controlPoints(2,:))*1.2,]);
 end
 
 
@@ -64,8 +55,6 @@ if flag==6
     weights=[1 0.707 1 0.707 1 0.707 1 0.707 1];
     Boundary=[min(controlPoints(1,:))*1.2, min(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2;...
         max(controlPoints(2,:))*1.2, min(controlPoints(2,:))*1.2, min(controlPoints(2,:))*1.2, max(controlPoints(2,:))*1.2];
-    axis=([min(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2,...
-        min(controlPoints(2,:))*1.2, max(controlPoints(2,:))*1.2,]);
 end
 
 if flag==7
@@ -76,8 +65,6 @@ if flag==7
     weights=[1 2 2 1 2 2 1];
     Boundary=[min(controlPoints(1,:))*1.2, min(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2;...
         max(controlPoints(2,:))*1.2, min(controlPoints(2,:))*1.2, min(controlPoints(2,:))*1.2, max(controlPoints(2,:))*1.2];
-    axis=([min(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2,...
-        min(controlPoints(2,:))*1.2, max(controlPoints(2,:))*1.2,]);
 end
 
 if flag==8
@@ -94,6 +81,4 @@ if flag==8
     
     Boundary=[0 0 5 5;...
               5 0 0 5];
-    axis=([min(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2,...
-        min(controlPoints(2,:))*1.2, max(controlPoints(2,:))*1.2,]);
 end
