@@ -46,7 +46,7 @@ for i = 1:4
     [Q_aux, Quadtree,numInterPoints] = splitting(Quadtree,Q_aux,Quad,NURBS,l,k,i,pos_aux);
  
     %Obtains number of seed points in given quad
-    nPointsCurrent = checkQuad(Current(:,1)', Current(:,2)', NURBS.controlPoints);
+    nPointsCurrent = checkQuad(Current(:,1)', Current(:,2)', NURBS.controlPoints');
     
     %If there are more than two segments or seed points, decompose again
     if (nPointsCurrent > 1 || numInterPoints > 2 || k <= k_min)
