@@ -30,24 +30,28 @@ f_splittElmtIntoSec = 1; % Splitt polygonal elements into section
 % consequently lies in its own column.
 
 % Obtains the selected NURBS definition
-[degree,knots,controlPoints,weights,ax,Boundary]=NURBS_parameters(example_nro);
+[NURBS,Boundary] = NURBS_parameters(example_nro);
 
 % compute point of the NURBS curve
-NURBS = CalculateNURBS(degree,knots,controlPoints,weights);
+NURBS_pts = CalculateNURBS(NURBS);
 
 %% Plot NURBS curve
 figure(1)
 hold on
 if f_plotNURBS == 1
-    plot(NURBS(:,1),NURBS(:,2),'r','LineWidth',3);
+    plot(NURBS_pts(:,1),NURBS_pts(:,2),'r','LineWidth',2.5);
     hold on
-    plot(controlPoints(1, :), controlPoints(2, :), 'ro','LineWidth',3);
-    plot(controlPoints(1, :), controlPoints(2, :), '--','LineWidth',0.5);
+    plot(NURBS.controlPoints(1, :), NURBS.controlPoints(2, :), 'b-.','LineWidth',1);
+    plot(NURBS.controlPoints(1, :), NURBS.controlPoints(2, :), 'o','Color','red','MarkerFaceColor','r','MarkerSize',8);
+    hold on 
+    patch(Boundary(1,:),Boundary(2,:), 'w','FaceAlpha',0)
 end
 box on
+
+
 %% Quadtree decomposition
 k_min = 2;
-[Quadtree] = nurbs_brep_quadtree(k_min,degree,knots,controlPoints,weights,Boundary);
+[Quadtree] = nurbs_brep_quadtree(k_min,NURBS,Boundary);
 
 %% Plots the NURBS contained in each leaf separately
 if f_plotLeaves == 1

@@ -1,5 +1,4 @@
-function [Quadtree]=Decompose_Star(Quadtree,controlPoints, ...
-                        knots, weights, degree,i,Boundary)
+function [Quadtree] = Decompose_Star(Quadtree,NURBS,i,Boundary)
 % Decompose_balance functions prepares input for decompose function. It
 % creates the auxiliar variables needed for calling the decompose function
 
@@ -15,6 +14,5 @@ pos_aux=Loc_Current;
 
 
 
-[Quadtree] = decompose(Quadtree,Quad,controlPoints, knots,...
-    weights, degree, l, k,pos_aux, Q_aux, Boundary); 
+[Quadtree] = decompose(Quadtree,Quad,NURBS,l,k,pos_aux,Q_aux,Boundary); 
 end

@@ -46,19 +46,19 @@ function [numcoor,coor,numel,connectivity,maxnel,...
 %% 
 % Get NURBS curve 
 data = Quadtree.Node{1,1};
-NURBS_degree = data{3};
-NURBS_knots  = data{4};
-NURBS_controlPoints = data{5};
-NURBS_weights = data{6};
+NURBS.degree = data{3};
+NURBS.knots  = data{4};
+NURBS.controlPoints = data{5};
+NURBS.weights = data{6};
 
 % compute point of the NURBS curve
-NURBS = CalculateNURBS(NURBS_degree,NURBS_knots, NURBS_controlPoints, NURBS_weights);
+NURBS_pts = CalculateNURBS(NURBS);
 
 % Compute bounding box that enclosed the NURBS curve
-x_min = min(NURBS(:,1));
-x_max = max(NURBS(:,1));
-y_min = min(NURBS(:,2));
-y_max = max(NURBS(:,2));
+x_min = min(NURBS_pts(:,1));
+x_max = max(NURBS_pts(:,1));
+y_min = min(NURBS_pts(:,2));
+y_max = max(NURBS_pts(:,2));
 
 %%
 % Get Quadtree leaves
@@ -359,7 +359,7 @@ for ii = find(coor(:,5) == 1)'
     if ( isPointInQuad([x_min,y_min], [x_max,y_max], coor(ii,2:3)) == 1 )
         % Check if current node is also inside 
         % the region enclosed by the NURBS curve
-        pointInPoly = isPointInPolygon(NURBS(1:end-1,1:2), coor(ii,2:3));
+        pointInPoly = isPointInPolygon(NURBS_pts(1:end-1,1:2), coor(ii,2:3));
         coor(ii,7) = pointInPoly;
     end
 end

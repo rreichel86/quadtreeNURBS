@@ -1,4 +1,4 @@
-function [Quadtree] = Star_Shape(Quadtree, controlPoints, knots, weights, degree, Boundary, leaves)
+function [Quadtree] = Star_Shape(Quadtree,NURBS,Boundary,leaves)
 % Star_Shape: Check if Quadtree leaves are star-shaped. Only the Quadtree 
 % leaves that are splitted by the NURBS curve are checked. 
 %
@@ -47,13 +47,12 @@ end
 % subdivide remainig leaves
 newLeaves = zeros(1, 4*length(leaves));
 for i = 1:length(leaves)
-    [Quadtree] = Decompose_Star(Quadtree, controlPoints, ...
-    knots, weights, degree,leaves(i),Boundary);
+    [Quadtree] = Decompose_Star(Quadtree,NURBS,leaves(i),Boundary);
     % get children pointers of current Quad 
     newLeaves(4*i-3:4*i) = Quadtree.Node{leaves(i),1}{11,1};
 end
 
 % chech if new Quadtree leaves are shar-shaped
-[Quadtree] = Star_Shape(Quadtree,controlPoints, knots, weights, degree, Boundary, newLeaves);
+[Quadtree] = Star_Shape(Quadtree,NURBS,Boundary, newLeaves);
 
 

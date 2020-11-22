@@ -1,5 +1,5 @@
-function [Q_aux, Quadtree,numInterPoints] = splitting(Quadtree, Q_aux, Quad, ...
-        controlPoints, knots, weights, degree,l, k, i, pos_aux)
+function [Q_aux, Quadtree,numInterPoints] = splitting(Quadtree,Q_aux,Quad,...
+    NURBS,l,k,i,pos_aux)
 % Splitting function obtains the description of an eventual segment of the 
 % NURBS contained in the quad.First we need to detect the intersection 
 % points, then performorm knot insertion for the intersection untill C0 
@@ -13,6 +13,11 @@ function [Q_aux, Quadtree,numInterPoints] = splitting(Quadtree, Q_aux, Quad, ...
 % Auxiliar variables previously defined
 % Output:
 % Quadtree data structure cointining the splitted segment of the NURBS
+
+degree = NURBS.degree;
+knots = NURBS.knots;
+controlPoints = NURBS.controlPoints;
+weights = NURBS.weights;
 
 Q_xmin = Quad(1,1);
 Q_xmax = Quad(1,2);

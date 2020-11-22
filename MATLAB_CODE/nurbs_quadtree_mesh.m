@@ -1,4 +1,4 @@
-function [nnode,coor,numsec,maxnsec,sections,ord,knots,wgt] = nurbs_quadtree_mesh(k_min,degree,knots,controlPoints,weights,Boundary)
+function [nnode,coor,numsec,maxnsec,sections,ord,knots,wgt] = nurbs_quadtree_mesh(k_min,NURBS,Boundary)
 
 % OUTPUT:
 % nnode -------------------- number of coordinates = number of nodes
@@ -30,7 +30,7 @@ function [nnode,coor,numsec,maxnsec,sections,ord,knots,wgt] = nurbs_quadtree_mes
 
 
 %% Quadtree decomposition
-[Quadtree] = nurbs_brep_quadtree(k_min,degree,knots,controlPoints,weights,Boundary);
+[Quadtree] = nurbs_brep_quadtree(k_min,NURBS,Boundary);
 
 %% Extract polygonal elements 
 [nnode,coor,numel,connectivity,maxnel,...

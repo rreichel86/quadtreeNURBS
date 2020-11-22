@@ -1,9 +1,9 @@
-function [Quadtree] = nurbs_brep_quadtree(k_min,degree,knots,controlPoints,weights,Boundary)
+function [Quadtree] = nurbs_brep_quadtree(k_min,NURBS,Boundary)
 
 
 
 % Count of control points in the root
-nPoints = checkQuad( [min(Boundary(1,:)) min(Boundary(2,:))], [max(Boundary(1,:)) max(Boundary(2,:))],controlPoints);
+nPoints = checkQuad( [min(Boundary(1,:)) min(Boundary(2,:))], [max(Boundary(1,:)) max(Boundary(2,:))],NURBS.controlPoints);
 
 % Split the root if there is more than one point in the root
 if nPoints > 1
@@ -23,15 +23,11 @@ if nPoints > 1
     k = 0; % k: level of decomposition, equal to 0 at the root
     pos_aux = []; Q_aux = [0]; %auxiliar arrays
     
-    [Quadtree] = decompose(Quadtree,Boundary,controlPoints, knots,...
-        weights, degree, l,k,pos_aux, Q_aux,Boundary,k_min);
+    [Quadtree] = decompose(Quadtree,Boundary,NURBS,l,k,pos_aux,Q_aux,Boundary,k_min);
 end
 
-[Quadtree] = Star_Shape(Quadtree,controlPoints, knots, weights,...
-    degree, Boundary);
+[Quadtree] = Star_Shape(Quadtree,NURBS,Boundary);
 
-[Quadtree] = QuadtreeBalance(Quadtree, controlPoints, knots, ...
-    weights, degree,Boundary);
-
+[Quadtree] = QuadtreeBalance(Quadtree,NURBS,Boundary);
 
 end
