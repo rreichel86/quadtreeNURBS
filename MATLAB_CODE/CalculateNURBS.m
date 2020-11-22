@@ -22,9 +22,9 @@ weights = NURBS.weigths;
 
 n = length(controlPoints)-1;
 subs = knots(1):(knots(end)-knots(1))*0.01:knots(end);
-NURBS = zeros(length(subs),3);
+NURBS_pts = zeros(length(subs),3);
 
 for i = 1:length(subs)
     f = curvePoint(n,degree,knots,controlPoints,subs(i),weights);
-    NURBS(i,:) = [f;subs(i)];
+    NURBS_pts(i,:) = [f;subs(i)];
 end
