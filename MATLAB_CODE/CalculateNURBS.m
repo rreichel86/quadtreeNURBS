@@ -1,5 +1,5 @@
-function NURBS = CalculateNURBS(degree,knots,controlPoints,weights)
-% CalculateNURBS: Compute NURBS Curve points 
+function NURBS_pts = CalculateNURBS(NURBS)
+% CalculateNURBS: Compute NURBS Curve points
 %
 % INPUT:
 % degree --------------------- NURBS degree
@@ -14,6 +14,11 @@ function NURBS = CalculateNURBS(degree,knots,controlPoints,weights)
 % 3rd column ----------------- parametric coordinates
 %
 % -------------------------------------------------------------------------
+
+degree = NURBS.degree;
+knots = NURBS.knots;
+controlPoints = NURBS.controlPoints;
+weights = NURBS.weigths;
 
 n = length(controlPoints)-1;
 subs = knots(1):(knots(end)-knots(1))*0.01:knots(end);
