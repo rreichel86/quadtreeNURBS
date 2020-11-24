@@ -18,17 +18,8 @@ for dir = 1:4
         % look for neighbour Quad reference in reference array
         % and get its position or its ancestor position
         
-        
         idxNQ = findNeighbour(Quadtree,idxQ,refQ, refNQ);
         levelNQ = length( Quadtree.Node{idxNQ,1}{2,1}(1:end) );
-        
-%         for level = levelNQ:-2:2
-%             idx = cellfun(@(x) isequal(x, refNQ(1:level)),references);
-%             if any(idx)
-%                 idxNQ = find(idx,1,'first');
-%                 break
-%             end
-%         end
         
         % are both of the same size ?
         if levelQ == levelNQ

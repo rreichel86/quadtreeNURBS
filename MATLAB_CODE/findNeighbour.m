@@ -12,10 +12,7 @@ function idxNQ = findNeighbour(Quadtree,idxQ,refQ,refNQ)
     % nearest common ancesor idx and ref
     idxA = idxQ;
     for l = 1:(lv - lvNCA)/2
-        idxA = Quadtree.Parent(idxA);
-%         if idxA ~= 1
-%             refA = Quadtree.Node{idxA,1}{2,1}(1:end);
-%         end     
+        idxA = Quadtree.Parent(idxA);     
     end
 
     % search neighbour idx 
