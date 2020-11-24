@@ -15,13 +15,18 @@ for i=1:length(l)
         % if each leaf may be plotted separately, uncomment
         %figure(i+1)
         
+        % Obtain NURBS definition of the curve contained in each leaf
+        NURBS.degree = Quadtree.Node{leaves(i),1}{6,1};
+        NURBS.knots  = Quadtree.Node{leaves(i),1}{8,1};
+        NURBS.controlPoints = Quadtree.Node{leaves(i),1}{7,1};
+        NURBS.weights = Quadtree.Node{leaves(i),1}{9,1};
+       
+        NURBS_pts = CalculateNURBS(NURBS);
+        plot(NURBS_pts(:,1),NURBS_pts(:,2),'r','LineWidth',2.5);
         
         % setting axis from function NURBS_parameter
 %         axis(ax);
         
-        % Obtaining NURBS definition of the curve contained in each leaf quad
-        leave=CalculateNURBS( Quadtree.Node{l(i),1}{6,1},Quadtree.Node{l(i),1}{8,1}, Quadtree.Node{l(i),1}{7,1},  Quadtree.Node{l(i),1}{9,1});
-        plot(leave(:,1),leave(:,2),'r','LineWidth',2.5);
         
         % Plotting  leaf's quad
         plot(Quadtree.Node{l(i),1}{10,1}(1,:),Quadtree.Node{l(i),1}{10,1}(2,:),'k.-');
