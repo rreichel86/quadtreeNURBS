@@ -1,13 +1,26 @@
 function [Quadtree] = nurbs_brep_quadtree(k_min,NURBS,Boundary)
+% nurbs_brep_quadree: quadtree decomposition 
+% 
+% INPUT: 
+% k_min ---------------------- minimum level of decomposition
+% NURBS definition
+% NURBS.degree --------------- NURBS degree
+% NURBS.knots ---------------- NURBS knot vector
+% NURBS.controlPoints -------- NURBS control points
+% NURBS.weights -------------- NURBS weights
+% Boundary ------------------- Outer boundary 
+% 
+% OUTPUT:
+% Quadtree ------------------- Quadtree data structure 
+% 
+% -------------------------------------------------------------------------
 
-
-
-% Count of control points in the root
+% Count control points in the root
 nPoints = checkQuad( [min(Boundary(1,:)) min(Boundary(2,:))], [max(Boundary(1,:)) max(Boundary(2,:))],NURBS.controlPoints');
 
 % Split the root if there is more than one point in the root
 if nPoints > 1
-    %Setting tree
+    %Set tree
     Quadtree = tree('root');
     data = Quadtree.Node{1,1};
     data = {data;...
