@@ -2,6 +2,7 @@ function NURBS_pts = CalculateNURBS(NURBS)
 % CalculateNURBS: Compute NURBS Curve points
 %
 % INPUT:
+% NURBS definition
 % NURBS.degree --------------------- NURBS degree
 % NURBS.knots ---------------------- NURBS knot vector
 % NURBS.controlPoints -------------- NURBS control points

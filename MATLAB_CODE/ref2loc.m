@@ -1,4 +1,5 @@
 function locQ = ref2loc(refQ)
+% ref2loc: compute Quad location in 1:4 format (11 = 1, 21 = 2, 12 = 3, 22 = 4)
 
 lenlocQ = length(refQ)/2;
 for l = 1:lenlocQ

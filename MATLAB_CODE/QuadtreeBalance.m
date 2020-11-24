@@ -2,6 +2,20 @@ function [Quadtree] = QuadtreeBalance(Quadtree,NURBS)
 
 % references = cellfun(@(Q) Q(2),Quadtree.Node);
 % references{1} = [];
+% QuadtreeBalance: balance quadtree, apply 2:1 rule
+%
+% INPUT:
+% Quadtree ------------------- Quadtree data structure
+% NURBS definition
+% NURBS.degree --------------- NURBS degree
+% NURBS.knots ---------------- NURBS knot vector
+% NURBS.controlPoints -------- NURBS control points
+% NURBS.weights -------------- NURBS weights
+% 
+% OUTPUT:
+% Quadtree ------------------- Quadtree data structure
+% 
+% -------------------------------------------------------------------------
 
 % array with Quadtree leaves indices
 idxLeaves = Quadtree.findleaves';

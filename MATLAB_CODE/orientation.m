@@ -1,8 +1,10 @@
 function s = orientation(Q,R,S)
-% orientation function obtains the orientation of three given points Q,R,S 
-% by terms of the cross product. s is the outut and can take the values 1
-% for a positive orientation (right-hand rule), -1 for negative, 0 for
-% colinear
+% orientation: obtain the orientation of three given points Q,R,S 
+% s is the output and can take the values: 
+%   1 if the given points are oriented CCW 
+%  -1 if the given points are oriented CW
+%   0 if the given points are collinear
+
  tol = 1e-10;
  d = (R(1)-Q(1))*(S(2)-Q(2))-(R(2)-Q(2))*(S(1)-Q(1));
  

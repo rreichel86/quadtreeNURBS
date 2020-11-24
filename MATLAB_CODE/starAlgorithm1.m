@@ -8,7 +8,7 @@ function [star_shaped, Quadtree] = starAlgorithm1(Quadtree,idx)
 %
 % OUTPUT: 
 % Quadtree ------------------- updated Quadtree data structure
-% star_shaped ---------------- 1: if and only ig both Quad subregions are 
+% star_shaped ---------------- 1: if and only if both Quad subregions are 
 %                                 star-shaped
 %                              0: otherwise
 %

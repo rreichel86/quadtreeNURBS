@@ -4,11 +4,11 @@ function [Quadtree] = Star_Shape(Quadtree,NURBS,leaves)
 %
 % INPUT: 
 % Quadtree ------------------- Quadtree data structure
-% controlPoints -------------- NURBS control points 
-% knots ---------------------- NURBS knot vector
-% weights -------------------- NURBS weights
-% degree --------------------- NURBS degree
-% Boundary
+% NURBS definition 
+% NURBS.degree --------------------- NURBS degree
+% NURBS.knots ---------------------- NURBS knot vector
+% NURBS.controlPoints -------------- NURBS control points
+% NURBS.weights -------------------- NURBS weights
 % leaves --------------------- filtered Quadtree leaves (optional)
 %
 % OUTPUT: 

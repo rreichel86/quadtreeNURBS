@@ -1,7 +1,18 @@
-function [nnode,coor,numsec,maxnsec,sections,ord,knots,wgt] = nurbs_quadtree_mesh(k_min,NURBS,Boundary)
-
+function [Quadtree,nnode,coor,numsec,maxnsec,sections,ord,knots,wgt] = nurbs_quadtree_mesh(k_min,NURBS,Boundary)
+% nurbs_quadtree_mesh: generate a quadtree based mesh 
+%
+% INPUT: 
+% k_min ---------------------- minimum level of decomposition
+% NURBS definition
+% NURBS.degree --------------- NURBS degree
+% NURBS.knots ---------------- NURBS knot vector
+% NURBS.controlPoints -------- NURBS control points
+% NURBS.weights -------------- NURBS weights
+% Boundary ------------------- Outer boundary 
+% 
 % OUTPUT:
-% nnode -------------------- number of coordinates = number of nodes
+% Quadtree ------------------- Quadtree data structure
+% nnode ---------------------- number of coordinates = number of nodes
 % coor ----------------------- nodes coordinates and weights 
 % coor = [number, x-coor, y-coor, weight, type, which_region, inside_region]
 %
@@ -27,13 +38,14 @@ function [nnode,coor,numsec,maxnsec,sections,ord,knots,wgt] = nurbs_quadtree_mes
 %
 % knots = [ikv, iw, nknots, iknot, jknot, knot_1,...,knot_nknots]
 % wgt = [iw, nweights, weight_1,...,weigth_nweigths]
-
+%
+% -------------------------------------------------------------------------
 
 %% Quadtree decomposition
 [Quadtree] = nurbs_brep_quadtree(k_min,NURBS,Boundary);
 
 %% Extract polygonal elements 
-[nnode,coor,numel,connectivity,maxnel,...
+[nnode,coor,numel,connectivity,~,...
  numKnotVectors,knotVectors,maxnknots,idxControlPoints] = extractElements(Quadtree);
 
 %% Splitt polygonal elements into section

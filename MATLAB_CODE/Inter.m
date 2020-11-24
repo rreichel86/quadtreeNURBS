@@ -1,16 +1,19 @@
 function [Pint,U] = Inter(x1,y1,x2,y2,degree,knots,controlPoints,weights)
-% Inter functions obtains the intersection between a NURBS and a given 
-% segment. If it exists, the control poligon will also intersect the
-% NURBS. The routine first obtains this segment of the control poligon.
-% Afterwards obtains an approximation of the solution: At the end it
-% obatins the solution with the Stevenson's method for the given accuracy.
+% Inter: obtain the intersection between a NURBS curve and a given line segment. 
 %
-% Input:
-% x1,y1,x2,y2: definition of the segment
+% INPUT:
+% x1, y1, x2, y2 ------------- geometrical definition of line segment
 % Definition of the NURBS
-% Output:
-% Pint: physical coordinates of the intersection point(empty if none)
-% U: paramrametrical coordinates of the intersection point(empty if none)
+% degree --------------------- NURBS degree
+% knots ---------------------- NURBS knot vector
+% controlPoints -------------- NURBS control points 
+% weights -------------------- NURBS weights
+%
+% OUTPUT:
+% Pint: physical coordinates of the intersection point (empty if none)
+% U: parametrical coordinates of the intersection point (empty if none)
+% 
+% -------------------------------------------------------------------------
 
 % Initialization of variables
 Pint = [];
@@ -126,7 +129,7 @@ num_a = length(a_knots_array);
 % Based on Steffensen's method obtains the closest solution for a
 % given tolerance
 for i=1:num_a
-    %loops over the approximated solutions
+    % loop over the approximated solutions
     a = a_knots_array(i);
     hh = 1e-2;
     for ii=1:20
@@ -172,7 +175,7 @@ for i=1:num_a
         end
         hh = hh/10;
         if ii==20
-            %Avoiding to obtain multiplicities
+            % Avoiding to obtain multiplicities
             if any(abs(U-a)>tol) || isempty(U)
                 if coorIdx == 1 
                     if f(2) > y1 && f(2) < y2

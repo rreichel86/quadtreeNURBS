@@ -3,7 +3,7 @@ function [numcoor,coor,numel,connectivity,maxnel,...
 % extractElements: get polygonal elements from Quadtree data structure
 %
 % INPUT:
-% Quadtree Data
+% Quadtree ------------------- Quadtree data structure
 %
 % OUTPUT:
 % numcoor -------------------- number of coordinates = number of nodes

@@ -1,6 +1,7 @@
-function plot_leaf(Quadtree,ax)
-% Function plot_leaf plots each quadtree's leaf content
 l=Quadtree.findleaves();
+function plot_leaf(Quadtree)
+% plot_leaf: plots each quadtree's leaf
+
 figure(3)
 axis square
 hold on
