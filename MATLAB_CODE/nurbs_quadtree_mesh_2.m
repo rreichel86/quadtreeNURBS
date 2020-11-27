@@ -25,7 +25,7 @@ function [Quadtree,nnode,coor,numsec,maxnsec,sections,ord,knots,wgt] = nurbs_qua
 %
 % numsec ---------------------- number of sections
 % maxnsec --------------------- maximum number of nodes on any section
-% sections -------------------- sectionsconnectivity matrix as nsec-tupel of 
+% sections -------------------- sections connectivity matrix as nsec-tupel of 
 %                               nodes, where the first three entries
 %                               isec - section number
 %                               ikv - knot vector number
