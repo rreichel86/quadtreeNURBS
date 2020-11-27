@@ -92,7 +92,7 @@ end
 [Quadtree] = QuadtreeBalance(Quadtree,NURBS);
 
 %% Extract polygonal elements 
-[nnode,coor,numel,connectivity,maxnel,...
+[nnode,coor,numel,connectivity,~,...
  numKnotVectors,knotVectors,maxnknots,idxControlPoints] = extractElements(Quadtree);
 
 %% Splitt polygonal elements into section
