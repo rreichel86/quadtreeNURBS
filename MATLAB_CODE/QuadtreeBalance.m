@@ -28,9 +28,9 @@ while l <= length(idxLeaves)
     refLeaf = Quadtree.Node{idxLeaf,1}{2,1}(1:end);
     levelLeaf = length(refLeaf);
     % current Quad location in 1:4 format (11 = 1, 21 = 2, 12 = 3, 22 = 4)
-    locLeaf = ref2loc(refLeaf);
+    % locLeaf = ref2loc(refLeaf);
     % current Quad father index
-    idxLeafFather = Quadtree.Parent(idxLeaf);
+    % idxLeafFather = Quadtree.Parent(idxLeaf);
     
     is_splitted = 0;
     % array with found neighbours indices
@@ -63,7 +63,7 @@ while l <= length(idxLeaves)
             % check if current Quad has to be split
             if splittQ(Quadtree,idxLeaf,dir,idxNQ) == 1
                 % split current Quad 
-                [Quadtree] = Decompose_balance(Quadtree,NURBS,idxLeaf,locLeaf,idxLeafFather);
+                [Quadtree] = Decompose_helper(Quadtree,NURBS,idxLeaf);
                 
                 is_splitted = 1;
                 idxNewLeaves = Quadtree.Node{idxLeaf,1}{11,1}';

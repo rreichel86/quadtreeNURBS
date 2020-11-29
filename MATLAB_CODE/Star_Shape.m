@@ -47,7 +47,7 @@ end
 % subdivide remainig leaves
 newLeaves = zeros(1, 4*length(leaves));
 for i = 1:length(leaves)
-    [Quadtree] = Decompose_Star(Quadtree,NURBS,leaves(i));
+    [Quadtree] = Decompose_helper(Quadtree,NURBS,leaves(i));
     % get children pointers of current Quad 
     newLeaves(4*i-3:4*i) = Quadtree.Node{leaves(i),1}{11,1};
 end

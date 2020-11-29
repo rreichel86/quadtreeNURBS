@@ -82,10 +82,10 @@ for i = 1:nSeedingPoints
     end
     
     idxRef = Quadtree.Node{idx,1}{2,1};
-    idxFather = Quadtree.Parent(idx);
-    idxLoc = ref2loc(idxRef);
+%     idxFather = Quadtree.Parent(idx);
+%     idxLoc = ref2loc(idxRef);
     
-    [Quadtree] = Decompose_balance(Quadtree,NURBS,idx,idxLoc,idxFather);
+    [Quadtree] = Decompose_helper(Quadtree,NURBS,idx);
     
 end
 
