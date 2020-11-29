@@ -89,11 +89,11 @@ end
 
 %% Extract polygonal elements 
 [nnode,coor,numel,connectivity,~,...
- numKnotVectors,knotVectors,maxnknots,idxControlPoints] = extractElements_2(Quadtree);
+ numKnotVectors,knotVectors,idxControlPoints] = extractElements_2(Quadtree);
 
 %% Splitt polygonal elements into section
 
 [nnode,coor,numsec,maxnsec,sections,ord,knots,wgt] = splittIntoSections_2(nnode,coor,numel,connectivity,...
-                                                                    numKnotVectors,knotVectors,maxnknots,idxControlPoints);
+                                                                    numKnotVectors,knotVectors,idxControlPoints);
 
 end
