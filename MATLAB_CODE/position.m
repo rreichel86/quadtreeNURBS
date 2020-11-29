@@ -5,26 +5,26 @@ function [position_Q] = position(l,k,i,pos_aux,Quadtree)
 Location = Location_Quads(Quadtree);
 
 if isempty(pos_aux)
-if k == 1
-    pos = l;
-end
-
-n = length(Location{end});
-if k > 1
-    if k > n
-        pos = [Location{end} 1];
+    if k == 1
+        pos = l;
     end
-    if k == n
-        pos =[Location{end}];
-        pos(end) = i;
+    
+    n = length(Location{end});
+    if k > 1
+        if k > n
+            pos = [Location{end} 1];
+        end
+        if k == n
+            pos =[Location{end}];
+            pos(end) = i;
+        end
+        if k < n
+            pos = Location{end}(1:k);
+            pos(end) = i;
+        end
     end
-    if k < n
-        pos = Location{end}(1:k);
-        pos(end) = i;
-    end
-end
 else
-    pos=[pos_aux i];
+    pos = [pos_aux i];
 end
 
 
