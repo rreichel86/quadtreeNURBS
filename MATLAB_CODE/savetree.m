@@ -108,17 +108,19 @@ else
             QS;...
             []};
        
-    for i = 1:length(Quadtree.Node)
-        Pos{i} = Quadtree.Node{i,1}{2};
-    end
-    Q_aux = Q_aux(1:end-2);
-    idx = cellfun('length',Pos) == length(Q_aux);
-    for j = 1:length(idx)
-        tf = isequal(Pos{j},Q_aux);
-        if tf
-            Parent = j;
-        end
-    end
+%     for i = 1:length(Quadtree.Node)
+%         Pos{i} = Quadtree.Node{i,1}{2};
+%     end
+      Q_aux = Q_aux(1:end-2);
+%     idx = cellfun('length',Pos) == length(Q_aux);
+%     for j = 1:length(idx)
+%         tf = isequal(Pos{j},Q_aux);
+%         if tf
+%             Parent = j;
+%         end
+%     end
+    
+    Parent = findQ(Quadtree,Q_aux);
     [Quadtree, node2] = Quadtree.addnode(Parent, data);
     
     % Adding pointer to father's new child
