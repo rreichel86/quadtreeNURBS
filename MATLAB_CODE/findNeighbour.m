@@ -33,11 +33,13 @@ function idxNQ = findNeighbour(Quadtree,idxQ,refQ,refNQ)
             loc = 4;
         end
         
-        if idxNQ ~= 1
-           children = Quadtree.Node{idxNQ,1}{11,1};
-        else   
-           children = Quadtree.Node{idxNQ,1}{2,1};
-        end 
+%         if idxNQ ~= 1
+%            children = Quadtree.Node{idxNQ,1}{11,1};
+%         else   
+%            children = Quadtree.Node{idxNQ,1}{2,1};
+%         end 
+
+        children = Quadtree.getchildren(idxNQ);
          
         if ~isempty(children)
             idxNQ = children(loc);

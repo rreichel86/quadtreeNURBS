@@ -25,7 +25,8 @@ for dir = 1:4
         if levelQ == levelNQ
             
             % has neighbour Quad children ?
-            children = Quadtree.Node{idxNQ,1}{11,1}';
+            %children = Quadtree.Node{idxNQ,1}{11,1}';
+            children = Quadtree.getchildren(idxNQ);
             if ~isempty(children) % yes
                 
                 % select neighbour Quad children
