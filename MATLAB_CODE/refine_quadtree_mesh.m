@@ -1,4 +1,4 @@
-function [Quadtree,nnode,coor,numsec,maxnsec,sections,ord,knots,wgt] = refine_quadtree_mesh(Quadtree,seedingPoints)
+function [Quadtree,nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] = refine_quadtree_mesh(Quadtree,seedingPoints_splitt,seedingPoints_merge)
 % refine_quadtree_mesh: refine given quadtree based mesh
 %
 % INPUT: 
@@ -33,12 +33,17 @@ function [Quadtree,nnode,coor,numsec,maxnsec,sections,ord,knots,wgt] = refine_qu
 %
 % knots = [ikv, iw, nknots, iknot, jknot, knot_1,...,knot_nknots]
 % wgt = [iw, nweights, weight_1,...,weigth_nweigths]
-
+%
+% polyElmts -------------------- relate sections and polygonal elements
+% polyElmts = [ipoly, region, numSecPoly, sec_1,...,sec_numSecPoly]
+%
+% -------------------------------------------------------------------------
 
 figure 
 hold on 
 
 %% Quadtree decomposition
+
 % Get NURBS curve
 data = Quadtree.Node{1,1};
 NURBS.degree = data{3};
@@ -56,7 +61,7 @@ NURBS.weights = data{6};
 
 %% Splitt polygonal elements into section
 
-[nnode,coor,numsec,maxnsec,sections,ord,knots,wgt] = splittIntoSections(nnode,coor,numel,connectivity,...
+[nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] = splittIntoSections(nnode,coor,numel,connectivity,...
                                                                     numKnotVectors,knotVectors,maxnknots,idxControlPoints);
 
 end

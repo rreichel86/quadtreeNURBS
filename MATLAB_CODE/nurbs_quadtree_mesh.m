@@ -1,4 +1,4 @@
-function [Quadtree,nnode,coor,numsec,maxnsec,sections,ord,knots,wgt] = nurbs_quadtree_mesh(k_min,NURBS,Boundary)
+function [Quadtree,nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] = nurbs_quadtree_mesh(k_min,NURBS,Boundary)
 % nurbs_quadtree_mesh: generate a quadtree based mesh 
 %
 % INPUT: 
@@ -39,6 +39,9 @@ function [Quadtree,nnode,coor,numsec,maxnsec,sections,ord,knots,wgt] = nurbs_qua
 % knots = [ikv, iw, nknots, iknot, jknot, knot_1,...,knot_nknots]
 % wgt = [iw, nweights, weight_1,...,weigth_nweigths]
 %
+% polyElmts -------------------- relate sections and polygonal elements
+% polyElmts = [ipoly, region, numSecPoly, sec_1,...,sec_numSecPoly]
+%
 % -------------------------------------------------------------------------
 
 %% Quadtree decomposition
@@ -50,7 +53,7 @@ function [Quadtree,nnode,coor,numsec,maxnsec,sections,ord,knots,wgt] = nurbs_qua
 
 %% Splitt polygonal elements into section
 
-[nnode,coor,numsec,maxnsec,sections,ord,knots,wgt] = splittIntoSections(nnode,coor,numel,connectivity,...
+[nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] = splittIntoSections(nnode,coor,numel,connectivity,...
                                                                     numKnotVectors,knotVectors,maxnknots,idxControlPoints);
 
 end
