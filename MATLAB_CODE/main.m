@@ -14,7 +14,7 @@ example_nro = 7;
 %       5      |  Limit double circum.   |     4.2
 %       6      |    Degenerated case     |     4.2
 %       7      |       Heart             |      -
-
+%       8      |  A quarter circumf.     |    
 
 % Plot options
 f_plotNURBS = 1; % Plot NURBS curve
