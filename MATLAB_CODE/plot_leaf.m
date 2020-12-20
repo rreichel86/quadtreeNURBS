@@ -16,7 +16,7 @@ for i = 1:numLeaves
     % check if leaf has intersections
     if isempty(intersections) || length(intersections) == 1
         % Plot Quad
-        plot(Quadtree.Node{leaves(i),1}{10,1}(1,:),Quadtree.Node{leaves(i),1}{10,1}(2,:),'k.-');
+%         plot(Quadtree.Node{leaves(i),1}{10,1}(1,:),Quadtree.Node{leaves(i),1}{10,1}(2,:),'k.-');
     else
         % Obtain NURBS definition of the curve contained in each leaf
         NURBS.degree = Quadtree.Node{leaves(i),1}{6,1};

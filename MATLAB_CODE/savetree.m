@@ -129,13 +129,13 @@ else
     Quadtree = Quadtree.set(Parent, data);
     
     % Deleting information of the father, information contained in leafs
-    if length(Quadtree.Node{Parent,1}{11}) == 4
-        data = Quadtree.Node{Parent,1};
-        data{6} = [];
-        data{7} = [];
-        data{8} = [];
-        data{9} = [];
-        Quadtree = Quadtree.set(Parent, data);
-    end
+%     if length(Quadtree.Node{Parent,1}{11}) == 4
+%         data = Quadtree.Node{Parent,1};
+%         data{6} = [];
+%         data{7} = [];
+%         data{8} = [];
+%         data{9} = [];
+%         Quadtree = Quadtree.set(Parent, data);
+%     end
     
 end
