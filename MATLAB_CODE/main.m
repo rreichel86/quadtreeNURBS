@@ -45,11 +45,12 @@ if f_plotNURBS == 1
     plot(NURBS_pts(:,1),NURBS_pts(:,2),'r','LineWidth',2.5);
     hold on
     plot(NURBS.controlPoints(1, :), NURBS.controlPoints(2, :), 'b-.','LineWidth',1);
-    plot(NURBS.controlPoints(1, :), NURBS.controlPoints(2, :), 'o','Color','red','MarkerFaceColor','r','MarkerSize',8);
+    plot(NURBS.controlPoints(1, :), NURBS.controlPoints(2, :), 'o','Color','red','MarkerFaceColor','r','MarkerSize',6);
     hold on 
     patch(Boundary(1,:),Boundary(2,:), 'w','FaceAlpha',0)
 end
 box on
+axis square
 
 
 %% Quadtree decomposition
