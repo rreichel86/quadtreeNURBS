@@ -35,6 +35,9 @@ f_splittElmtIntoSec = 1; % Splitt polygonal elements into section
 % compute point of the NURBS curve
 NURBS_pts = CalculateNURBS(NURBS);
 
+numRef = 0;
+NURBS = hRefinement1d(NURBS,numRef);     
+
 %% Plot NURBS curve
 figure(1)
 hold on
