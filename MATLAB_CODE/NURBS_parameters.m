@@ -52,8 +52,10 @@ elseif flag == 6
 
 elseif flag == 7
     degree = 3;
+%     controlPoints = [ 0 -5 -2 0 2 5 0;...
+%                    -3 2 5 2 5 2 -3];
     controlPoints = [ 0 -5 -2 0 2 5 0;...
-                   -3 2 5 2 5 2 -3];
+                     -4 1 4 1 4 1 -4];
     knots = [0 0 0 0 0.5 0.5 0.5 1 1 1 1];  
     weights = [1 2 2 1 2 2 1];
     Boundary = [-6 -6 6 6;...
