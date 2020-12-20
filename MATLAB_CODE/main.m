@@ -60,51 +60,8 @@ end
 %% Extract polygonal elements 
 [nnode,coor,numel,connectivity,maxnel,...
  numKnotVectors,knotVectors,maxnknots,idxControlPoints] = extractElements(Quadtree);
-%% Plot Nodes
 
-figure(2)
-plot(NURBS(:,1),NURBS(:,2),'b','LineWidth',1);
-hold on
-plot(coor(1:nnode-numel-1,2),coor(1:nnode-numel-1,3),'.r') ;
-hold on;
-plot(coor(nnode-numel:nnode,2),coor(nnode-numel:nnode,3),'.k') ;
-hold on;
-% text(coor(:,2), coor(:,3), num2str(coor(:,1)));
-
-% Compute bounding box that enclosed the NURBS curve
-x_min = min(NURBS(:,1));
-x_max = max(NURBS(:,1));
-y_min = min(NURBS(:,2));
-y_max = max(NURBS(:,2));
-
-% Plot bounding box
-% plot( [x_min,x_max,x_max,x_min,x_min], [y_min,y_min,y_max,y_max,y_min], '-k')
-% hold on;
-
-% loop over nodes, excluding control points
-for ii = find(coor(:,5) == 1)'
-    
-    % Check if current node is inside the bounding box
-    if ( isPointInQuad([x_min,y_min], [x_max,y_max], coor(ii,2:3)) == 1 )
-        
-        
-%         plot(coor(ii,2),coor(ii,3),'xc')
-%         hold on;
-        
-        % Check if current node is also inside 
-        % the region enclosed by the NURBS curve
-        pointInPoly = isPointInPolygon(NURBS(1:end-1,1:2), coor(ii,2:3));
-        coor(ii,7) = pointInPoly;
-%         if (  pointInPoly > 0 )
-%             
-%             
-%             plot(coor(ii,2),coor(ii,3),'*b')
-%             hold on;
-%             
 %         end
-    end
-end
-
 
    
 %% Splitt polygonal elements into section
