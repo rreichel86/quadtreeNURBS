@@ -388,6 +388,180 @@ for ielno = 1:numel
             end
             ii = ii + 1;
         end
+    elseif kvno ~= 0 && icp < ecp && icp == 1
+        ii = 1;
+        while ii <= nel
+            if ii == icp
+                isec = isec + 1;
+                isec_w_NURBS = isec_w_NURBS + 1;
+                sections(isec,1) = isec; % section number (isec)
+                sections(isec,2) = isec_w_NURBS; % knot vector number (ikv)
+                sections(isec,4) = ncp + 1; % number of nodes per section (nsec)
+                sections(isec,3) = region_nro; % region number
+                if OP == -1
+                    sections(isec,5:4+ncp) = fliplr(idxCtrlP);
+                else
+                    sections(isec,5:4+ncp) = idxCtrlP;
+                end
+                sections(isec,5+ncp) = elmt(end);
+                
+                ord(isec,:) = [isec,pgrad,1,0,0];
+                
+                % knot vector number (ikv)
+                knots(isec_w_NURBS,1) = isec_w_NURBS;
+                % weights number (iw)
+                knots(isec_w_NURBS,2) = isec_w_NURBS;
+                % number of knots (nknots)
+                knots(isec_w_NURBS,3) = nKnot;
+                
+                if OP == -1
+                    % initial knot value (iknot)
+                    knots(isec_w_NURBS,4) = 1-jKnot;
+                    % final knot value (jknot)
+                    knots(isec_w_NURBS,5) = 1-iKnot;
+                else
+                    % initial knot value (iknot)
+                    knots(isec_w_NURBS,4) = iKnot;
+                    % final knot value (jknot)
+                    knots(isec_w_NURBS,5) = jKnot;
+                end
+                
+                
+                % knots
+                knots(isec_w_NURBS,6:5+nKnot) = knotVectors{kvno}(6:end);
+                
+                % weights number (iw)
+                wgt(isec_w_NURBS,1) = isec_w_NURBS;
+                % number of control points / weights (nweights)
+                wgt(isec_w_NURBS,2) = ncp;
+                % weights
+                if OP == -1
+                    wgt(isec_w_NURBS,3:2+ncp) = coor(fliplr(idxCtrlP),4);
+                else
+                    wgt(isec_w_NURBS,3:2+ncp) = coor(idxCtrlP,4);
+                end
+                
+            elseif ii == nel
+                a = ii;
+                b = icp;
+                %idx = [a,b,nel+1];
+                
+                isec = isec + 1;
+                isec_w_NURBS = isec_w_NURBS + 1;
+                sections(isec,1) = isec; % section number (isec)
+                sections(isec,2) = isec_w_NURBS; % knot vector number (ikv)
+                sections(isec,4) = ncp + 2; % number of nodes per section (nsec)
+                sections(isec,3) = region_nro; % region number
+                sections(isec,5) = elmt(a);
+                sections(isec,6:5+ncp) = idxCtrlP;
+                sections(isec,6+ncp) = elmt(end);
+                
+                ord(isec,:) = [isec,1,1,1,0];
+                
+                if norm(coor(elmt(b),2:3) - NURBS_segment(1,1:2)) < 1e-10
+                    ord(isec,5) = -1;
+                else
+                    ord(isec,5) = 1;
+                end
+                
+                % knot vector number (ikv)
+                knots(isec_w_NURBS,1) = isec_w_NURBS;
+                % weights number (iw)
+                knots(isec_w_NURBS,2) = isec_w_NURBS;
+                % number of knots (nknots)
+                knots(isec_w_NURBS,3) = nKnot;
+                % initial knot value (iknot)
+                knots(isec_w_NURBS,4) = iKnot;
+                % final knot value (jknot)
+                knots(isec_w_NURBS,5) = jKnot;
+                % knots
+                knots(isec_w_NURBS,6:5+nKnot) = knotVectors{kvno}(6:end);
+                
+                % weights number (iw)
+                wgt(isec_w_NURBS,1) = isec_w_NURBS;
+                % number of control points / weights (nweights)
+                wgt(isec_w_NURBS,2) = ncp;
+                % weights
+                wgt(isec_w_NURBS,3:2+ncp) = coor(idxCtrlP,4);
+                
+            elseif ii == ecp
+                a = ii;
+                if ii == nel
+                    b = 1;
+                else
+                    b = ii + 1;
+                end
+                %idx = [a,b,nel+1];
+                
+                isec = isec + 1;
+                isec_w_NURBS = isec_w_NURBS + 1;
+                sections(isec,1) = isec; % section number (isec)
+                sections(isec,2) = isec_w_NURBS; % knot vector number (ikv)
+                sections(isec,4) = ncp + 2; % number of nodes per section (nsec)
+                sections(isec,3) = region_nro; % region number
+                sections(isec,5:4+ncp) = idxCtrlP;
+                sections(isec,5+ncp) = elmt(b);
+                sections(isec,6+ncp) = elmt(end);
+                
+                ord(isec,:) = [isec,1,1,-1,0];
+                
+                if norm(coor(elmt(a),2:3) - NURBS_segment(1,1:2)) < 1e-10
+                    ord(isec,5) = -1;
+                else
+                    ord(isec,5) = 1;
+                end
+                
+                % knot vector number (ikv)
+                knots(isec_w_NURBS,1) = isec_w_NURBS;
+                % weights number (iw)
+                knots(isec_w_NURBS,2) = isec_w_NURBS;
+                % number of knots (nknots)
+                knots(isec_w_NURBS,3) = nKnot;
+                % initial knot value (iknot)
+                knots(isec_w_NURBS,4) = iKnot;
+                % final knot value (jknot)
+                knots(isec_w_NURBS,5) = jKnot;
+                % knots
+                knots(isec_w_NURBS,6:5+nKnot) = knotVectors{kvno}(6:end);
+                
+                % weights number (iw)
+                wgt(isec_w_NURBS,1) = isec_w_NURBS;
+                % number of control points / weights (nweights)
+                wgt(isec_w_NURBS,2) = ncp;
+                % weights
+                wgt(isec_w_NURBS,3:2+ncp) = coor(idxCtrlP,4);
+                
+            elseif ii ~= nel
+                a = ii;
+                b = ii+1;
+                idx = [a,b,nel+1];
+                
+                isec = isec + 1;
+                sections(isec,1) = isec; % section number (isec)
+                sections(isec,2) = 0; % knot vector number (ikv)
+                sections(isec,4) = 3; % number of nodes per section (nsec)
+                sections(isec,3) = region_nro; % region number
+                sections(isec,5:7) = elmt(idx);
+                
+                ord(isec,:) = [isec,1,1,0,0];
+                
+%             elseif ii == nel
+%                 a = nel;
+%                 b = 1;
+%                 idx = [a,b,nel+1];
+%                 
+%                 isec = isec + 1;
+%                 sections(isec,1) = isec; % section number (isec)
+%                 sections(isec,2) = 0; % knot vector number (ikv)
+%                 sections(isec,4) = 3; % number of nodes per section (nsec)
+%                 sections(isec,3) = region_nro; % region number
+%                 sections(isec,5:7) = elmt(idx);
+%                 
+%                 ord(isec,:) = [isec,1,1,0,0];
+                
+            end
+            ii = ii + 1;
+        end    
     elseif kvno ~= 0 && icp > ecp && ecp == 1
         ii = 1;
         while ii <= nel
@@ -557,6 +731,11 @@ for ielno = 1:numel
             end
             ii = ii + 1;
         end
+    else 
+        kvno
+        icp 
+        ecp
+        
     end
 end
 
