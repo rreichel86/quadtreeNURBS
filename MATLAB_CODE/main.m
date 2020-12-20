@@ -55,7 +55,9 @@ axis square
 
 %% Quadtree decomposition
 k_min = 2;
+tic 
 [Quadtree] = nurbs_brep_quadtree(k_min,NURBS,Boundary);
+toc
 
 %% Plots the NURBS segments contained in each leaf separately
 if f_plotLeaves == 1
