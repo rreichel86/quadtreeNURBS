@@ -53,9 +53,9 @@ box on
 k_min = 2;
 [Quadtree] = nurbs_brep_quadtree(k_min,NURBS,Boundary);
 
-%% Plots the NURBS contained in each leaf separately
+%% Plots the NURBS segments contained in each leaf separately
 if f_plotLeaves == 1
-    plot_leaf(Quadtree,ax)
+    plot_leaf(Quadtree)
 end
 %% Extract polygonal elements 
 [nnode,coor,numel,connectivity,maxnel,...
