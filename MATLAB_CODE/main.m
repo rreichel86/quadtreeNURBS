@@ -18,9 +18,9 @@ example_nro = 7;
 
 % Plot options
 f_plotNURBS = 1; % Plot NURBS curve
-f_plotLeaves = 0; % Plot the NURBS contained in each leaf separately
+f_plotLeaves = 1; % Plot the NURBS contained in each leaf separately
 f_plotPolyElmt = 0; % Plot polygonal elements 
-f_splittElmtIntoSec = 1; % Splitt polygonal elements into section
+f_splittElmtIntoSec = 0; % Splitt polygonal elements into section
 
 % Initialization
 % ==============
