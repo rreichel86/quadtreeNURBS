@@ -51,7 +51,8 @@ NURBS.knots  = data{4};
 NURBS.controlPoints = data{5};
 NURBS.weights = data{6};
 
-[Quadtree] = QuadtreeSplit(Quadtree,NURBS,seedingPoints);
+% [Quadtree] = QuadtreeMerge(Quadtree,seedingPoints_merge);
+[Quadtree] = QuadtreeSplit(Quadtree,NURBS,seedingPoints_splitt);
 
 [Quadtree] = QuadtreeBalance(Quadtree,NURBS);
 
