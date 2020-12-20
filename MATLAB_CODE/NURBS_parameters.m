@@ -56,8 +56,8 @@ elseif flag == 7
                    -3 2 5 2 5 2 -3];
     knots = [0 0 0 0 0.5 0.5 0.5 1 1 1 1];  
     weights = [1 2 2 1 2 2 1];
-    Boundary = [min(controlPoints(1,:))*1.2, min(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2;...
-                max(controlPoints(2,:))*1.2, min(controlPoints(2,:))*1.2, min(controlPoints(2,:))*1.2, max(controlPoints(2,:))*1.2];
+    Boundary = [-6 -6 6 6;...
+                 6 -6 -6 6];
 
 elseif flag == 8
     degree = 2;
