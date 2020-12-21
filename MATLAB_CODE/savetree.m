@@ -20,7 +20,11 @@ controlPoints2=[];
 knots_new2=[];
 weights2=[];
 
+% First level of decomposition
+if k == 1
     for j=1:length(newKnots)/2
+        % Loop over the inserted knots and extact NURBS segment 
+        % contained in current quad
         k0 = find( abs(knots_new - newKnots(2*(j-1)+1)) < 1e-10, 1, 'First');
         k1 = find( abs(knots_new - newKnots(2*(j-1)+2)) < 1e-10, 1, 'Last');
         
@@ -42,6 +46,37 @@ weights2=[];
             weights2= weights;
         end
     end
+    
+    % Store information in tree's new node 
+    
+    % Quad name 
+    % Quad location
+    % horizontal intersections (physical space)
+    % vertical intersections (physical space)
+    % intersection in parametric space of the curve
+    % NURBS degree
+    % NURBS control points 
+    % NURBS Knot vector 
+    % NURBS weights
+    % Quad definition 
+    % Pointer to the children
+    data = {['Quad' num2str(Q_aux)];...
+             Q_aux;...
+             Px;...
+             Py;...
+             newKnots;...
+             degree;...
+             controlPoints2;...
+             knots_new2;...
+             weights2;...
+             QS;...
+             []};
+         
+    % attach tree's new node to the root     
+    [Quadtree, nodeID] = Quadtree.addnode(1, data);
+    % add nodeID to root's pointer list 
+    data = Quadtree.Node{1,1};
+    data{2} = [data{2} nodeID];
     Quadtree = Quadtree.set(1, data);
 else
     % Storing data for any other level of decomposition
