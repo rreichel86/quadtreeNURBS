@@ -22,28 +22,28 @@ weights2=[];
 
 % First level of decomposition
 if k == 1
-    for j=1:length(newKnots)/2
+    for j=1:length(newKnotVals)/2
         % Loop over the inserted knots and extact NURBS segment 
         % contained in current quad
-        k0 = find( abs(knots_new - newKnots(2*(j-1)+1)) < 1e-10, 1, 'First');
-        k1 = find( abs(knots_new - newKnots(2*(j-1)+2)) < 1e-10, 1, 'Last');
+        k0 = find( abs(newKnots - newKnotVals(2*(j-1)+1)) < 1e-10, 1, 'First');
+        k1 = find( abs(newKnots - newKnotVals(2*(j-1)+2)) < 1e-10, 1, 'Last');
         
-        if k0 == 1 && k1 ~= length(knots_new)
+        if k0 == 1 && k1 ~= length(newKnots)
             controlPoints2 = controlPoints(1:2,k0:(k1-degree));
-            knots_new2= [knots_new(k0:k1) knots_new(k1)];
-            weights2= weights(k0:(k1-degree));
-        elseif k0 ~= 1 && k1 == length(knots_new)
+            knots_new2 = [newKnots(k0:k1) newKnots(k1)];
+            weights2 = weights(k0:(k1-degree));
+        elseif k0 ~= 1 && k1 == length(newKnots)
             controlPoints2 = controlPoints(1:2,(k0-1):(k1-degree-1));
-            knots_new2= [knots_new(k0) knots_new(k0:k1)];
-            weights2= weights((k0-1):(k1-degree-1));
-        elseif k0~=1 && k1~=length(knots_new)
+            knots_new2 = [newKnots(k0) newKnots(k0:k1)];
+            weights2 = weights((k0-1):(k1-degree-1));
+        elseif k0~=1 && k1 ~= length(newKnots)
             controlPoints2 = controlPoints(1:2,(k0-1):(k1-degree));
-            knots_new2= [knots_new(k0) knots_new(k0:k1) knots_new(k1)];
-            weights2= weights((k0-1):(k1-degree));
+            knots_new2 = [newKnots(k0) newKnots(k0:k1) newKnots(k1)];
+            weights2 = weights((k0-1):(k1-degree));
         else    
             controlPoints2 = controlPoints;
-            knots_new2 = knots_new;
-            weights2= weights;
+            knots_new2 = newKnots;
+            weights2 = weights;
         end
     end
     
@@ -64,7 +64,7 @@ if k == 1
              Q_aux;...
              Px;...
              Py;...
-             newKnots;...
+             newKnotVals;...
              degree;...
              controlPoints2;...
              knots_new2;...
@@ -80,28 +80,28 @@ if k == 1
     Quadtree = Quadtree.set(1, data);
 else
     % other levels of decomposition
-    for j=1:length(newKnots)/2
+    for j=1:length(newKnotVals)/2
         % Loop over the inserted knots and extact NURBS segment 
         % contained in current quad
-        k0 = find( abs(knots_new - newKnots(2*(j-1)+1)) < 1e-10, 1, 'First');
-        k1 = find( abs(knots_new - newKnots(2*(j-1)+2)) < 1e-10, 1, 'Last');
+        k0 = find( abs(newKnots - newKnotVals(2*(j-1)+1)) < 1e-10, 1, 'First');
+        k1 = find( abs(newKnots - newKnotVals(2*(j-1)+2)) < 1e-10, 1, 'Last');
         
         
-        if k0 == 1 && k1 ~= length(knots_new)
+        if k0 == 1 && k1 ~= length(newKnots)
             controlPoints2 = controlPoints(1:2,k0:(k1-degree));
-            knots_new2= [knots_new(k0:k1) knots_new(k1)];
-            weights2= weights(k0:(k1-degree));
-        elseif  k0 ~= 1 && k1 == length(knots_new)
+            knots_new2 = [newKnots(k0:k1) newKnots(k1)];
+            weights2 = weights(k0:(k1-degree));
+        elseif  k0 ~= 1 && k1 == length(newKnots)
             controlPoints2 = controlPoints(1:2,(k0-1):(k1-degree-1));
-            knots_new2= [knots_new(k0) knots_new(k0:k1)];
-            weights2= weights((k0-1):(k1-degree-1));
-        elseif k0~=1 && k1~=length(knots_new)
+            knots_new2 = [newKnots(k0) newKnots(k0:k1)];
+            weights2 = weights((k0-1):(k1-degree-1));
+        elseif k0 ~= 1 && k1 ~= length(newKnots)
             controlPoints2 = controlPoints(1:2,(k0-1):(k1-degree));
-            knots_new2= [knots_new(k0) knots_new(k0:k1) knots_new(k1)];
-            weights2= weights((k0-1):(k1-degree));
+            knots_new2 = [newKnots(k0) newKnots(k0:k1) newKnots(k1)];
+            weights2 = weights((k0-1):(k1-degree));
         else    
             controlPoints2 = controlPoints;
-            knots_new2 = knots_new;
+            knots_new2 = newKnots;
             weights2 = weights;    
         end
     end
@@ -123,7 +123,7 @@ else
             Q_aux;...
             Px;...
             Py;...
-            newKnots;...
+            newKnotVals;...
             degree;...
             controlPoints2;...
             knots_new2;...

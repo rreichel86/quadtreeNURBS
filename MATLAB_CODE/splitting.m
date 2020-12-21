@@ -58,18 +58,19 @@ end
 
 % After determining the intersection points we perform a knot insertion,
 % beeing the knots the parametrical coordinates of the intersection points
-newKnots=sort(U); 
-knots_new=knots;
+newKnotVals = sort(U); 
+newKnots = knots; 
 if ~isempty(U)
-    for j= 1:length(newKnots)
-        % loop over newKnots vector. We insert them at knot vector
-        newKnot=newKnots(j);
-        num_ins = degree-sum(abs(knots_new(:) - newKnot) < 1e-10);
-        if num_ins > 0 
-        for ij=1:num_ins % Insert knot untill C0 continuity condition
-            [knots_new, controlPoints, weights] = CurveKnotIns(degree,...
-                controlPoints, knots_new, weights, newKnot);
-        end
+    for j = 1:length(newKnotVals)
+        % loop over newKnotVals 
+        % insert knotVal in newknots
+        KnotVal = newKnotVals(j);
+        numKnotIns = degree-sum(abs(newKnots(:) - KnotVal) < 1e-10);
+        if numKnotIns > 0 
+            for jj = 1:numKnotIns % Insert knot until C0 continuity condition
+                [newKnots, controlPoints, weights] = CurveKnotIns(degree,...
+                    controlPoints, newKnots, weights, KnotVal);
+            end
         end
     end
 end
