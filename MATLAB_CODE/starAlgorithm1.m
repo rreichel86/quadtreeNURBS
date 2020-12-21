@@ -16,10 +16,9 @@ function [star_shaped, Quadtree] = starAlgorithm1(Quadtree,idx)
 
 tol = 1e-10;
 % Quad vertices
-vertices = Quadtree.Node{idx,1}{10,1}(:,1:end)';
+vertices = Quadtree.Node{idx,1}{7,1}(:,1:end)';
 % control points
-controlPoints = Quadtree.Node{idx,1}{7,1}';
-nControlPoints = size(controlPoints,1);
+controlPoints = Quadtree.Node{idx,1}{6,1}.controlPoints';
 % vertical intersections [left; right] 
 vertIntrsc = Quadtree.Node{idx,1}{4,1}';
 nVertIntrsc = size(vertIntrsc,1);

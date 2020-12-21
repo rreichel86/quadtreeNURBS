@@ -2,7 +2,7 @@ function [Quadtree] = Decompose_helper(Quadtree,NURBS,idxQ)
 % Decompose_helper: prepares input for decompose SR. 
 % It creates the auxiliar variables needed for calling the decompose SR.
 
-Quad = Quadtree.Node{idxQ,1}{10};
+Quad = Quadtree.Node{idxQ,1}{7};
 LocQ = ref2loc(Quadtree.Node{idxQ,1}{2});
 idxFather = Quadtree.Parent(idxQ);
 Q_aux = Quadtree.Node{idxFather,1}{2};

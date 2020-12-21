@@ -45,8 +45,8 @@ for dir = 1:4
                 end
                 
                 % get midPoint from neighbour Quad children
-                pt1 = Quadtree.Node{idxC(1),1}{10,1}(:,idxV(1));
-                pt2 = Quadtree.Node{idxC(2),1}{10,1}(:,idxV(2));
+                pt1 = Quadtree.Node{idxC(1),1}{7,1}(:,idxV(1));
+                pt2 = Quadtree.Node{idxC(2),1}{7,1}(:,idxV(2));
                 
                 % compare midPoints
                 if norm(pt1-pt2) < 1e-10
