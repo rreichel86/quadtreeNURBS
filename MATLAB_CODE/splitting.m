@@ -74,8 +74,8 @@ if ~isempty(U)
     end
 end
 
-position_Q = position(l,k,i,pos_aux,Quadtree);
-Q_aux = position_Q;
+refQ = position(l,k,i,pos_aux,Quadtree);
+Q_aux = refQ;
 
 % The information of the curve contained in the quad, pointers and auxiliar
 % variables are stord at the tree data structure at the node assigned to
