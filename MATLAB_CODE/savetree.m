@@ -14,11 +14,9 @@ function [Quadtree] = savetree(Q_aux, Quadtree,k, Px, Py, newKnotVals,...
 % Output:
 % Quadtree after storing new information
 
+% NURBS segment 
+NURBS_segment = struct;
 
-% Initializating variables 
-controlPoints2=[];
-knots_new2=[];
-weights2=[];
 
 % First level of decomposition
 if k == 1
@@ -29,46 +27,48 @@ if k == 1
         k1 = find( abs(newKnots - newKnotVals(2*(j-1)+2)) < 1e-10, 1, 'Last');
         
         if k0 == 1 && k1 ~= length(newKnots)
-            controlPoints2 = controlPoints(1:2,k0:(k1-degree));
-            knots_new2 = [newKnots(k0:k1) newKnots(k1)];
-            weights2 = weights(k0:(k1-degree));
+            NURBS_segment.degree = degree;
+            NURBS_segment.controlPoints = controlPoints(1:2,k0:(k1-degree));
+            NURBS_segment.knots = [newKnots(k0:k1) newKnots(k1)];
+            NURBS_segment.weights = weights(k0:(k1-degree));
         elseif k0 ~= 1 && k1 == length(newKnots)
-            controlPoints2 = controlPoints(1:2,(k0-1):(k1-degree-1));
-            knots_new2 = [newKnots(k0) newKnots(k0:k1)];
-            weights2 = weights((k0-1):(k1-degree-1));
+            NURBS_segment.degree = degree;
+            NURBS_segment.controlPoints = controlPoints(1:2,(k0-1):(k1-degree-1));
+            NURBS_segment.knots = [newKnots(k0) newKnots(k0:k1)];
+            NURBS_segment.weights = weights((k0-1):(k1-degree-1));
         elseif k0~=1 && k1 ~= length(newKnots)
-            controlPoints2 = controlPoints(1:2,(k0-1):(k1-degree));
-            knots_new2 = [newKnots(k0) newKnots(k0:k1) newKnots(k1)];
-            weights2 = weights((k0-1):(k1-degree));
+            NURBS_segment.degree = degree;
+            NURBS_segment.controlPoints = controlPoints(1:2,(k0-1):(k1-degree));
+            NURBS_segment.knots = [newKnots(k0) newKnots(k0:k1) newKnots(k1)];
+            NURBS_segment.weights = weights((k0-1):(k1-degree));
         else    
-            controlPoints2 = controlPoints;
-            knots_new2 = newKnots;
-            weights2 = weights;
+            NURBS_segment.degree = degree;
+            NURBS_segment.controlPoints = controlPoints;
+            NURBS_segment.knots = newKnots;
+            NURBS_segment.weights = weights;
         end
     end
     
     % Store information in tree's new node 
     
-    % Quad name 
-    % Quad location
-    % horizontal intersections (physical space)
-    % vertical intersections (physical space)
-    % intersection in parametric space of the curve
-    % NURBS degree
-    % NURBS control points 
-    % NURBS Knot vector 
-    % NURBS weights
-    % Quad definition 
-    % Pointer to the children
+    % 1. Quad name 
+    % 2. Quad location
+    % 3. horizontal intersections (physical space)
+    % 4. vertical intersections (physical space)
+    % 5. intersection in parametric space of the curve
+    % 6. NURBS definition 
+    %    NURBS degree
+    %    NURBS control points 
+    %    NURBS Knot vector 
+    %    NURBS weights
+    % 7. Quad definition 
+    % 8. Pointer to the children
     data = {['Quad' num2str(Q_aux)];...
              Q_aux;...
              Px;...
              Py;...
              newKnotVals;...
-             degree;...
-             controlPoints2;...
-             knots_new2;...
-             weights2;...
+             NURBS_segment;...
              QS;...
              []};
          
@@ -88,46 +88,48 @@ else
         
         
         if k0 == 1 && k1 ~= length(newKnots)
-            controlPoints2 = controlPoints(1:2,k0:(k1-degree));
-            knots_new2 = [newKnots(k0:k1) newKnots(k1)];
-            weights2 = weights(k0:(k1-degree));
+            NURBS_segment.degree = degree;
+            NURBS_segment.controlPoints = controlPoints(1:2,k0:(k1-degree));
+            NURBS_segment.knots = [newKnots(k0:k1) newKnots(k1)];
+            NURBS_segment.weights = weights(k0:(k1-degree));
         elseif  k0 ~= 1 && k1 == length(newKnots)
-            controlPoints2 = controlPoints(1:2,(k0-1):(k1-degree-1));
-            knots_new2 = [newKnots(k0) newKnots(k0:k1)];
-            weights2 = weights((k0-1):(k1-degree-1));
+            NURBS_segment.degree = degree;
+            NURBS_segment.controlPoints = controlPoints(1:2,(k0-1):(k1-degree-1));
+            NURBS_segment.knots = [newKnots(k0) newKnots(k0:k1)];
+            NURBS_segment.weights = weights((k0-1):(k1-degree-1));
         elseif k0 ~= 1 && k1 ~= length(newKnots)
-            controlPoints2 = controlPoints(1:2,(k0-1):(k1-degree));
-            knots_new2 = [newKnots(k0) newKnots(k0:k1) newKnots(k1)];
-            weights2 = weights((k0-1):(k1-degree));
+            NURBS_segment.degree = degree;
+            NURBS_segment.controlPoints = controlPoints(1:2,(k0-1):(k1-degree));
+            NURBS_segment.knots = [newKnots(k0) newKnots(k0:k1) newKnots(k1)];
+            NURBS_segment.weights = weights((k0-1):(k1-degree));
         else    
-            controlPoints2 = controlPoints;
-            knots_new2 = newKnots;
-            weights2 = weights;    
+            NURBS_segment.degree = degree;
+            NURBS_segment.controlPoints = controlPoints;
+            NURBS_segment.knots = newKnots;
+            NURBS_segment.weights = weights;    
         end
     end
     
     % Store information in tree's new node 
     
-    % Quad name 
-    % Quad location
-    % horizontal intersections (physical space)
-    % vertical intersections (physical space)
-    % intersection in parametric space of the curve
-    % NURBS degree
-    % NURBS control points 
-    % NURBS Knot vector 
-    % NURBS weights
-    % Quad definition 
-    % Pointer to the children
+    % 1. Quad name 
+    % 2. Quad location
+    % 3. horizontal intersections (physical space)
+    % 4. vertical intersections (physical space)
+    % 5. intersection in parametric space of the curve
+    % 6. NURBS definition 
+    %    NURBS degree
+    %    NURBS control points 
+    %    NURBS Knot vector 
+    %    NURBS weights
+    % 7. Quad definition 
+    % 8. Pointer to the children
     data = {['Quad' num2str(Q_aux)];...
             Q_aux;...
             Px;...
             Py;...
             newKnotVals;...
-            degree;...
-            controlPoints2;...
-            knots_new2;...
-            weights2;...
+            NURBS_segment;...
             QS;...
             []};
            
@@ -137,7 +139,7 @@ else
     [Quadtree, nodeID] = Quadtree.addnode(Parent, data);
     % add nodeID to father's pointer list 
     data = Quadtree.Node{Parent,1};
-    data{11} = [data{11} nodeID];
+    data{8} = [data{8} nodeID];
     Quadtree = Quadtree.set(Parent, data);
     
     % Deleting information of the father, information contained in leafs
