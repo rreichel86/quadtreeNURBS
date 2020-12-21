@@ -100,6 +100,50 @@ end
 % end
 
 %% Splitt polygonal elements into section
-
 [nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] = splittIntoSections(nnode,coor,numel,connectivity,...
                                                                     numKnotVectors,knotVectors,maxnknots,idxControlPoints);
+%% Plot sections
+figure(3)
+hold on
+for ie = 1:numsec
+    
+    kv = sections(ie,2); 
+    nsec = sections(ie,4);
+    secnd  = sections(ie,5:4+nsec); 
+    secx = coor(secnd,2);
+    secy = coor(secnd,3);
+    
+    if kv == 0
+        
+        patch(secx,secy,'w','FaceAlpha',0,'LineStyle','-','LineWidth',1);
+       
+    else 
+        
+        w = knots(kv,2); % weights
+        nknots = knots(kv,3); % number of knots
+        n = wgt(w,2) - 1; % number of control points or
+        %           weights or
+        %           NURBS basis functions
+        degree = nknots - 1 - (n + 1); % degree of the NURBS curve
+        iKnot = knots(kv,4);
+        jKnot = knots(kv,5);
+        
+        controlPoints = zeros(2,n+1);
+        controlPoints(1,:) = secx(1:end-1);
+        controlPoints(2,:) = secy(1:end-1);
+            
+        % Compute discrete points of NURBS curve
+        NURBS = CalculateNURBS_2(ord(ie,2),iKnot,jKnot,knots(kv,6:end),...
+            controlPoints,wgt(w,3:3+n));
+            
+        % Plot NURBS curve
+        plot(NURBS(:,1),NURBS(:,2),'r','LineWidth',2);
+        % Plot control points
+        plot(controlPoints(1,:), controlPoints(2,:),'b-.');
+
+        secx = [NURBS(:,1); secx(end)];
+        secy = [NURBS(:,2); secy(end)];
+        patch(secx,secy,'w','FaceAlpha',0,'LineStyle','-');
+        
+    end    
+end                                                                                                                                                 
