@@ -96,7 +96,7 @@ for i = 1:numleaves
     if isempty(intersections) || length(intersections) == 1
         
         % quad's geometry
-        quad = Quadtree.Node{leaves(i),1}{10,1}(1:2,1:4);
+        quad = Quadtree.Node{leaves(i),1}{7,1}(1:2,1:4);
         
         % intersection points
         intersectionPoints = [];
@@ -113,29 +113,25 @@ for i = 1:numleaves
     elseif isempty(Quadtree.Node{leaves(i),1}{3,1}) == 1
         
         % quad's geometry 
-        quad = Quadtree.Node{leaves(i),1}{10,1}(1:2,1:4);
+        quad = Quadtree.Node{leaves(i),1}{7,1}(1:2,1:4);
         
-        % intersection points
-        intersectionPoints = [Quadtree.Node{leaves(i),1}{7,1}(:,1),Quadtree.Node{leaves(i),1}{7,1}(:,end)];
+        NURBS_segment = Quadtree.Node{leaves(i),1}{6,1};
         
         % degree
-        degree = Quadtree.Node{leaves(i),1}{6,1};
-        
+        degree = NURBS_segment.degree;
         % knot vector 
-        knots = Quadtree.Node{leaves(i),1}{8,1};
+        knots = NURBS_segment.knots;
+        % control points
+        controlPoints = NURBS_segment.controlPoints;
+        % intersection points
+        intersectionPoints = [controlPoints(:,1),controlPoints(:,end)];
+        % weights
+        weights = NURBS_segment.weights;
         
         % number of knots 
         nknots = length(knots);
-        
-        % control points
-        controlPoints = Quadtree.Node{leaves(i),1}{7,1};
-        
-        % weights
-        weights = Quadtree.Node{leaves(i),1}{9,1};
-        
         % number of control points / weights 
         ncp = length(controlPoints);
-       
         % maximun number of knots on any knot vector
         maxnknots = max(maxnknots,nknots);
         
@@ -160,30 +156,26 @@ for i = 1:numleaves
     elseif isempty(Quadtree.Node{leaves(i),1}{4,1}) == 1
         
         % quad's geometry 
-        quad = Quadtree.Node{leaves(i),1}{10,1}(1:2,1:4);
+        quad = Quadtree.Node{leaves(i),1}{7,1}(1:2,1:4);
         
-        % intersection points
-        intersectionPoints = [Quadtree.Node{leaves(i),1}{7,1}(:,1),Quadtree.Node{leaves(i),1}{7,1}(:,end)];
+        NURBS_segment = Quadtree.Node{leaves(i),1}{6,1};
         
         % degree
-        degree = Quadtree.Node{leaves(i),1}{6,1};
-        
+        degree = NURBS_segment.degree;
         % knot vector 
-        knots = Quadtree.Node{leaves(i),1}{8,1};
+        knots = NURBS_segment.knots;
+        % control points
+        controlPoints = NURBS_segment.controlPoints;
+        % intersection points
+        intersectionPoints = [controlPoints(:,1),controlPoints(:,end)];
+        % weights
+        weights = NURBS_segment.weights;
         
         % number of knots 
         nknots = length(knots);
-        
-        % control points 
-        controlPoints = Quadtree.Node{leaves(i),1}{7,1};
-        
-        % weights
-        weights = Quadtree.Node{leaves(i),1}{9,1};
-        
-        % number of control points / weights
+        % number of control points / weights 
         ncp = length(controlPoints);
-        
-        % maximun number of knots on any knot vector  
+        % maximun number of knots on any knot vector
         maxnknots = max(maxnknots,nknots);
         
         % counter for the number of knot vectors
@@ -207,29 +199,25 @@ for i = 1:numleaves
     else
 
         % quad's geometry 
-        quad = Quadtree.Node{leaves(i),1}{10,1}(1:2,1:4);
+        quad = Quadtree.Node{leaves(i),1}{7,1}(1:2,1:4);
         
-        % intersection points
-        intersectionPoints = [Quadtree.Node{leaves(i),1}{7,1}(:,1),Quadtree.Node{leaves(i),1}{7,1}(:,end)];
+        NURBS_segment = Quadtree.Node{leaves(i),1}{6,1};
         
         % degree
-        degree = Quadtree.Node{leaves(i),1}{6,1};
-        
-        % knot vector
-        knots = Quadtree.Node{leaves(i),1}{8,1};
-        
-         % number of knots
-        nknots = length(knots);
-        
-        % control points 
-        controlPoints = Quadtree.Node{leaves(i),1}{7,1};
-        
+        degree = NURBS_segment.degree;
+        % knot vector 
+        knots = NURBS_segment.knots;
+        % control points
+        controlPoints = NURBS_segment.controlPoints;
+        % intersection points
+        intersectionPoints = [controlPoints(:,1),controlPoints(:,end)];
         % weights
-        weights = Quadtree.Node{leaves(i),1}{9,1};
+        weights = NURBS_segment.weights;
         
-        % number of control points / weights
+        % number of knots 
+        nknots = length(knots);
+        % number of control points / weights 
         ncp = length(controlPoints);
-       
         % maximun number of knots on any knot vector
         maxnknots = max(maxnknots,nknots);
         
