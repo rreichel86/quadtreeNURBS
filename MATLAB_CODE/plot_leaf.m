@@ -30,7 +30,8 @@ for i = 1:numLeaves
         plot(NURBS_pts(:,1),NURBS_pts(:,2),'r','LineWidth',2);
         
         % Plot Quad
-        plot(Quadtree.Node{leaves(i),1}{10,1}(1,:),Quadtree.Node{leaves(i),1}{10,1}(2,:),'k.-');
+        Quad = Quadtree.Node{leaves(i),1}{10,1}(1:2,1:4);
+        patch(Quad(1,:),Quad(2,:),'w','FaceAlpha',0,'LineStyle','-','LineWidth',1);
         
         % Plot control points and control polygon for each leaf
         plot(NURBS.controlPoints(1,:),NURBS.controlPoints(2,:),'b-.','LineWidth',1)
