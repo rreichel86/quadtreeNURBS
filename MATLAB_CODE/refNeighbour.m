@@ -1,5 +1,9 @@
-function [exist_NQ, refNQ] = refNeighbour(refQ,dir)
+function [exist_NQ, refNQ] = refNeighbour(refQ,dir,Ntyp)
 % refNeighbour: determine reference of searched neighbour
+
+if ~exist('Ntyp','var')
+    Ntyp = 0;
+end    
 
 posQ = refQ(end-1:end);
 level = length(refQ)/2;
@@ -18,7 +22,12 @@ lim(2) = calcLim(level, N(:,2)); % lim_y
 %   4 - North
 % and determine reference of searched edge neighbour by interweaving
 % new N_x and N_y
-[exist_NQ, refNQ] = edgeNeighbour(posQ, dir, level, N, lim);
+if Ntyp == 0
+    [exist_NQ, refNQ] = edgeNeighbour(posQ, dir, level, N, lim);
+elseif Ntyp == 1
+   [exist_NQ, refNQ] = cornerNeighbour(posQ, dir, level, N, lim);
+end     
+
 end
 
 function lim = calcLim(level, N)
