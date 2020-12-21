@@ -79,7 +79,10 @@ if k == 1
     data{2} = [data{2} nodeID];
     Quadtree = Quadtree.set(1, data);
 else
+    % other levels of decomposition
     for j=1:length(newKnots)/2
+        % Loop over the inserted knots and extact NURBS segment 
+        % contained in current quad
         k0 = find( abs(knots_new - newKnots(2*(j-1)+1)) < 1e-10, 1, 'First');
         k1 = find( abs(knots_new - newKnots(2*(j-1)+2)) < 1e-10, 1, 'Last');
         
@@ -103,6 +106,7 @@ else
         end
     end
     
+    % Store information in tree's new node 
     
     % Quad name 
     % Quad location
@@ -136,7 +140,14 @@ else
 %             Parent = j;
 %         end
 %     end
+           
+    refFQ = Q_aux(1:end-2);
+    Parent = findQ(Quadtree,refFQ);
+    % attach tree's new node to its father
+    [Quadtree, nodeID] = Quadtree.addnode(Parent, data);
+    % add nodeID to father's pointer list 
     data = Quadtree.Node{Parent,1};
+    data{11} = [data{11} nodeID];
     Quadtree = Quadtree.set(Parent, data);
     
     % Deleting information of the father, information contained in leafs
