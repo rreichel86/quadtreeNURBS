@@ -130,16 +130,6 @@ else
             weights2;...
             QS;...
             []};
-%     for i = 1:length(Quadtree.Node)
-%         Pos{i} = Quadtree.Node{i,1}{2};
-%     end
-%     idx = cellfun('length',Pos) == length(Q_aux);
-%     for j = 1:length(idx)
-%         tf = isequal(Pos{j},Q_aux);
-%         if tf
-%             Parent = j;
-%         end
-%     end
            
     refFQ = Q_aux(1:end-2);
     Parent = findQ(Quadtree,refFQ);
