@@ -115,44 +115,10 @@ function [exist_NQ, refNQ] = cornerNeighbour(posQ, dir, level, N, lim)
 % and determine reference of searched edge neighbour by interweaving
 % new N_x and N_y
 
-has_same_father = 1;
-
-% Check if the neighbour (dir) we are looking for has the same father
-% as the current Quad
-if isequal(posQ,[1 1]) % NW Quad
-    if dir ~= 2
-        has_same_father = 0;
-    end
-elseif isequal(posQ,[2 1]) % SW Quad
-    if dir ~= 3 
-        has_same_father = 0;
-    end
-elseif isequal(posQ,[1 2]) % NE Quad
-    if dir ~= 1 
-        has_same_father = 0;
-    end
-elseif isequal(posQ,[2 2]) % SE Quad
-    if dir ~= 4 
-        has_same_father = 0;
     end
 end
-% has the same father ?
-if has_same_father == 1 % yes
-    % peform binary operation on N(level)
-%     if dir == 1 || dir == 3
         [exist_NQ_1, N(:,1)] = binaryTransformation(level, N(:,1));
-%     elseif dir == 2 || dir == 4
-        [exist_NQ_2, N(:,2)] = binaryTransformation(level, N(:,2));
-%     end
-      exist_NQ = exist_NQ_1 * exist_NQ_2;
-else % no
-    % perform binary operation on N(level) to N(lim-1)
-%     if dir == 1 || dir == 3
         [exist_NQ_1, N(:,1)] = binaryTransformation(level, N(:,1), lim(1));
-%     elseif dir == 2 || dir == 4
-        [exist_NQ_2, N(:,2)] = binaryTransformation(level, N(:,2), lim(2));
-%     end
-      exist_NQ = exist_NQ_1 * exist_NQ_2;
 end
 
 % determine reference of searched neighbour by interweaving new N_x and N_y
