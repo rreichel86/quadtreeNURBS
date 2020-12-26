@@ -115,11 +115,36 @@ function [exist_NQ, refNQ] = cornerNeighbour(posQ, dir, level, N, lim)
 % and determine reference of searched edge neighbour by interweaving
 % new N_x and N_y
 
+if posQ(1) == 1 % N
+    if dir == 1 || dir == 2
+        [exist_NQ_2, N(:,2)] = binaryTransformation(level, N(:,2));
+    elseif dir == 3 || dir == 4
+        [exist_NQ_2, N(:,2)] = binaryTransformation(level, N(:,2), lim(2));
+    end     
+elseif posQ(1) == 2 % S
+    if dir == 1 || dir == 2
+        [exist_NQ_2, N(:,2)] = binaryTransformation(level, N(:,2), lim(2));
+    elseif dir == 3 || dir == 4
+        [exist_NQ_2, N(:,2)] = binaryTransformation(level, N(:,2));
     end
 end
+
+
+if posQ(2) == 1 % W
+    if dir == 2 || dir == 3
         [exist_NQ_1, N(:,1)] = binaryTransformation(level, N(:,1));
+    elseif dir == 1 || dir == 4
         [exist_NQ_1, N(:,1)] = binaryTransformation(level, N(:,1), lim(1));
+    end     
+elseif posQ(2) == 2 % E
+    if dir == 2 || dir == 3
+        [exist_NQ_1, N(:,1)] = binaryTransformation(level, N(:,1), lim(1));
+    elseif dir == 1 || dir == 4
+        [exist_NQ_1, N(:,1)] = binaryTransformation(level, N(:,1));
+    end
 end
+
+exist_NQ = exist_NQ_1 * exist_NQ_2;
 
 % determine reference of searched neighbour by interweaving new N_x and N_y
 if exist_NQ == 1
