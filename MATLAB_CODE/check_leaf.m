@@ -34,7 +34,6 @@ for i = 1:numLeaves
     
     data = Quadtree.Node{idxLeaf,1};
     
-    % refLeaf = data{2};
     intersections = data{5};
     horzIntrsc = data{3}';
     vertIntrsc = data{4}';
@@ -110,9 +109,6 @@ end
 
 numLeaves = length(updatedLeaves);
 
-
-
-
 for i = 1:numLeaves
     
     LEAF = updatedLeaves(i);
@@ -162,10 +158,7 @@ for i = 1:numLeaves
     %         40. North Neighbour -> Vertex 1
     %         41. North West Neighbour -> Vertex 2
     %         10. West Neighbour -> Vertex 3
-    
-    vertexNum = LEAF.vertexNum;
-    newVertexCoor = LEAF.vertexCoor;
-    
+        
     switch LEAF.vertexNum
         case 1
             Neighbours = [10,11,20];
@@ -191,31 +184,23 @@ for i = 1:numLeaves
         updateVertex = updateVertices(ii);
         dir = floor(Neighbour/10);
         Ntyp = mod(Neighbour,10);
-        
-        data = Quadtree.Node{LEAF.idx,1};
-        Quad = data{7};
-        
 %         % plot vertex
 %         plot(Quad(1,LEAF.vertexNum),Quad(2,LEAF.vertexNum), 'o','Color','red','MarkerFaceColor','r','MarkerSize',6);
 %         % plot quad
 %         patch(Quad(1,:),Quad(2,:),'r','FaceAlpha',0.1,'LineStyle','-','LineWidth',1);
         
         
+         
         [exist_NQ, refNQ] = refNeighbour(refLeaf,dir,Ntyp);
         if exist_NQ == 1
             
             idxNQ = findNeighbour(Quadtree,LEAF.idx,refLeaf, refNQ);
             
             if Quadtree.isleaf(idxNQ)
-                
                 idx = idxNQ;
-                
             else
-                
                 idxNQchildren = Quadtree.getchildren(idxNQ);
                 idx = idxNQchildren(Children(ii));
-                
-                
             end 
             
             data = Quadtree.Node{idx,1};
@@ -228,15 +213,9 @@ for i = 1:numLeaves
             % update quad definition
             data{7} = Quad;
             Quadtree = Quadtree.set(idx, data);
-            
-            
         end
     end
-    
-    
-    
 end
-
 end
 
 
