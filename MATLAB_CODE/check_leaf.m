@@ -34,6 +34,7 @@ for i = 1:numLeaves
     
     data = Quadtree.Node{idxLeaf,1};
     
+    % Intersections
     intersections = data{5};
     horzIntrsc = data{3}';
     vertIntrsc = data{4}';
@@ -45,6 +46,7 @@ for i = 1:numLeaves
         continue
     else
         
+        % Quad definition
         Quad = data{7};
         
         Qxmin = min(Quad(1,:));
@@ -135,6 +137,11 @@ for i = 1:numLeaves
     
     % Quad definition
 %     Quad = data{7};
+
+    % plot vertex
+%     plot(Quad(1,LEAF.vertexNum),Quad(2,LEAF.vertexNum), 'o','Color','red','MarkerFaceColor','r','MarkerSize',6);
+    % plot quad
+%     patch(Quad(1,:),Quad(2,:),'r','FaceAlpha',0.1,'LineStyle','-','LineWidth',1);
     
 %     Qxmin = min(Quad(1,:));
 %     Qymin = min(Quad(2,:));
@@ -184,12 +191,6 @@ for i = 1:numLeaves
         updateVertex = updateVertices(ii);
         dir = floor(Neighbour/10);
         Ntyp = mod(Neighbour,10);
-%         % plot vertex
-%         plot(Quad(1,LEAF.vertexNum),Quad(2,LEAF.vertexNum), 'o','Color','red','MarkerFaceColor','r','MarkerSize',6);
-%         % plot quad
-%         patch(Quad(1,:),Quad(2,:),'r','FaceAlpha',0.1,'LineStyle','-','LineWidth',1);
-        
-        
          
         [exist_NQ, refNQ] = refNeighbour(refLeaf,dir,Ntyp);
         if exist_NQ == 1
@@ -203,6 +204,7 @@ for i = 1:numLeaves
                 idx = idxNQchildren(Children(ii));
             end 
             
+            % quad definition 
             data = Quadtree.Node{idx,1};
             Quad = data{7};
             Quad(:,updateVertex) = LEAF.vertexCoor;
