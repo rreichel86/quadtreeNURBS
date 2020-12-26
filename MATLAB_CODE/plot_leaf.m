@@ -39,7 +39,7 @@ for i = 1:numLeaves
         patch(Quad(1,:),Quad(2,:),'w','FaceAlpha',0,'LineStyle','-','LineWidth',1);
     else
         % Obtain definition of the NURBS curve contained in each leaf
-        NURBS = data{5};
+        NURBS = data{6};
        
         ncp = length(NURBS.knots) - NURBS.degree - 1;
         NURBS_pts = CalculateNURBS(NURBS);
