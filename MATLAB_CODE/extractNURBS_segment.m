@@ -1,4 +1,4 @@
-function [NURBS_segment] = extractNURBS_segment(knotVals, NURBS)
+function [NURBS_segment] = extractNURBS_segment(knotInterval, NURBS)
 
 % NURBS segment
 NURBS_segment = struct;
@@ -9,8 +9,8 @@ controlPoints = NURBS.controlPoints;
 weights = NURBS.weights;
 
 % extact NURBS segment
-k0 = find( abs(knots - knotVals(1) ) < 1e-10, 1, 'First');
-k1 = find( abs(knots - knotVals(2) ) < 1e-10, 1, 'Last');
+k0 = find( abs(knots - knotInterval(1) ) < 1e-10, 1, 'First');
+k1 = find( abs(knots - knotInterval(2) ) < 1e-10, 1, 'Last');
 
 if k0 == 1 && k1 ~= length(knots)
     NURBS_segment.degree = degree;
