@@ -84,6 +84,8 @@ for i = 1:numLeaves
                 p = intrsc(1,:)';
                 v = Quad(:,vertexNum);
                 newVertexCoor = v + n.'*(p-v)*n;
+                
+                oldVertexCoor = Quad(:,vertexNum);
                 Quad(:,vertexNum) = newVertexCoor;
                 
 %                 % plot vertex
@@ -99,6 +101,7 @@ for i = 1:numLeaves
                 LEAF.idx = idxLeaf;
                 LEAF.vertexNum = vertexNum;
                 LEAF.vertexCoor = newVertexCoor;
+                LEAF.oldVertexCoor = oldVertexCoor;
                 
                 updatedLeaves = [updatedLeaves LEAF];
                 
