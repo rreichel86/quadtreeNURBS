@@ -46,10 +46,7 @@ function [numcoor,coor,numel,connectivity,maxnel,...
 %% 
 % Get NURBS curve 
 data = Quadtree.Node{1,1};
-NURBS.degree = data{3};
-NURBS.knots  = data{4};
-NURBS.controlPoints = data{5};
-NURBS.weights = data{6};
+NURBS = data{3};
 
 % compute point of the NURBS curve
 NURBS_pts = CalculateNURBS(NURBS);
