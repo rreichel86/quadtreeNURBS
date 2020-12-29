@@ -1,5 +1,5 @@
 function [Quadtree] = savetree(Q_aux, Quadtree,k, Px, Py, knotVals,...
-    NURBS, QS)
+    NURBS_segment, QS)
 % Savetree function prepares the information that will be store at the tree
 % data structure. After splitting the function the description of the NURBS
 % contained in the quad is stored in a node of the tree data structure,
