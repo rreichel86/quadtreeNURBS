@@ -81,7 +81,7 @@ Q_aux = refQ;
 % The information of the curve contained in the quad, pointers and auxiliar
 % variables are stored in the tree data structure in the node assigned to
 % the given quad
-[Quadtree] = savetree(Q_aux, Quadtree,k, Px, Py, newKnotVals, degree, controlPoints, newKnots, weights, Quad);
+[Quadtree] = savetree(Q_aux, Quadtree,k, Px, Py, newKnotVals, newNURBS, Quad);
 numInterPoints = length(U);
 
 end
