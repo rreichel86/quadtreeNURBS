@@ -14,11 +14,17 @@ function [Q_aux, Quadtree,numInterPoints] = splitting(Quadtree,Q_aux,Quad,...
 % Output:
 % Quadtree data structure cointining the splitted segment of the NURBS
 
+% quad's reference 
+refQ = position(l,k,i,pos_aux,Quadtree);
+Q_aux = refQ;
+
+% NURBS curve definition
 degree = NURBS.degree;
 knots = NURBS.knots;
 controlPoints = NURBS.controlPoints;
 weights = NURBS.weights;
 
+% quad's vertices
 Q_xmin = Quad(1,1);
 Q_xmax = Quad(1,2);
 Q_ymin = Quad(2,1);
@@ -26,13 +32,13 @@ Q_ymax = Quad(2,3);
 
 % Possible intersections with one of the 4 quad's edges
 % Intersection with quad's bottom edge
-[Px0, Ux0] = Inter(Q_xmin,Q_ymin,Q_xmax,Q_ymin,degree,knots,controlPoints,weights); 
+[Px0, Ux0] = Inter(Q_xmin,Q_ymin,Q_xmax,Q_ymin,degree,knots,controlPoints,weights);
 % Intersection with quad's top edge
-[Px1, Ux1] = Inter(Q_xmin,Q_ymax,Q_xmax,Q_ymax,degree,knots,controlPoints,weights); 
+[Px1, Ux1] = Inter(Q_xmin,Q_ymax,Q_xmax,Q_ymax,degree,knots,controlPoints,weights);
 % Intersection with quad's left edge
-[Py0,Uy0] = Inter(Q_xmin,Q_ymin,Q_xmin,Q_ymax,degree,knots,controlPoints,weights); 
+[Py0,Uy0] = Inter(Q_xmin,Q_ymin,Q_xmin,Q_ymax,degree,knots,controlPoints,weights);
 % Intersection with quad's right edge
-[Py1,Uy1] = Inter(Q_xmax,Q_ymin,Q_xmax,Q_ymax,degree,knots,controlPoints,weights); 
+[Py1,Uy1] = Inter(Q_xmax,Q_ymin,Q_xmax,Q_ymax,degree,knots,controlPoints,weights);
 
 
 Px = [Px0, Px1]; % [x1,x2;y1,y2]
@@ -58,15 +64,15 @@ end
 
 % After determining the intersection points we perform a knot insertion,
 % beeing the knots the parametrical coordinates of the intersection points
-newKnotVals = sort(U); 
-newKnots = knots; 
+newKnotVals = sort(U);
+newKnots = knots;
 if ~isempty(U)
     for j = 1:length(newKnotVals)
-        % loop over newKnotVals 
+        % loop over newKnotVals
         % insert knotVal in newknots
         KnotVal = newKnotVals(j);
         numKnotIns = degree-sum(abs(newKnots(:) - KnotVal) < 1e-10);
-        if numKnotIns > 0 
+        if numKnotIns > 0
             for jj = 1:numKnotIns % Insert knot until C0 continuity condition
                 [newKnots, controlPoints, weights] = CurveKnotIns(degree,...
                     controlPoints, newKnots, weights, KnotVal);
@@ -75,8 +81,11 @@ if ~isempty(U)
     end
 end
 
-refQ = position(l,k,i,pos_aux,Quadtree);
-Q_aux = refQ;
+% NURBS curve after knot isertion
+newNURBS.degree = degree;
+newNURBS.controlPoints = controlPoints;
+newNURBS.knots = newKnots;
+newNURBS.weights = weights;
 
 % The information of the curve contained in the quad, pointers and auxiliar
 % variables are stored in the tree data structure in the node assigned to
