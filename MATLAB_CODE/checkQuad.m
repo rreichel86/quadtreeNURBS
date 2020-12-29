@@ -23,7 +23,9 @@ for ii = 1:nPoints
 end
 
 % Check for dublicated control point 
-counter = size(unique(currentPoints,'rows'),1);
+if ~isempty(currentPoints)
+    counter = size(unique(currentPoints,'rows'),1);
+end 
 
 nPoints = counter;
 end
