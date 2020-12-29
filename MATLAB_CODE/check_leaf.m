@@ -210,14 +210,20 @@ for i = 1:numLeaves
             % quad definition 
             data = Quadtree.Node{idx,1};
             Quad = data{7};
-            Quad(:,updateVertex) = LEAF.vertexCoor;
             
 %             % plot quad 
 %             patch(Quad(1,:),Quad(2,:),'g','FaceAlpha',0.1,'LineStyle','-','LineWidth',1);
+            
+            currentVertexCoor = Quad(:,updateVertex);
+            
+            if norm(currentVertexCoor - LEAF.oldVertexCoor) < tol
                 
-            % update quad definition
-            data{7} = Quad;
-            Quadtree = Quadtree.set(idx, data);
+                Quad(:,updateVertex) = LEAF.vertexCoor;
+                % update quad definition
+                data{7} = Quad;
+                Quadtree = Quadtree.set(idx, data);
+            end 
+            
         end
     end
 end
