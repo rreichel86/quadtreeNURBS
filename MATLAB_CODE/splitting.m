@@ -73,10 +73,10 @@ if ~isempty(U)
         KnotVal = newKnotVals(j);
         numKnotIns = degree-sum(abs(newKnots(:) - KnotVal) < 1e-10);
         if numKnotIns > 0
-            for jj = 1:numKnotIns % Insert knot until C0 continuity condition
+            %for jj = 1:numKnotIns % Insert knot until C0 continuity condition
                 [newKnots, controlPoints, weights] = CurveKnotIns(degree,...
-                    controlPoints, newKnots, weights, KnotVal);
-            end
+                    newKnots, controlPoints, weights, KnotVal, numKnotIns);
+            %end
         end
     end
 end
