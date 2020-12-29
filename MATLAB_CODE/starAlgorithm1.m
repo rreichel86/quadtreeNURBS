@@ -39,28 +39,28 @@ poly(1:2:8,:) = vertices;
 poly(9,:) = vertices(1,:);
 
 if nVertIntrsc == 2
-    poly(4,:) = intrsc(2,:);
-    poly(8,:) = intrsc(1,:); 
+    poly(4,:) = intrsc(2,1:2);
+    poly(8,:) = intrsc(1,1:2); 
     iintrsc = [4,8];
 elseif nHorzIntrsc == 2
-    poly(2,:) = intrsc(1,:); 
-    poly(6,:) = intrsc(2,:);
+    poly(2,:) = intrsc(1,1:2); 
+    poly(6,:) = intrsc(2,1:2);
     iintrsc = [2,6];
 else
     % horizontal intersection
     if abs(intrsc(1,2) - Qymin) < tol % bottom 
-        poly(2,:) = intrsc(1,:);
+        poly(2,:) = intrsc(1,1:2);
         iintrsc(1) = 2;
     else % top
-        poly(6,:) = intrsc(1,:);
+        poly(6,:) = intrsc(1,1:2);
         iintrsc(1) = 6;
     end
     % vertical intersection
     if abs(intrsc(2,1) - Qxmin) < tol % left 
-        poly(8,:) = intrsc(2,:);
+        poly(8,:) = intrsc(2,1:2);
         iintrsc(2) = 8;
     else % right
-        poly(4,:) = intrsc(2,:);
+        poly(4,:) = intrsc(2,1:2);
         iintrsc(2) = 4;
     end
 end
