@@ -1,18 +1,17 @@
 function [Q_aux, Quadtree,numInterPoints] = splitting(Quadtree,Q_aux,Quad,...
-    NURBS,l,k,i,pos_aux)
-% Splitting function obtains the description of an eventual segment of the 
-% NURBS contained in the quad.First we need to detect the intersection 
-% points, then performorm knot insertion for the intersection untill C0 
-% continuity. At the mathematical description of the segment of the NURBS, 
-% pointers and other variables are stored the tree data structure.  
+    NURBS0,l,k,i,pos_aux)
+% splitting: ...
+%
+% INPUT:
+% Quadtree ------------------- Quadtree data structure
+% ...
+% 
+% OUTPUT:
+% Quadtree ------------------- Quadtree data structure
+% numInterPoints ------------- number of intersection points
+% 
+% -------------------------------------------------------------------------
 
-% Input: 
-% Quadtree data
-% Quad: geometrical definition of the considered quad 
-% Definition of the NURBS
-% Auxiliar variables previously defined
-% Output:
-% Quadtree data structure cointining the splitted segment of the NURBS
 
 Ix = [];
 Iy = [];
