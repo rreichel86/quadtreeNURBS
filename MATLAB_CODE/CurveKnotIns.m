@@ -1,16 +1,19 @@
 function [knots_new, Q, weights] = CurveKnotIns(degree, knots, controlPoints, weights, newKnot, numKnotIns)
 % Adapted from the NURBS book (Algorithm A5.1)
 p = degree;
-np = length(controlPoints);
 s = 0;
 r = numKnotIns;
+
+% number of control points before knot insertion
+np = length(controlPoints);
+% number of control points after knot insertion
+nq = np + r;
 
 k = find(knots >= newKnot(1),1) - 1;
 
 Pw = [controlPoints(1,:) .* weights ;controlPoints(2,:) .* weights; weights];
 
 mp = np + degree + 1;
-nq = np + r;
 
 for i = 1:k
     knots_new(i) = knots(i);
