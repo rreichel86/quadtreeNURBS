@@ -82,18 +82,19 @@ maxnknots = 0;% maximun number of knot on any knot vector
 % loop over leaves 
 for i = 1:numleaves
     
+    idxLeaf = leaves(i);
      % current Quad reference
-    refLeaf = Quadtree.Node{leaves(i),1}{2,1}(1:end);
-    intersections = Quadtree.Node{leaves(i),1}{5,1};
+    refLeaf = Quadtree.Node{idxLeaf,1}{2,1}(1:end);
+    intersections = Quadtree.Node{idxLeaf,1}{5,1};
     
     % Check neighborhood of current leaf
     % get mid points if they exist
-    [midPoints] = getMidPoints(Quadtree,leaves(i),refLeaf);
+    [midPoints] = getMidPoints(Quadtree,idxLeaf,refLeaf);
 
     if isempty(intersections) || length(intersections) == 1
         
         % quad's geometry
-        quad = Quadtree.Node{leaves(i),1}{7,1}(1:2,1:4);
+        quad = Quadtree.Node{idxLeaf,1}{7,1}(1:2,1:4);
         
         % intersection points
         intersectionPoints = [];
@@ -110,9 +111,9 @@ for i = 1:numleaves
     else
 
         % quad's geometry 
-        quad = Quadtree.Node{leaves(i),1}{7,1}(1:2,1:4);
+        quad = Quadtree.Node{idxLeaf,1}{7,1}(1:2,1:4);
         
-        NURBS_segment = Quadtree.Node{leaves(i),1}{6,1};
+        NURBS_segment = Quadtree.Node{idxLeaf,1}{6,1};
         
         % degree
         degree = NURBS_segment.degree;
