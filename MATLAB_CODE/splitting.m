@@ -51,10 +51,10 @@ if ~isempty(NURBS)
     % Possible intersections with one of the 4 quad's edges
     % Intersection with quad's bottom edge
     [Px0, Ux0] = Inter(Q_xmin,Q_ymin,Q_xmax,Q_ymin,degree,knots,controlPoints,weights);
-    % Intersection with quad's top edge
-    [Px1, Ux1] = Inter(Q_xmin,Q_ymax,Q_xmax,Q_ymax,degree,knots,controlPoints,weights);
     % Intersection with quad's left edge
     [Py0, Uy0] = Inter(Q_xmin,Q_ymin,Q_xmin,Q_ymax,degree,knots,controlPoints,weights);
+    % Intersection with quad's top edge
+    [Px1, Ux1] = Inter(Q_xmin,Q_ymax,Q_xmax,Q_ymax,degree,knots,controlPoints,weights);
     % Intersection with quad's right edge
     [Py1, Uy1] = Inter(Q_xmax,Q_ymin,Q_xmax,Q_ymax,degree,knots,controlPoints,weights);
     
