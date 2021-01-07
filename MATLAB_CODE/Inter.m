@@ -124,59 +124,35 @@ end
 a_knots_array = a_array(3,:);
 % avoid duplicated start values
 a_knots_array = unique(a_knots_array);
+% number of start values 
 num_a = length(a_knots_array);
 
-% Based on Steffensen's method obtains the closest solution for a
-% given tolerance
-for i=1:num_a
-    % loop over the approximated solutions
+
+p = [x1;y1];
+q = [x2;y2];
+tVec = q - p;
+nVec = [-tVec(2);tVec(1)];
+nVec = nVec/norm(nVec);
+
+
+for i = 1:num_a
     a = a_knots_array(i);
-    hh = 1e-2;
-    for ii=1:20
-        [f] = curvePoint(n,degree,knots,controlPoints,a,weights);
-        O1  = lfunc(f(1),f(2),x1,y1,x2,y2);
-        err = abs(lfunc(f(1),f(2),x1,y1,x2,y2));
-        if err < tol
-            %Avoiding to obtain multiplicities,
-            if any(abs(U-a)>tol) || isempty(U)
-                if coorIdx == 1 
-                    if f(2) > y1 && f(2) < y2
-                        Pint = [Pint f(:)];
-                        U = [U a];
-                    elseif ( abs( f(2) - y1 ) < tol ) ||  ( abs( f(2) - y2 ) < tol )
-                        Pint = [Pint f(:)];
-                        U = [U a];
-                    end 
-                
-                elseif coorIdx == 2
-                    if f(1) > x1 && f(1) < x2
-                        Pint = [Pint f(:)];
-                        U = [U a];
-                    elseif ( abs( f(1) - x1 ) < tol ) ||  ( abs( f(1) - x2 ) < tol )
-                        Pint = [Pint f(:)];
-                        U = [U a];
-                    end    
-                end
-            end
-            break
-        end    
-        if ( abs( a - knots(end) ) < 1e-16 ) ||  ( a > knots(end) )
-            break;
-        end     
+    
+    for j = 1 : 10
+        [R,R_xi] = shape_func_NURBS_1d(a,degree,knots,weights);
         
-        if (a+hh) > knots(end)
-            hh=hh/10;
-        end
-        [g] = curvePoint(n,degree,knots,controlPoints,a+hh,weights);
-        [O3] = lfunc(g(1),g(2),x1,y1,x2,y2);
-        a =  a - O1/((O3-O1)/(hh));
-        if a < 0
-            a = abs(a);
-        end
-        hh = hh/10;
-        if ii==20
+        f = controlPoints*R;
+        df = controlPoints*R_xi;
+        
+        G = nVec' * ( f - p);
+        dG = nVec' * df;
+        
+        if abs(G) < tol
+%         if abs(f(coorIdx) - coorVal) < tol
+            
             % Avoiding to obtain multiplicities
             if any(abs(U-a)>tol) || isempty(U)
+                
                 if coorIdx == 1 
                     if f(2) > y1 && f(2) < y2
                         Pint = [Pint f(:)];
@@ -185,7 +161,6 @@ for i=1:num_a
                         Pint = [Pint f(:)];
                         U = [U a];
                     end 
-                
                 elseif coorIdx == 2
                     if f(1) > x1 && f(1) < x2
                         Pint = [Pint f(:)];
@@ -195,7 +170,24 @@ for i=1:num_a
                         U = [U a];
                     end    
                 end
+                
             end
+            
+            break
+            
         end
-    end       
+        
+        a = a - G/dG;
+%         a = a - (f(coorIdx) - coorVal)/df(coorIdx);
+        
+        
+        if ( a > knots(end) )
+            a = knots(end);
+        elseif ( a < knots(1) )
+            a = knots(1); 
+        end    
+        
+    end
+    
 end
+
