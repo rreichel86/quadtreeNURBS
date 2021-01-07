@@ -83,18 +83,37 @@ maxnknots = 0;% maximun number of knot on any knot vector
 for i = 1:numleaves
     
     idxLeaf = leaves(i);
-     % current Quad reference
-    refLeaf = Quadtree.Node{idxLeaf,1}{2,1}(1:end);
-    intersections = Quadtree.Node{idxLeaf,1}{5,1};
+    
+    % get data stored in current leaf
+    
+    % 1. Quad name
+    % 2. Quad location
+    % 3. horizontal intersections (physical space)
+    % 4. vertical intersections (physical space)
+    % 5. intersection in parametric space of the curve
+    % 6. NURBS definition
+    %    NURBS degree
+    %    NURBS control points
+    %    NURBS Knot vector
+    %    NURBS weights
+    % 7. Quad definition
+    % 8. Pointer to the children
+    
+    data = Quadtree.Node{idxLeaf,1};
+    
+    % leaf reference
+    refLeaf = data{2};
+    % Intersections
+    intersections = data{5,1};
+    % Quad definition
+    quad = data{7};
     
     % Check neighborhood of current leaf
     % get mid points if they exist
     [midPoints] = getMidPoints(Quadtree,idxLeaf,refLeaf);
 
+    % check if leaf has intersections
     if isempty(intersections) || length(intersections) == 1
-        
-        % quad's geometry
-        quad = Quadtree.Node{idxLeaf,1}{7,1}(1:2,1:4);
         
         % intersection points
         intersectionPoints = [];
@@ -109,11 +128,8 @@ for i = 1:numleaves
         element = [quad,midPoints];
         
     else
-
-        % quad's geometry 
-        quad = Quadtree.Node{idxLeaf,1}{7,1}(1:2,1:4);
         
-        NURBS_segment = Quadtree.Node{idxLeaf,1}{6,1};
+        NURBS_segment = data{6};
         
         % degree
         degree = NURBS_segment.degree;
