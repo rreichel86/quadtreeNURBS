@@ -12,8 +12,18 @@ nq = np + r;
 k = find(knots >= newKnot(1),1) - 1;
 
 Pw = [controlPoints(1,:) .* weights ;controlPoints(2,:) .* weights; weights];
+% Control points after knot insertion 
+Qw = zeros(3,nq);
+% Local array of length p+1
+Rw = zeros(3,p+1);
 
-mp = np + degree + 1;
+% number of knots before knot insertion
+mp = np + p + 1;
+% number of knots after knot insertion
+mq = nq + p + 1;
+
+% knot vector after knot insertion
+knots_new = zeros(1,mp);
 
 for i = 1:k
     knots_new(i) = knots(i);
