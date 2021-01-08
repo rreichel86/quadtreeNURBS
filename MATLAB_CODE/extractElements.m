@@ -118,12 +118,12 @@ for i = 1:numleaves
         % intersection points
         intersectionPoints = [];
 
+        coordinates = zeros(6, 4);
         
-        coordinates = [quad;...       % nodal x-coor and y-coor
-                       ones(1,4);...  % weights
-                       ones(1,4);...  % type 
-                       zeros(1,4);... % which_region
-                       -1*ones(1,4)]; % inside_region
+        coordinates(1:2,1:4) = quad; % nodal x-coor and y-coor
+        coordinates(3,1:4) = 1;       % weights
+        coordinates(4,1:4) = 1;       % type
+        coordinates(6,1:4) = -1;      % inside_region
                    
         element = [quad,midPoints];
         
@@ -159,12 +159,18 @@ for i = 1:numleaves
         idxControlPoints{countKnotVectors}(1,1) = countKnotVectors;
         idxControlPoints{countKnotVectors}(1,2) = ncp;
         
-        coordinates = [quad, controlPoints;...   % nodal/ctrlPts x-coor and y-coor
-                       ones(1,4), weights;...    % weights
-                       ones(1,4), 2*ones(1,ncp);... % type
-                       zeros(1,4), zeros(1,ncp);... % which_region
-                       -1*ones(1,4), zeros(1,ncp)]; % inside_region
-                   
+        
+        coordinates = zeros(6, 4 + ncp);
+        
+        coordinates(1:2,1:4) = quad; % nodal x-coor and y-coor
+        coordinates(3,1:4) = 1;       % weights
+        coordinates(4,1:4) = 1;       % type
+        coordinates(6,1:4) = -1;      % inside_region
+        
+        coordinates(1:2,5:4+ncp) = controlPoints; % ctrlPts x-coor and y-coor
+        coordinates(3,5:4+ncp)   = weights; % weights
+        
+        
         element = [quad,midPoints,intersectionPoints];
         
     end
