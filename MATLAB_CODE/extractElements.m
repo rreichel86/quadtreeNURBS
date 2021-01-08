@@ -109,10 +109,26 @@ for i = 1:numleaves
     numIntersections = length(intersections);
     % Quad definition
     quad = data{7};
-    
+     
     % Check neighborhood of current leaf
     % get mid points if they exist
     [numMidPoints,midPoints,locMidPoints] = getMidPoints(Quadtree,idxLeaf,refLeaf);
+    
+    if numMidPoints ~= 0
+        
+        numPoints = numMidPoints + 4;
+        extQuad = zeros(2,numPoints);
+        loc = (1:numPoints);
+        locMidPoints = locMidPoints + (1:numMidPoints);
+        locPoints = setdiff(loc,locMidPoints);
+        
+        extQuad(:,locPoints) = quad;
+        extQuad(:,locMidPoints) = midPoints;
+        
+    else
+        extQuad = quad;
+    end
+    
     % check if leaf has intersections
     if numIntersections == 0 || numIntersections == 1
         
