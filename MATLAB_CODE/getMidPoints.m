@@ -33,15 +33,19 @@ for dir = 1:4
                 if dir == 1 % West NQ
                     idxC = children([3,4]); % NE and SE children
                     idxV = [2,3];
+                    idxM = 4;
                 elseif dir == 2 % South NQ
                     idxC = children([1,3]); % NW and NE children
                     idxV = [3,4];  
+                    idxM = 1;
                 elseif dir == 3 % East NQ
                     idxC = children([1,2]); % NW and SW children
                     idxV = [1,4];
+                    idxM = 2;
                 elseif dir == 4 % North NQ
                     idxC = children([2,4]); % SW and SE children
                     idxV = [2,1];
+                    idxM = 3;
                 end
                 
                 % get midPoint from neighbour Quad children
