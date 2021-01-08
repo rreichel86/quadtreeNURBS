@@ -105,6 +105,8 @@ for i = 1:numleaves
     refLeaf = data{2};
     % Intersections
     intersections = data{5,1};
+    % number of intersections
+    numIntersections = length(intersections);
     % Quad definition
     quad = data{7};
     
@@ -113,7 +115,7 @@ for i = 1:numleaves
     [midPoints] = getMidPoints(Quadtree,idxLeaf,refLeaf);
 
     % check if leaf has intersections
-    if isempty(intersections) || length(intersections) == 1
+    if numIntersections == 0 || numIntersections == 1
         
         % intersection points
         intersectionPoints = [];
