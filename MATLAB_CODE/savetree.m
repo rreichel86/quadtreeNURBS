@@ -56,7 +56,22 @@ else % other levels
     % add nodeID to father's pointer list
     data = Quadtree.Node{Parent,1};
     data{8} = [data{8} nodeID];
-    Quadtree = Quadtree.set(Parent, data);   
+     
+    % delete stored information in the father
+    
+    % 3. horizontal intersections (physical space)
+    % 4. vertical intersections (physical space)
+    % 5. intersection in parametric space of the curve
+    % 6. NURBS definition
+    if length(data{8}) == 4
+        data{3} = [];
+        data{4} = [];
+        data{5} = [];
+        data{6} = [];
+    end    
+    
+    Quadtree = Quadtree.set(Parent, data); 
+    
 end
 
 
