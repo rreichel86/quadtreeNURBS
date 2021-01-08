@@ -1,9 +1,14 @@
-function [midPoints] = getMidPoints(Quadtree,idxQ,refQ)
+function [numMidPoints,midPoints,locMidPoints] = getMidPoints(Quadtree,idxQ,refQ)
 % getMidPoints: get current Quad mid points
 
 % current Quad level
 levelQ = length(refQ);
+% mid points coordinates
 midPoints = zeros(2,4) - 99;
+% mid points location 
+locMidPoints = zeros(1,4);
+% number of mid points 
+numMidPoints = 0;
 
 % search for current Quad neighbours
 % Loop over directions:
@@ -54,7 +59,9 @@ for dir = 1:4
                 
                 % compare midPoints
                 if norm(pt1-pt2) < 1e-10
-                    midPoints(:,dir) = pt1;
+                    numMidPoints = numMidPoints + 1;
+                    midPoints(:,idxM) = pt1;
+                    locMidPoints(idxM) = idxM;
                 end 
                 
             else % no
@@ -68,8 +75,9 @@ for dir = 1:4
     end
 end
 
-
-
+existMidPoints = midPoints(1,:) ~= -99;
+midPoints = midPoints(:,existMidPoints);
+locMidPoints = locMidPoints(existMidPoints);
 
 
 end
