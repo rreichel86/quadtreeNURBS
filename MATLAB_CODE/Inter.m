@@ -1,8 +1,9 @@
-function [Pint,U] = Inter(x1,y1,x2,y2,degree,knots,controlPoints,weights)
-% Inter: obtain the intersection between a NURBS curve and a given line segment. 
+function [Pint,U] = Inter(A,B,degree,knots,controlPoints,weights)
+% Inter: obtain the intersection between a NURBS curve and 
+% a given line segment AB.
 %
 % INPUT:
-% x1, y1, x2, y2 ------------- geometrical definition of line segment
+% A, B ------------- geometrical definition of line segment
 % Definition of the NURBS
 % degree --------------------- NURBS degree
 % knots ---------------------- NURBS knot vector
