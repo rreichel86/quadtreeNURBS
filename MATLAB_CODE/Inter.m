@@ -18,7 +18,7 @@ function [Pint,U] = Inter(x1,y1,x2,y2,degree,knots,controlPoints,weights)
 % Initialization of variables
 Pint = [];
 U = [];
-tol = 1e-10;
+tol = 1e-12;
 
 intrsc_1 = [];
 num_intrsc_1 = 0;
@@ -33,7 +33,7 @@ n = length(knots)-degree-2;
 ncp = size(controlPoints,2);
 
 % First we obtain if there is an intersection between a control polygon
-% and the quad's edge
+% and the current quad's edge
 
 % Loop over the control points
 for i = 1:ncp-1
@@ -103,19 +103,19 @@ if (num_a == 0)
     return
 end    
 
+% Newton-Raphson iteration 
+
+% start values
 a_knots_array = a_array(3,:);
 % avoid duplicated start values
 a_knots_array = unique(a_knots_array);
 % number of start values 
 num_a = length(a_knots_array);
 
-
-p = [x1;y1];
-q = [x2;y2];
-tVec = q - p;
-nVec = [-tVec(2);tVec(1)];
-nVec = nVec/norm(nVec);
-
+% Line that passes through A and B
+tVec = B - A; % tangent vector 
+nVec = [-tVec(2);tVec(1)]; % normal vector
+nVec = nVec/norm(nVec); % normalized normal vector
 
 for i = 1:num_a
     a = a_knots_array(i);
@@ -123,35 +123,27 @@ for i = 1:num_a
     for j = 1 : 10
         [R,R_xi] = shape_func_NURBS_1d(a,degree,knots,weights);
         
-        f = controlPoints*R;
-        df = controlPoints*R_xi;
+        C = controlPoints*R;
+        dCdu = controlPoints*R_xi;
         
-        G = nVec' * ( f - p);
-        dG = nVec' * df;
+        G = nVec' * ( C - A);
+        dG = nVec' * dCdu;
         
         if abs(G) < tol
             
             % Avoiding to obtain multiplicities
             if any(abs(U-a)>tol) || isempty(U)
+                 
+                alpha = (C - A)'*tVec/(tVec'*tVec);
                 
-                if coorIdx == 1 
-                    if f(2) > y1 && f(2) < y2
-                        Pint = [Pint f(:)];
-                        U = [U a];
-                    elseif ( abs( f(2) - y1 ) < tol ) ||  ( abs( f(2) - y2 ) < tol )
-                        Pint = [Pint f(:)];
-                        U = [U a];
-                    end 
-                elseif coorIdx == 2
-                    if f(1) > x1 && f(1) < x2
-                        Pint = [Pint f(:)];
-                        U = [U a];
-                    elseif ( abs( f(1) - x1 ) < tol ) ||  ( abs( f(1) - x2 ) < tol )
-                        Pint = [Pint f(:)];
-                        U = [U a];
-                    end    
-                end
-                
+                % check if intersection point lies on line segment AB
+                if alpha > 0 && alpha < 1
+                    Pint = [Pint C];
+                    U = [U a];
+                elseif abs(alpha) < tol || abs(alpha - 1) < tol
+                    Pint = [Pint C];
+                    U = [U a];
+                end                       
             end
             break
         end
