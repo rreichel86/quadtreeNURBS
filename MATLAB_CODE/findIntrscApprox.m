@@ -53,70 +53,70 @@ nVec = nVec/norm(nVec); % normalized normal vector
 % compute distances from P to the line that passes through A and B
 g = nVec' * ( P(:,1:2)' - A );
 pos = 0;
-    for i = 1: nkts - 1
-
-        p = P(i,1:2)';
-        q = P(i+1,1:2)';
-
-        if g(i)*g(i+1) < 0
-
-            % projection of p onto the line that passes through A and B
-            p = p + nVec'*(A - p)* nVec;
-            alpha = (p - A)'*tVec/(tVec'*tVec);
-
-            % check if projection lies on line segment AB
-            if alpha > 0 && alpha < 1
-                pos = i;
-                break
-            elseif abs(alpha) < tol || abs(alpha - 1) < tol
-                pos = i;
-                break
-            end
-
-            % projection of q onto the line that passes through A and B
-            q = q + nVec'*(A - q)* nVec;
-            alpha = (q - A)'*tVec/(tVec'*tVec);
-
-            % check if projection lies on line segment AB
-            if alpha > 0 && alpha < 1
-                pos = i;
-                break
-            elseif abs(alpha) < tol || abs(alpha - 1) < tol
-                pos = i;
-                break
-            end
-
-        elseif  abs(g(i)) < tol
-
-            % projection of p onto the line that passes through A and B
-            p = p + nVec'*(A - p)* nVec;
-            alpha = (p - A)'*tVec/(tVec'*tVec);
-
-            % check if projection lies on line segment AB
-            if alpha > 0 && alpha < 1
-                pos = i;
-                break
-            elseif abs(alpha) < tol || abs(alpha - 1) < tol
-                pos = i;
-                break
-            end
-
-        elseif abs(g(i+1)) < tol
-
-            % projection of q onto the line that passes through A and B
-            q = q + nVec'*(A - q)* nVec;
-            alpha = (q - A)'*tVec/(tVec'*tVec);
-
-            % check if projection lies on line segment AB
-            if alpha > 0 && alpha < 1
-                pos = i;
-                break
-            elseif abs(alpha) < tol || abs(alpha - 1) < tol
-                pos = i;
-                break
-            end       
+for i = 1: nkts - 1
+    
+    p = P(i,1:2)';
+    q = P(i+1,1:2)';
+    
+    if g(i)*g(i+1) < 0
+        
+        % projection of p onto the line that passes through A and B
+        p = p + nVec'*(A - p)* nVec;
+        alpha = (p - A)'*tVec/(tVec'*tVec);
+        
+        % check if projection lies on line segment AB
+        if alpha > 0 && alpha < 1
+            pos = i;
+            break
+        elseif abs(alpha) < tol || abs(alpha - 1) < tol
+            pos = i;
+            break
+        end
+        
+        % projection of q onto the line that passes through A and B
+        q = q + nVec'*(A - q)* nVec;
+        alpha = (q - A)'*tVec/(tVec'*tVec);
+        
+        % check if projection lies on line segment AB
+        if alpha > 0 && alpha < 1
+            pos = i;
+            break
+        elseif abs(alpha) < tol || abs(alpha - 1) < tol
+            pos = i;
+            break
+        end
+        
+    elseif  abs(g(i)) < tol
+        
+        % projection of p onto the line that passes through A and B
+        p = p + nVec'*(A - p)* nVec;
+        alpha = (p - A)'*tVec/(tVec'*tVec);
+        
+        % check if projection lies on line segment AB
+        if alpha > 0 && alpha < 1
+            pos = i;
+            break
+        elseif abs(alpha) < tol || abs(alpha - 1) < tol
+            pos = i;
+            break
+        end
+        
+    elseif abs(g(i+1)) < tol
+        
+        % projection of q onto the line that passes through A and B
+        q = q + nVec'*(A - q)* nVec;
+        alpha = (q - A)'*tVec/(tVec'*tVec);
+        
+        % check if projection lies on line segment AB
+        if alpha > 0 && alpha < 1
+            pos = i;
+            break
+        elseif abs(alpha) < tol || abs(alpha - 1) < tol
+            pos = i;
+            break
         end
     end
+end
 
 if pos ~= 0
     flag = 1;
@@ -130,10 +130,8 @@ if pos ~= 0
             
             flag = 0;
             s = -99;
-        end
-        
+        end  
     end
-    
 end
 
 
