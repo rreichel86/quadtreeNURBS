@@ -43,20 +43,20 @@ if ~isempty(NURBS)
     weights = NURBS.weights;
     
     % quad's vertices
-    Q_xmin = Quad(1,1);
-    Q_xmax = Quad(1,2);
-    Q_ymin = Quad(2,1);
-    Q_ymax = Quad(2,3);
+    V1 = Quad(:,1);
+    V2 = Quad(:,2);
+    V3 = Quad(:,3);
+    V4 = Quad(:,4);
     
     % Possible intersections with one of the 4 quad's edges
     % Intersection with quad's bottom edge
-    [Px0, Ux0] = Inter(Q_xmin,Q_ymin,Q_xmax,Q_ymin,degree,knots,controlPoints,weights);
+    [Px0, Ux0] = Inter(V1,V2,degree,knots,controlPoints,weights);
     % Intersection with quad's left edge
-    [Py0, Uy0] = Inter(Q_xmin,Q_ymin,Q_xmin,Q_ymax,degree,knots,controlPoints,weights);
+    [Py0, Uy0] = Inter(V1,V4,degree,knots,controlPoints,weights);
     % Intersection with quad's top edge
-    [Px1, Ux1] = Inter(Q_xmin,Q_ymax,Q_xmax,Q_ymax,degree,knots,controlPoints,weights);
+    [Px1, Ux1] = Inter(V4,V3,degree,knots,controlPoints,weights);
     % Intersection with quad's right edge
-    [Py1, Uy1] = Inter(Q_xmax,Q_ymin,Q_xmax,Q_ymax,degree,knots,controlPoints,weights);
+    [Py1, Uy1] = Inter(V2,V3,degree,knots,controlPoints,weights);
     
     % horizontal intersections
     % physical coordinates
