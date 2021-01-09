@@ -1,17 +1,15 @@
-function [s,flag] = findIntrscApprox(coorVal,coorIdx,interval,degree,knots,...
-    controlPoints,weights,x1,x2,y1,y2,intrscArr)
-% findIntrscApprox: determine first intersection approximation between
-% a Quad edge and a NURBS curve.
+function [s,flag] = findIntrscApprox(interval,degree,knots,...
+    controlPoints,weights,A,B,intrscArr)
+% findIntrscApprox: determine first intersection approximations between
+% a quad's edge AB and a NURBS curve.
 %
 % INPUT:
-% coorVal ----------------------- x or y coordinate of Quad edge
-% coorIdx ------------------------ index of the corresponding Quad edge coordiante
 % interval ------------------- knot vector interval 
 % degree --------------------- NURBS degree
 % knots ---------------------- NURBS knot vector
 % controlPoints -------------- NURBS control points 
 % weights -------------------- NURBS weights
-% x1, y1, x2, y2 ------------- geometrical definition of Quad edge
+% A, B ----------------------- geometrical definition of quad's edge
 % intrscArr ------------------ record of previous intersections
 %
 % OUTPUT:
