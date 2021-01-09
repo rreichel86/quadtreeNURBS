@@ -35,19 +35,6 @@ ncp = size(controlPoints,2);
 % First we obtain if there is an intersection between a control polygon
 % and the quad's edge
 
-% a vertical edge
-if abs(x2 - x1) < tol
-    coorVal = x1;
-    coorIdx = 1;
-    coorInterval = [y1, y2];
-    
-% a horizontal edge    
-elseif abs(y2 - y1) < tol
-    coorVal = y1;
-    coorIdx = 2;
-    coorInterval = [x1, x2];
-end
-
 % Loop over the control points
 for i = 1:ncp-1
    
