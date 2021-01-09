@@ -47,97 +47,39 @@ for k = kts
     
 end
 
-g = P(:,coorIdx)-coorVal;
 pos = 0;
-if coorIdx == 1
     for i = 1: nkts - 1
         
         if g(i)*g(i+1) < 0
             
-            if P(i,2) > y1 && P(i,2) < y2 
-                pos = i;
-                break
-            elseif  ( abs( P(i,2) - y1 ) < tol ) || abs( P(i,2) - y2 ) < tol 
-                pos = i;
-                break
-            end     
             
-            if P(i+1,2) > y1 && P(i+1,2) < y2 
                 pos = i;
                 break
-            elseif ( abs( P(i+1,2) - y1 ) < tol ) || ( abs( P(i+1,2) - y2 ) < tol )
                 pos = i;
                 break
             end
             
-        elseif  abs(g(i)) < tol
             
-            if P(i,2) > y1 && P(i,2) < y2 
                 pos = i;
                 break
-            elseif  ( abs( P(i,2) - y1 ) < tol ) || ( abs( P(i,2) - y2 ) < tol )
                 pos = i;
                 break
-            end 
             
-        elseif abs(g(i+1)) < tol
             
-            if P(i+1,2) > y1 && P(i+1,2) < y2 
-                pos = i+1;
-                break
-            elseif  ( abs( P(i+1,2) - y1 ) < tol ) || ( abs( P(i+1,2) - y2 ) < tol )
-                pos = i+1;
-                break
-            end 
             
-        end
-    end
-    
-elseif coorIdx == 2
-    for i = 1: nkts - 1
-        
-        if g(i)*g(i+1) < 0
-            
-            if P(i,1) > x1 && P(i,1) < x2 
                 pos = i;
                 break
-            elseif  ( abs( P(i,1) - x1 ) < tol ) || abs( P(i,1) - x2 ) < tol 
-                pos = i;
-                break
-            end     
-            
-            if P(i+1,1) > x1 && P(i+1,1) < x2 
-                pos = i;
-                break
-            elseif ( abs( P(i+1,1) - x1 ) < tol ) || ( abs( P(i+1,1) - x2 ) < tol )
                 pos = i;
                 break
             end
             
-        elseif  abs(g(i)) < tol
             
-            if P(i,1) > x1 && P(i,1) < x2 
                 pos = i;
                 break
-            elseif  ( abs( P(i,1) - x1 ) < tol ) || ( abs( P(i,1) - x2 ) < tol )
                 pos = i;
                 break
-            end 
-            
-        elseif abs(g(i+1)) < tol
-            
-            if P(i+1,1) > x1 && P(i+1,1) < x2 
-                pos = i + 1;
-                break
-            elseif  ( abs( P(i+1,1) - x1 ) < tol ) || ( abs( P(i+1,1) - x2 ) < tol )
-                pos = i + 1;
-                break
-            end 
             
         end
-    end   
-end
-    
 if pos ~= 0
     flag = 1;
     s = P(pos,:)';
