@@ -53,8 +53,7 @@ for i = 1:ncp-1
         intrsc_1 =  [intrsc_1 i];
     elseif O2 == 0    
         intrsc_1 =  [intrsc_1 i+1];
-    end    
-        
+    end       
 end     
 
 
@@ -69,7 +68,6 @@ if  ~isempty(intrsc_1)
     
     intrsc_1 = unique(intrsc_1,'stable');
     num_intrsc_1 = length(intrsc_1);
-    
 end 
 
 % Next step is to obtain an approximation of the solution 
@@ -85,7 +83,6 @@ for i = 1:num_intrsc_2
         num_a = num_a + 1;
         a_array = [a_array a_pt];
     end
-    
 end
 
 for i = 1:num_intrsc_1
@@ -100,7 +97,6 @@ for i = 1:num_intrsc_1
         num_a = num_a + 1;
         a_array = [a_array a_pt];
     end
-    
 end
 
 if (num_a == 0) 
@@ -134,7 +130,6 @@ for i = 1:num_a
         dG = nVec' * df;
         
         if abs(G) < tol
-%         if abs(f(coorIdx) - coorVal) < tol
             
             % Avoiding to obtain multiplicities
             if any(abs(U-a)>tol) || isempty(U)
@@ -158,15 +153,11 @@ for i = 1:num_a
                 end
                 
             end
-            
             break
-            
         end
         
         a = a - G/dG;
-%         a = a - (f(coorIdx) - coorVal)/df(coorIdx);
-        
-        
+
         if ( a > knots(end) )
             a = knots(end);
         elseif ( a < knots(1) )
