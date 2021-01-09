@@ -80,8 +80,8 @@ for i = 1:num_intrsc_2
     % points that define the intersected segment. It obtains the first
     % approximation of the solution as output (a_pt)
     
-    [a_pt,flag] = findIntrscApprox(coorVal,coorIdx,intrsc_2((2*i-1):2*i),degree,knots,...
-        controlPoints,weights,x1,x2,y1,y2,a_array);
+    [a_pt,flag] = findIntrscApprox(intrsc_2((2*i-1):2*i),degree,knots,...
+        controlPoints,weights,A,B,a_array);
     if flag == 1
         num_a = num_a + 1;
         a_array = [a_array a_pt];
@@ -95,8 +95,8 @@ for i = 1:num_intrsc_1
     % points that define the intersected segment. It obtains the first
     % approximation of the solution as output (a_pt)
     
-    [a_pt,flag] = findIntrscApprox(coorVal,coorIdx,intrsc_1(i:i),degree,knots,...
-        controlPoints,weights,x1,x2,y1,y2,a_array);
+    [a_pt,flag] = findIntrscApprox(intrsc_1(i:i),degree,knots,...
+        controlPoints,weights,A,B,a_array);
     if flag == 1
         num_a = num_a + 1;
         a_array = [a_array a_pt];
