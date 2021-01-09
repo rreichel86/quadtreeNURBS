@@ -43,18 +43,17 @@ for i = 1:ncp-1
     if i ~= ncp 
         Q = controlPoints(:,i+1);
     end 
+        
+    O1 = orientation(P,A,B);
+    O2 = orientation(Q,A,B);
     
-    dP = ( P(coorIdx) - coorVal );
-    dQ = ( Q(coorIdx) - coorVal );
-    
-    if dP * dQ < 0 
-       intrsc_2 = [intrsc_2 i i+1];
-    elseif abs(dP) < tol   
-       intrsc_1 =  [intrsc_1 i];
-    elseif  abs(dQ) < tol
-       intrsc_1 =  [intrsc_1 i+1];
-    end     
-    
+    if O1*O2 < 0
+        intrsc_2 = [intrsc_2 i i+1];
+    elseif O1 == 0    
+        intrsc_1 =  [intrsc_1 i];
+    elseif O2 == 0    
+        intrsc_1 =  [intrsc_1 i+1];
+    end    
         
 end     
 
