@@ -95,9 +95,23 @@ if (nPv ~= numPolyVertices)
     numPolyVertices = nPv;
 end     
 
+% insert control points and split quad 
+I1 = poly(:,locIntersectionPoints(1));
+
+if norm( I1 - controlPoints(:,1) ) < tol 
+    polygon_1 = [poly(:,1:locIntersectionPoints(1)),...
+                 controlPoints(:,2:end-1),...
+                 poly(:,locIntersectionPoints(2):numPolyVertices)];
              
+    polygon_2 = [poly(:,locIntersectionPoints(1):locIntersectionPoints(2)),...
+                 controlPoints(:,end-1:-1:1)];
 else
+    polygon_1 = [poly(:,1:locIntersectionPoints(1)),...
+                 controlPoints(:,end-1:-1:2),...
+                 poly(:,locIntersectionPoints(2):numPolyVertices)];
              
+    polygon_2 = [poly(:,locIntersectionPoints(1):locIntersectionPoints(2)),...
+                 controlPoints(:,2:end)];
 end
 
 star_shaped = ~isempty(K1) && ~isempty(K2);
