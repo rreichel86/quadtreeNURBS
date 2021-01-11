@@ -20,7 +20,7 @@ tol = 1e-10;
 
 % 1. Quad name
 % 2. Quad location
-% 3. intersections points (physical space)
+% 3. intersection points (physical space)
 % 4.
 % 5. intersection in parametric space of the curve
 % 6. NURBS definition
