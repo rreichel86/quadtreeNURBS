@@ -114,6 +114,9 @@ else
                  controlPoints(:,2:end)];
 end
 
+% compute polygons kernel
+K1 = computePolygonKernel(polygon_1');
+K2 = computePolygonKernel(polygon_2');
 star_shaped = ~isempty(K1) && ~isempty(K2);
 end
 
