@@ -44,10 +44,56 @@ controlPoints = NURBS_segment.controlPoints;
 intersectionPoints = data{3}; 
 % number of intersection points
 numIntersectionPoints = size(intersectionPoints,2);
+
+% number of polygon's vertices
+numPolyVertices = numQuadVertices + numIntersectionPoints;
+% polygon vertices
+poly = zeros(2, numPolyVertices); 
+% intersection points location 
+locIntersectionPoints = zeros(1,2);
+
+nPv = 0;
+for iQv = 1:numQuadVertices 
+    
+    A = quadVertices(:,iQv);
+    
+    nPv = nPv + 1;
+    poly(:,nPv) = A;
+    
+    if iQv ~= numQuadVertices
+        B = quadVertices(:,iQv+1);
+    else
+        B = quadVertices(:,1);
     end
+    
+    for iIp = 1:numIntersectionPoints
+        
+        if locIntersectionPoints(iIp) ~= 0
+           continue 
+        end    
+        
+        P = intersectionPoints(1:2,iIp);
+        
+        [pointInSegment, locPoint] = isPointInLineSegment(A,B,P,3);
+        
+        if pointInSegment
+            
+            if locPoint > 0
+                nPv = nPv + 1;
+                poly(:,nPv) = P;
+                locIntersectionPoints(iIp) = nPv;
+            else 
+                locIntersectionPoints(iIp) = nPv;
+            end   
+            
+        end  
     end
 end
 
+% update number of polygon's vertices
+if (nPv ~= numPolyVertices)
+    numPolyVertices = nPv;
+end     
 
 % insert control point
 if norm( poly(iintrsc(1),:) - controlPoints(1,:) ) < tol 
