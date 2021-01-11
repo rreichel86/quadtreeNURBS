@@ -1,9 +1,13 @@
-function [Pint,U] = Inter(A,B,degree,knots,controlPoints,weights)
+function [intPt,U] = Inter(A,B,intervalTyp,degree,knots,controlPoints,weights)
 % Inter: obtain the intersection between a NURBS curve and 
 % a given line segment AB.
 %
 % INPUT:
 % A, B ------------- geometrical definition of line segment
+% intervalTyp ------ 1 ()
+%                    2 (]
+%                    3 [)
+%                    4 []
 % Definition of the NURBS
 % degree --------------------- NURBS degree
 % knots ---------------------- NURBS knot vector
@@ -11,13 +15,13 @@ function [Pint,U] = Inter(A,B,degree,knots,controlPoints,weights)
 % weights -------------------- NURBS weights
 %
 % OUTPUT:
-% Pint: physical coordinates of the intersection point (empty if none)
+% intPt: physical coordinates of the intersection point (empty if none)
 % U: parametrical coordinates of the intersection point (empty if none)
 % 
 % -------------------------------------------------------------------------
 
 % Initialization of variables
-Pint = [];
+intPt = [];
 U = [];
 tol = 1e-12;
 
@@ -139,11 +143,18 @@ for i = 1:num_a
                 
                 % check if intersection point lies on line segment AB
                 if alpha > 0 && alpha < 1
-                    Pint = [Pint C];
+                    intPt = [intPt C];
                     U = [U a];
-                elseif abs(alpha) < tol || abs(alpha - 1) < tol
-                    Pint = [Pint C];
-                    U = [U a];
+                elseif abs(alpha) < tol 
+                    if intervalTyp == 3 || intervalTyp == 4
+                        intPt = [intPt C];
+                        U = [U a];
+                    end 
+                elseif abs(alpha - 1) < tol
+                   if intervalTyp == 2 || intervalTyp == 4
+                        intPt = [intPt C];
+                        U = [U a];
+                    end 
                 end                       
             end
             break
