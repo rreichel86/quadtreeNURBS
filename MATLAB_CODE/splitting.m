@@ -13,8 +13,8 @@ function [Q_aux, Quadtree,numInterPoints] = splitting(Quadtree,Q_aux,Quad,...
 % -------------------------------------------------------------------------
 
 
-Ix = [];
-Iy = [];
+
+Ip = [];
 newKnotVals = [];
 numInterPoints = 0;
 NURBS_segment = struct([]);
@@ -59,36 +59,24 @@ if ~isempty(NURBS)
     % Intersection with quad's left edge [V4 V1)
     [Py1, Uy1] = Inter(V4,V1,3,degree,knots,controlPoints,weights);
     
-    % horizontal intersections
-    % physical coordinates
-    Px = [Px0, Px1]; % [x1,x2;y1,y2]
-    % parametric coordinates
-    Ux = [Ux0, Ux1];
-    Ix = [Px;Ux];
-    % plot horizontal intersections
-    if ~isempty(Px)
-        plot(Px(1,:),Px(2,:),'bo', 'LineWidth',1.5);
-    end
-    
-    % vertical intersections
-    % physical coordinates
-    Py = [Py0, Py1]; % [x1,x2;y1,y2]
-    % parametric coordinates
-    Uy = [Uy0, Uy1];
-    Iy = [Py;Uy];
-    % plot vertical intersections
-    if ~isempty(Py)
-        plot(Py(1,:),Py(2,:),'bo','LineWidth',1.5);
-    end
-    
-    % avoid duplicated knots values
-    U = [Ux Uy];
+    % intersection points (physical space)
+    Ip = [Px0, Py0, Px1, Py1;...
+          Ux0, Uy0, Ux1, Uy1];
+      
+    % and the corresponding knots
+    U = [Ux0, Uy0, Ux1, Uy1];
+    % avoid duplicated knot values
     U = unique(U);
     
     if any(U == 0)
         if any((U-0.65) > 0)
             U(U == 0)=1;
         end
+    end
+    
+    % plot intersection points 
+    if ~isempty(Ip)
+        plot(Ip(1,:),Ip(2,:),'bo', 'LineWidth',1.5);
     end
     
     % Knot insertions:
@@ -136,7 +124,7 @@ end
 
 % store information in the tree data structure in the node assigned to
 % the current quad
-[Quadtree] = savetree(Q_aux, Quadtree,k, Ix, Iy, newKnotVals, NURBS_segment, Quad);
+[Quadtree] = savetree(Q_aux, Quadtree,k, Ip, [], newKnotVals, NURBS_segment, Quad);
 
 end
 
