@@ -44,11 +44,15 @@ controlPoints = NURBS_segment.controlPoints;
 intersectionPoints = data{3}; 
 % number of intersection points
 numIntersectionPoints = size(intersectionPoints,2);
+% intersection points location 
+locIntersectionPoints = data{4};
 
 % number of polygon's vertices
 numPolyVertices = numQuadVertices + numIntersectionPoints;
 % polygon vertices
 poly = zeros(2, numPolyVertices); 
+% intersection points indices
+idxIntersectionPoints = zeros(1,2);
 
 nPv = 0;
 for iQv = 1:numQuadVertices 
@@ -60,12 +64,20 @@ for iQv = 1:numQuadVertices
      
     for iIp = 1:numIntersectionPoints
         
+        if locIntersectionPoints(iIp) ~= iQv
            continue 
         end    
         
         P = intersectionPoints(1:2,iIp);
         
         
+        if norm(A-P) < tol
+            idxIntersectionPoints(iIp) = nPv;
+        else
+            nPv = nPv + 1;
+            poly(:,nPv) = P;
+            idxIntersectionPoints(iIp) = nPv;
+        end
             
     end
 end
@@ -76,13 +88,22 @@ if (nPv ~= numPolyVertices)
 end     
 
 % insert control points and split quad 
+I1 = poly(:,idxIntersectionPoints(1));
 
 if norm( I1 - controlPoints(:,1) ) < tol 
+    polygon_1 = [poly(:,1:idxIntersectionPoints(1)),...
                  controlPoints(:,2:end-1),...
+                 poly(:,idxIntersectionPoints(2):numPolyVertices)];
              
+    polygon_2 = [poly(:,idxIntersectionPoints(1):idxIntersectionPoints(2)),...
+                 controlPoints(:,end-1:-1:2)];
 else
+    polygon_1 = [poly(:,1:idxIntersectionPoints(1)),...
                  controlPoints(:,end-1:-1:2),...
+                 poly(:,idxIntersectionPoints(2):numPolyVertices)];
              
+    polygon_2 = [poly(:,idxIntersectionPoints(1):idxIntersectionPoints(2)),...
+                 controlPoints(:,2:end-1)];
 end
 
 % compute polygons kernel
