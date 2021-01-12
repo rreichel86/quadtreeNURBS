@@ -49,8 +49,6 @@ numIntersectionPoints = size(intersectionPoints,2);
 numPolyVertices = numQuadVertices + numIntersectionPoints;
 % polygon vertices
 poly = zeros(2, numPolyVertices); 
-% intersection points location 
-locIntersectionPoints = zeros(1,2);
 
 nPv = 0;
 for iQv = 1:numQuadVertices 
@@ -59,34 +57,16 @@ for iQv = 1:numQuadVertices
     
     nPv = nPv + 1;
     poly(:,nPv) = A;
-    
-    if iQv ~= numQuadVertices
-        B = quadVertices(:,iQv+1);
-    else
-        B = quadVertices(:,1);
-    end
-    
+     
     for iIp = 1:numIntersectionPoints
         
-        if locIntersectionPoints(iIp) ~= 0
            continue 
         end    
         
         P = intersectionPoints(1:2,iIp);
         
-        [pointInSegment, locPoint] = isPointInLineSegment(A,B,P,3);
         
-        if pointInSegment
             
-            if locPoint > 0
-                nPv = nPv + 1;
-                poly(:,nPv) = P;
-                locIntersectionPoints(iIp) = nPv;
-            else 
-                locIntersectionPoints(iIp) = nPv;
-            end   
-            
-        end  
     end
 end
 
@@ -96,22 +76,13 @@ if (nPv ~= numPolyVertices)
 end     
 
 % insert control points and split quad 
-I1 = poly(:,locIntersectionPoints(1));
 
 if norm( I1 - controlPoints(:,1) ) < tol 
-    polygon_1 = [poly(:,1:locIntersectionPoints(1)),...
                  controlPoints(:,2:end-1),...
-                 poly(:,locIntersectionPoints(2):numPolyVertices)];
              
-    polygon_2 = [poly(:,locIntersectionPoints(1):locIntersectionPoints(2)),...
-                 controlPoints(:,end-1:-1:1)];
 else
-    polygon_1 = [poly(:,1:locIntersectionPoints(1)),...
                  controlPoints(:,end-1:-1:2),...
-                 poly(:,locIntersectionPoints(2):numPolyVertices)];
              
-    polygon_2 = [poly(:,locIntersectionPoints(1):locIntersectionPoints(2)),...
-                 controlPoints(:,2:end)];
 end
 
 % compute polygons kernel
