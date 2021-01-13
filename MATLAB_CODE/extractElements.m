@@ -88,8 +88,6 @@ for i = 1:numleaves
     
     % 1. Quad name
     % 2. Quad location
-    % 3. horizontal intersections (physical space)
-    % 4. vertical intersections (physical space)
     % 5. intersection in parametric space of the curve
     % 6. NURBS definition
     %    NURBS degree
@@ -103,30 +101,10 @@ for i = 1:numleaves
     
     % leaf reference
     refLeaf = data{2};
-    % Intersections
-    intersections = data{5,1};
-    % number of intersections
-    numIntersections = length(intersections);
-    % Quad definition
-    quad = data{7};
-     
     % Check neighborhood of current leaf
     % get mid points if they exist
     [numMidPoints,midPoints,locMidPoints] = getMidPoints(Quadtree,idxLeaf,refLeaf);
     
-    if numMidPoints ~= 0
-        
-        numPoints = numMidPoints + 4;
-        extQuad = zeros(2,numPoints);
-        loc = (1:numPoints);
-        locMidPoints = locMidPoints + (1:numMidPoints);
-        locPoints = setdiff(loc,locMidPoints);
-        
-        extQuad(:,locPoints) = quad;
-        extQuad(:,locMidPoints) = midPoints;
-        
-    else
-        extQuad = quad;
     end
     
     % check if leaf has intersections
@@ -195,28 +173,6 @@ for i = 1:numleaves
     intersections_coor{i} = intersectionPoints';% intersection points
     coor{i} = coordinates;% nodal coordinates
     
-    % remove -99 values and arrange the element nodal coordinates
-    % counterclockwise starting from the left bottom corner
-    element = element(element ~= -99);
-    ncol = size(element, 1);
-    element = reshape(element,[2,ncol/2]);
-    x = element(1,:);
-    y = element(2,:);
-    cx = mean(x);
-    cy = mean(y);
-    a = atan2(y - cy, x - cx);% angle counterclockwise from [-pi,pi]
-    [~, order] = sort(a, 'ascend');
-    x_1 = x(order);
-    y_1 = y(order);
-    if a(1,1) > min(a(1,2:end))
-        %if there is any point angle which is less than the left bottom
-        %point than it should be end point
-        element(1,:) = [x_1(1,2:end),x_1(1,1)];
-        element(2,:) = [y_1(1,2:end),y_1(1,1)];
-    else
-        element(1,:) = x_1;
-        element(2,:) = y_1;
-    end
     %if int_cor empty than there is only one element that was itself leaf
     %otherwise it would be two elements
     if isempty(intersectionPoints)    
