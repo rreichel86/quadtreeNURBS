@@ -298,13 +298,6 @@ for i = 1:numleaves
         connectivity{j}(1,3) = 1;
         j = j+1;
     else
-        % loop over intersection points 
-        for k = 1:2
-            % search for intersection points in current element nodal coordinates
-            [b] = find ( abs(intersectionPoints(1,k) - element(1,:))<1e-10);
-            [d] = find (abs(intersectionPoints(2,k) - element(2,:))<1e-10);
-            col(:,k) = intersect(b,d);
-        end
         % for the control points in Clockwise direction 
         if col(1,1) < col(1,2)
             elements{j} = [element(:,[1:col(1,1)]),controlPoints(:,[2:end-1]),element(:,[col(1,2):end])];
