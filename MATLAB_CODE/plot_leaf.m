@@ -5,7 +5,7 @@ function plot_leaf(Quadtree)
 leaves = Quadtree.findleaves();
 numLeaves = length(leaves);
 
-figure(3)
+figure(2)
 axis square
 hold on
 
