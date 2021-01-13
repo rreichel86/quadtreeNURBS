@@ -88,6 +88,8 @@ for i = 1:numleaves
     
     % 1. Quad name
     % 2. Quad location
+    % 3. intersections points (physical space)
+    % 4.
     % 5. intersection in parametric space of the curve
     % 6. NURBS definition
     %    NURBS degree
@@ -101,10 +103,121 @@ for i = 1:numleaves
     
     % leaf reference
     refLeaf = data{2};
+    % quad vertices
+    quadVertices = data{7};
+    % number of quad vertices
+    numQuadVertices = size(quadVertices,2);
+    % intersecion points
+    intersectionPoints = data{3};
+    % number of intersection points
+    numIntersectionPoints = size(intersectionPoints,2);
+    % intersection points location
+    locIntersectionPoints = data{4};
+
     % Check neighborhood of current leaf
     % get mid points if they exist
     [numMidPoints,midPoints,locMidPoints] = getMidPoints(Quadtree,idxLeaf,refLeaf);
+
+    % number of polygon's vertices
+    numPolyVertices = numQuadVertices + numMidPoints + numIntersectionPoints;
+    % polygon vertices
+    poly = zeros(2, numPolyVertices);
+    % intersection points indices
+    idxIntersectionPoints = zeros(1,2);
+
+    % arrange quadVertices, midPoints and intersectionPoints CCW in poly 
+    iMp = 0;
+    iIp = 0;
+    nPv = 0; 
+    for iQv = 1:numQuadVertices
+        % current edge's endpoint
+        A = quadVertices(:,iQv);
+        % insert quad's edge endpoint 
+        nPv = nPv + 1;
+        poly(:,nPv) = A;
+        % check if a mid point lies on the current edge
+        if numMidPoints ~= 0
+            iMp = find(locMidPoints == iQv);
+            if isempty(iMp)
+                iMp = 0;
+            end
+        end
+        % check if an intersection point lies on the current edge
+        if numIntersectionPoints ~= 0
+            iIp = find(locIntersectionPoints == iQv);
+            if isempty(iIp)
+                iIp = 0;
+            end
+        end
+        % a mid point and an intersection point lie on the current edge
+        if iMp ~= 0 && iIp ~= 0
+            
+            % mid point 
+            M = midPoints(:,iMp); 
+            % intersection point 
+            P = intersectionPoints(1:2,iIp);
+            
+            % distance to current edge's endpoint
+            dist_AP = norm(P-A);
+            dist_AM = norm(M-A);
+            
+            % is P closer to A than M?
+            if dist_AP < dist_AM 
+                % check if P == A?
+                if dist_AP < tol
+                    idxIntersectionPoints(iIp) = nPv;
+                else
+                    % insert intersection point
+                    nPv = nPv + 1;
+                    poly(:,nPv) = P;
+                    idxIntersectionPoints(iIp) = nPv;
+                end
+                % insert mid point 
+                nPv = nPv + 1;
+                poly(:,nPv) = M;
+            else
+                % insert mid point 
+                nPv = nPv + 1;
+                poly(:,nPv) = M;
+                % insert intersection point
+                nPv = nPv + 1;
+                poly(:,nPv) = P;
+                idxIntersectionPoints(iIp) = nPv;
+            end
+            
+        %  a mid point lies on the current edge  
+        elseif  iIp ~= 0
+            
+            % intersection point 
+            P = intersectionPoints(1:2,iIp);
+            
+            % distance to current edge's endpoint
+            dist_AP = norm(P-A);
+            
+            % check if P == A?
+            if dist_AP < tol
+                idxIntersectionPoints(iIp) = nPv;
+            else
+                % insert intersection point 
+                nPv = nPv + 1;
+                poly(:,nPv) = P;
+                idxIntersectionPoints(iIp) = nPv;
+            end
+            
+        % a mid point lies on the current edge    
+        elseif  iMp ~= 0
+            
+            % mid point 
+            M = midPoints(:,iMp);
+            % insert mid point 
+            nPv = nPv + 1;
+            poly(:,nPv) = M;
+        end  
+    end
     
+    % update number of polygon's vertices
+    if (nPv ~= numPolyVertices)
+        numPolyVertices = nPv;
     end
     
     % check if leaf has intersections
