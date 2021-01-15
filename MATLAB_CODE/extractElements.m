@@ -236,9 +236,6 @@ for i = 1:numleaves
         coordinates(4,1:4) = 1;       % type
         coordinates(6,1:4) = -1;      % inside_region
         
-        % element's nodal coordinates 
-        element = poly(:,1:numPolyVertices);
-        
     else
         % NURBS segment definition
         NURBS_segment = data{6};
@@ -278,10 +275,7 @@ for i = 1:numleaves
         % control points 
         coordinates(1:2,5:4+ncp) = controlPoints; % ctrlPts x-coor and y-coor
         coordinates(3,5:4+ncp)   = weights; % weights
-        
-        % element's nodal coordinates
-        element = poly(:,1:numPolyVertices);
-        
+         
     end
     
     intersections_coor{i} = intersectionPoints';% intersection points
@@ -290,7 +284,7 @@ for i = 1:numleaves
     % check if leaf has intersections
     % leaf is splitted in 2 elements if it has 2 intersection points
     if numIntersectionPoints == 0 || numIntersectionPoints == 1
-        elements{ielno} = element;
+        elements{ielno} = poly(:,1:numPolyVertices);
         % element number
         connectivity{ielno}(1,1) = ielno;
         % knot vector number
