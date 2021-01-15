@@ -12,9 +12,10 @@ function [Q_aux, Quadtree,numInterPoints] = splitting(Quadtree,Q_aux,Quad,...
 % 
 % -------------------------------------------------------------------------
 
-
-
-Ip = [];
+% array that contains intersection points
+Ip = []; 
+% array that contains corresponding intersection points location
+Is = [];
 newKnotVals = [];
 numInterPoints = 0;
 NURBS_segment = struct([]);
@@ -115,6 +116,23 @@ if ~isempty(NURBS)
     if numInterPoints == 2
         knotInterval = newKnotVals;
         [NURBS_segment] = extractNURBS_segment(knotInterval, newNURBS);
+        
+         if ~isempty(Px0)
+             Is = [Is 1];
+         end  
+         
+         if ~isempty(Py0)
+             Is = [Is 2];
+         end 
+         
+         if ~isempty(Px1)
+             Is = [Is 3];
+         end 
+         
+         if ~isempty(Py1)
+             Is = [Is 4];
+         end 
+        
     elseif  numInterPoints > 2
         knotInterval = [newKnotVals(1), newKnotVals(end)];
         [NURBS_segment] = extractNURBS_segment(knotInterval, newNURBS);
@@ -124,7 +142,7 @@ end
 
 % store information in the tree data structure in the node assigned to
 % the current quad
-[Quadtree] = savetree(Q_aux, Quadtree,k, Ip, [], newKnotVals, NURBS_segment, Quad);
+[Quadtree] = savetree(Q_aux, Quadtree,k, Ip, Is, newKnotVals, NURBS_segment, Quad);
 
 end
 
