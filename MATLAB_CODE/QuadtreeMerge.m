@@ -23,7 +23,7 @@ for i = 1:nSeedingPoints
         
         for j = 1:4
             
-            Quad = Quadtree.Node{idxChildren(j),1}{10,1}(1:2,1:4);
+            Quad = Quadtree.Node{idxChildren(j),1}{7,1}(1:2,1:4);
             
             minCoords = [Quad(1,1),Quad(2,1)];
             maxCoords = [Quad(1,2),Quad(2,3)];
