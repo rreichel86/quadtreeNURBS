@@ -378,9 +378,7 @@ indices = zeros(size(intersections_coor,1),1);
 for k = 1:size(intersections_coor,1)
     % search for intersection point in coor
     % and get its index
-    [a] = find ( abs(coor(:,2)-intersections_coor(k,1))<tol);
-    [b] = find ( abs(coor(:,3)-intersections_coor(k,2))<tol);
-    index = intersect(a,b);
+    index = find( vecnorm(coor(:,2:3)-intersections_coor(k,1:2),2,2) < tol);
     indices(k,1) = index;
 end
 
