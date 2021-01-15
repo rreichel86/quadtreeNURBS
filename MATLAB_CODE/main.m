@@ -147,3 +147,30 @@ for ie = 1:numsec
         
     end    
 end                                                                                                                                                 
+hold off
+
+%% sections quality 
+figure(4)
+hold on
+colormap(parula(100))
+for ie = 1:numsec
+    
+    kv = sections(ie,2); 
+    nsec = sections(ie,4);
+    secnd  = sections(ie,5:4+nsec); 
+    secx = coor(secnd,2);
+    secy = coor(secnd,3);
+    
+    A = [secx(end); secy(end)];
+    C = [secx(end-1); secy(end-1)];
+    B = [secx(1); secy(1)];
+    
+    alpha = qualityTriangle(A,B,C);
+    
+    patch('Faces',[1:nsec],'Vertices',[secx secy] ,...
+        'FaceVertexCData',zeros(nsec,1) + alpha,...
+        'FaceColor','interp',...
+        'EdgeColor', 'k')
+end                                                                                                                                                 
+colorbar
+hold off
