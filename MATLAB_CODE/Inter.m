@@ -120,8 +120,8 @@ uStartValues = StartValues(3,:);
 % numStartValues = length(uStartValues);
 
 
-% intrscP = [];
-% intrscU = [];
+intrscP = zeros(2,numStartValues);
+intrscU = ones(1,numStartValues) * -99;
 
 % Line that passes through A and B
 tVec = B - A; % tangent vector 
@@ -143,23 +143,26 @@ for i = 1:numStartValues
         if abs(G) < tol
             
             % Avoiding to obtain multiplicities
-            if any(abs(intrscU-u)>tol) || isempty(intrscU)
-                 
+            
+            if numIntrsc == 0 || any(abs(intrscU(1:numIntrsc)-u) > tol)  
                 alpha = (C - A)'*tVec/(tVec'*tVec);
                 
                 % check if intersection point lies on line segment AB
                 if alpha > 0 && alpha < 1
-                    intrscP = [intrscP C];
-                    intrscU = [intrscU u];
+                    numIntrsc = numIntrsc + 1;
+                    intrscP(:,numIntrsc) = C;
+                    intrscU(numIntrsc) = u;
                 elseif abs(alpha) < tol 
                     if intervalTyp == 3 || intervalTyp == 4
-                        intrscP = [intrscP C];
-                        intrscU = [intrscU u];
+                        numIntrsc = numIntrsc + 1; 
+                        intrscP(:,numIntrsc) = C;
+                        intrscU(numIntrsc) = u;
                     end 
                 elseif abs(alpha - 1) < tol
                    if intervalTyp == 2 || intervalTyp == 4
-                        intrscP = [intrscP C];
-                        intrscU = [intrscU u];
+                       numIntrsc = numIntrsc + 1;
+                       intrscP(:,numIntrsc) = C;
+                       intrscU(numIntrsc) = u;
                     end 
                 end                       
             end
@@ -178,3 +181,13 @@ for i = 1:numStartValues
     
 end
 
+if numIntrsc == 0 
+    intrscP = [];
+    intrscU = [];
+else
+    intrscP = intrscP(:,1:numIntrsc);
+    intrscU = intrscU(1:numIntrsc);
+end     
+
+
+end
