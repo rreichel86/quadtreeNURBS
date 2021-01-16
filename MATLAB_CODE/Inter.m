@@ -32,8 +32,7 @@ num_intrsc_1 = 0;
 intrsc_2 = [];
 num_intrsc_2 = 0;
 
-% number of control points / basis functions - 1
-n = length(knots)-degree-2;
+
 % ncp number of control points 
 ncp = size(controlPoints,2);
 
