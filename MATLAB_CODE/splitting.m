@@ -52,13 +52,13 @@ if ~isempty(NURBS)
     % Possible intersections with one of the 4 quad's edges
 
     % Intersection with quad's bottom edge [V1 V2)
-    [Px0, Ux0] = Inter(V1,V2,3,degree,knots,controlPoints,weights);
+    [Px0, Ux0, nIx0] = Inter(V1,V2,3,degree,knots,controlPoints,weights);
     % Intersection with quad's right edge [V2 V3)
-    [Py0, Uy0] = Inter(V2,V3,3,degree,knots,controlPoints,weights);
+    [Py0, Uy0, nIy0] = Inter(V2,V3,3,degree,knots,controlPoints,weights);
     % Intersection with quad's top edge [V3 V4)
-    [Px1, Ux1] = Inter(V3,V4,3,degree,knots,controlPoints,weights);
+    [Px1, Ux1, nIx1] = Inter(V3,V4,3,degree,knots,controlPoints,weights);
     % Intersection with quad's left edge [V4 V1)
-    [Py1, Uy1] = Inter(V4,V1,3,degree,knots,controlPoints,weights);
+    [Py1, Uy1, nIy1] = Inter(V4,V1,3,degree,knots,controlPoints,weights);
     
     % intersection points (physical space)
     Ip = [Px0, Py0, Px1, Py1;...
