@@ -117,20 +117,28 @@ if ~isempty(NURBS)
         knotInterval = newKnotVals;
         [NURBS_segment] = extractNURBS_segment(knotInterval, newNURBS);
         
-         if ~isempty(Px0)
+         if nIx0 == 1
              Is = [Is 1];
+         elseif  nIx0 == 2
+             numInterPoints = numInterPoints + 1;
          end  
          
-         if ~isempty(Py0)
-             Is = [Is 2];
-         end 
+         if nIy0 == 1
+             Is = [Is 2]; 
+         elseif  nIy0 == 2
+             numInterPoints = numInterPoints + 1;
+         end
          
-         if ~isempty(Px1)
+         if nIx1 == 1 
              Is = [Is 3];
+         elseif  nIx1 == 2
+             numInterPoints = numInterPoints + 1;
          end 
          
-         if ~isempty(Py1)
+         if nIy1 == 1 
              Is = [Is 4];
+         elseif  nIy1 == 2
+             numInterPoints = numInterPoints + 1;
          end 
         
     elseif  numInterPoints > 2
