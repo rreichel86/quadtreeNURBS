@@ -1,4 +1,4 @@
-function [intrscP,intrscU] = Inter(A,B,intervalTyp,degree,knots,controlPoints,weights)
+function [intrscP,intrscU, numIntrsc] = Inter(A,B,intervalTyp,degree,knots,controlPoints,weights)
 % Inter: obtain the intersection between a NURBS curve and 
 % a given line segment AB.
 %
