@@ -31,8 +31,6 @@ intrsc_1 = [];
 num_intrsc_1 = 0;
 intrsc_2 = [];
 num_intrsc_2 = 0;
-StartValues = [];
-numStartValues = 0;
 
 % number of control points / basis functions - 1
 n = length(knots)-degree-2;
@@ -78,6 +76,8 @@ if  ~isempty(intrsc_1)
 end 
 
 % Next step is to obtain an approximation of the solution 
+StartValues = zeros(3,num_intrsc_1 + num_intrsc_2);
+numStartValues = 0;
 for i = 1:num_intrsc_2
    
     % findIntrscApprox scans the part of the NURBS controlled by the control
@@ -85,10 +85,10 @@ for i = 1:num_intrsc_2
     % approximation of the solution as output (u0 )
     
     [u0 ,flag] = findIntrscApprox(intrsc_2((2*i-1):2*i),degree,knots,...
-        controlPoints,weights,A,B,StartValues);
+        controlPoints,weights,A,B,StartValues(:,1:numStartValues));
     if flag == 1
         numStartValues = numStartValues + 1;
-        StartValues = [StartValues u0 ];
+        StartValues(:,numStartValues) = u0;
     end
 end
 
@@ -99,10 +99,10 @@ for i = 1:num_intrsc_1
     % approximation of the solution as output (u0 )
     
     [u0 ,flag] = findIntrscApprox(intrsc_1(i:i),degree,knots,...
-        controlPoints,weights,A,B,StartValues);
+        controlPoints,weights,A,B,StartValues(:,1:numStartValues));
     if flag == 1
         numStartValues = numStartValues + 1;
-        StartValues = [StartValues u0 ];
+        StartValues(:,numStartValues) = u0;
     end
 end
 
@@ -111,13 +111,14 @@ if (numStartValues == 0)
 end    
 
 % Newton-Raphson iteration 
-
+% update StarValues
+StartValues = StartValues(:,1:numStartValues);
 % start values
 uStartValues = StartValues(3,:);
 % avoid duplicated start values
-uStartValues = unique(uStartValues);
+% uStartValues = unique(uStartValues);
 % number of start values 
-numStartValues = length(uStartValues);
+% numStartValues = length(uStartValues);
 
 
 % intrscP = [];
