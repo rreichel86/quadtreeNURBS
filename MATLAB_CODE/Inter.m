@@ -150,21 +150,21 @@ for i = 1:numStartValues
                 % check if intersection point lies on line segment AB
                 if norm(C-A) < tol
                     if intervalTyp == 3 || intervalTyp == 4
-                        numIntrsc = numIntrsc + 1; 
+                        numIntrsc = numIntrsc + 1;
                         intrscP(:,numIntrsc) = C;
                         intrscU(numIntrsc) = u;
-                    end 
+                    end
                 elseif norm(B-C) < tol
-                   if intervalTyp == 2 || intervalTyp == 4
-                       numIntrsc = numIntrsc + 1;
-                       intrscP(:,numIntrsc) = C;
-                       intrscU(numIntrsc) = u;
-                    end 
+                    if intervalTyp == 2 || intervalTyp == 4
+                        numIntrsc = numIntrsc + 1;
+                        intrscP(:,numIntrsc) = C;
+                        intrscU(numIntrsc) = u;
+                    end
                 elseif alpha > 0 && alpha < 1
-                   numIntrsc = numIntrsc + 1;
-                   intrscP(:,numIntrsc) = C;
-                   intrscU(numIntrsc) = u;
-                end                       
+                    numIntrsc = numIntrsc + 1;
+                    intrscP(:,numIntrsc) = C;
+                    intrscU(numIntrsc) = u;
+                end
             end
             break
         end
