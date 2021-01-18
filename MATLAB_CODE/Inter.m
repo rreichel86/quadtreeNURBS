@@ -154,7 +154,7 @@ for i = 1:numStartValues
                         intrscP(:,numIntrsc) = C;
                         intrscU(numIntrsc) = u;
                     end 
-                elseif abs(alpha - 1) < tol
+                elseif norm(B-C) < tol
                    if intervalTyp == 2 || intervalTyp == 4
                        numIntrsc = numIntrsc + 1;
                        intrscP(:,numIntrsc) = C;
