@@ -148,10 +148,6 @@ for i = 1:numStartValues
                 alpha = (C - A)'*tVec/(tVec'*tVec);
                 
                 % check if intersection point lies on line segment AB
-                if alpha > 0 && alpha < 1
-                    numIntrsc = numIntrsc + 1;
-                    intrscP(:,numIntrsc) = C;
-                    intrscU(numIntrsc) = u;
                 elseif abs(alpha) < tol 
                     if intervalTyp == 3 || intervalTyp == 4
                         numIntrsc = numIntrsc + 1; 
@@ -164,6 +160,10 @@ for i = 1:numStartValues
                        intrscP(:,numIntrsc) = C;
                        intrscU(numIntrsc) = u;
                     end 
+                elseif alpha > 0 && alpha < 1
+                   numIntrsc = numIntrsc + 1;
+                   intrscP(:,numIntrsc) = C;
+                   intrscU(numIntrsc) = u;
                 end                       
             end
             break
