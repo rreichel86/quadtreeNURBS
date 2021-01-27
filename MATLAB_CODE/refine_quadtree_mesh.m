@@ -53,6 +53,8 @@ NURBS = data{3};
 
 [Quadtree] = QuadtreeBalance(Quadtree,NURBS);
 
+[Quadtree] = check_leaf(Quadtree);
+
 %% Extract polygonal elements 
 [nnode,coor,numel,connectivity,~,...
  numKnotVectors,knotVectors,maxnknots,idxControlPoints] = extractElements(Quadtree);
