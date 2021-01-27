@@ -24,12 +24,14 @@ for i = 1:nSeedingPoints
             
             Quad = Quadtree.Node{idxChildren(j),1}{7,1}(1:2,1:4);
             
-            minCoords = [Quad(1,1),Quad(2,1)];
-            maxCoords = [Quad(1,2),Quad(2,3)];
+%             minCoords = [Quad(1,1),Quad(2,1)];
+%             maxCoords = [Quad(1,2),Quad(2,3)];
+%             
+%             ptInQuad = isPointInQuad(minCoords,maxCoords,seedingPoints(i,:));
             
-            ptInQuad = isPointInQuad(minCoords,maxCoords,seedingPoints(i,:));
+            if isPointInPolygon(Quad', seedingPoints(i,:))  ~= -1
             
-            if ptInQuad == 1
+%             if ptInQuad == 1
                 idx = idxChildren(j);
                 break
             end
