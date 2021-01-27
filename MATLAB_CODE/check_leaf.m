@@ -34,6 +34,10 @@ for i = 1:numLeaves
     
     data = Quadtree.Node{idxLeaf,1};
     
+    
+    refLeaf = data{2};
+    levelLeaf = length(refLeaf);
+    
     % intersections
     intersections = data{5};
     
@@ -116,6 +120,7 @@ for i = 1:numLeaves
             data{3} = [newVertexCoor; u];
             data{4} = vertexNum;
             data{5} = u;
+            data{6} = [];
             % update quad vertices 
             data{7} = quadVertices;
             
@@ -129,6 +134,58 @@ for i = 1:numLeaves
             LEAF.oldIntersectionPoints = intersectionPoints;
             
             updatedLeaves = [updatedLeaves LEAF];
+            
+            % seach Neighbours that share the same vertex
+            % Vertex 1
+            %         10. West Neighbour -> Vertex 2
+            %         11. South West Neighbour -> Vertex 3
+            %         20. South Neighbour -> Vertex 4
+            % Vertex 2
+            %         20. South Neighbour -> Vertex 3
+            %         21. South East Neighbour -> Vertex 4
+            %         30. East Neighbour -> Vertex 1
+            % Vertex 3
+            %         30. East Neighbour -> Vertex 4
+            %         31. North East Neighbour -> Vertex 1
+            %         40. North Neighbour -> Vertex 2
+            % Vertex 4
+            %         40. North Neighbour -> Vertex 1
+            %         41. North West Neighbour -> Vertex 2
+            %         10. West Neighbour -> Vertex 3
+            
+            switch vertexNum
+                case 1
+                    Neighbours = [10,11,20];
+                case 2
+                    Neighbours = [20,21,30];
+                case 3
+                    Neighbours = [30,31,40];
+                case 4
+                    Neighbours = [40,41,10];
+            end
+            
+            for ii = 1:3
+                
+                Neighbour = Neighbours(ii);
+                dir = floor(Neighbour/10);
+                Ntyp = mod(Neighbour,10);
+                
+                [exist_NQ, refNQ] = refNeighbour(refLeaf,dir,Ntyp);
+                if exist_NQ == 1
+                    
+                    idxNQ = findNeighbour(Quadtree,idxLeaf,refLeaf, refNQ);
+                    
+                    refNQ = Quadtree.Node{idxNQ,1}{2,1}(1:end);
+                    levelNQ = length(refNQ);
+                    
+                    if Quadtree.isleaf(idxNQ) && levelLeaf > levelNQ
+                        
+                        [Quadtree] = Decompose_helper(Quadtree,NURBS,idxNQ);
+                    
+                    end
+                    
+                end
+            end
             
         end
     end
@@ -223,6 +280,8 @@ for i = 1:numLeaves
             data = Quadtree.Node{idx,1};
             % intersection points
             intersectionPoints = data{3};
+            % intersection points location
+            locIntersectionPoints = data{4};
             % NURBS segment
             NURBS = data{6};
             % quad vertices 
@@ -235,59 +294,70 @@ for i = 1:numLeaves
                 % replace quad vertex by its projection
                 quadVertices(:,updateVertex) = LEAF.vertexCoor(1:2) ;
                 
-                if ~isempty(NURBS)
-                    
-                    idxU1 = find( vecnorm(intersectionPoints-LEAF.oldIntersectionPoints(:,1) ) < tol);
-                    idxU2 = find( vecnorm(intersectionPoints-LEAF.oldIntersectionPoints(:,2) ) < tol);
-                    
-                    if ~isempty(idxU1)
-                        idxU = idxU1;
-                    elseif ~isempty(idxU2)
-                        idxU = idxU2;
-                    else
-                        idxU = 0;
-                    end
-                    
-                    if idxU ~= 0
-                        
-                        % update intersection points 
-                        intersectionPoints(:,idxU) = LEAF.vertexCoor;
-                        intersections = intersectionPoints(3,:);
-                        intersections = sort(intersections);
+            end
+            
+            % check if current leaf's NB contains a NURBS segment
+            if ~isempty(NURBS) % yes
                 
-                        data{3} = intersectionPoints;
-                        data{5} = intersections;
-                        
-                        newNURBS = oNURBS;
-                        
-                        for j = 1:length(intersections)
-                            % loop over newKnotVals
-                            % for knotVal in newknots
-                            KnotVal = intersections(j);
-                            numKnotIns = newNURBS.degree-sum(abs(newNURBS.knots(:) - KnotVal) < 1e-10);
-                            % Insert knot numKnotsIns times
-                            if numKnotIns > 0
-                                [newNURBS.knots, newNURBS.controlPoints, newNURBS.weights] = CurveKnotIns(newNURBS.degree,...
-                                    newNURBS.knots, newNURBS.controlPoints, newNURBS.weights, KnotVal, numKnotIns);
-                            end
-                        end
-                    
-                        [newNURBS] = extractNURBS_segment(intersections, newNURBS);
-                        
-                        % update NURBS segment 
-                        data{6} = newNURBS;
-                    end 
+                idxU1 = find( vecnorm(intersectionPoints-LEAF.oldIntersectionPoints(:,1) ) < tol);
+                idxU2 = find( vecnorm(intersectionPoints-LEAF.oldIntersectionPoints(:,2) ) < tol);
+                
+                if ~isempty(idxU1)
+                    idxU = idxU1;
+                elseif ~isempty(idxU2)
+                    idxU = idxU2;
                 else
-                    % update intersection points
-                    data{3} = LEAF.vertexCoor;
-                    data{5} = LEAF.vertexCoor(3);
+                    idxU = 0;
                 end
                 
-                % update quad vertices
-                data{7} = quadVertices;
-                % update data stored in current leaf's Neigbour
-                Quadtree = Quadtree.set(idx, data);
+                if idxU ~= 0
+                    
+                    % update intersection points
+                    intersectionPoints(:,idxU) = LEAF.vertexCoor;
+                    locIntersectionPoints(idxU) = updateVertex;
+                    intersections = intersectionPoints(3,:);
+                    intersections = sort(intersections);
+                    
+                    % sort intersectionPoints
+                    if ( locIntersectionPoints(1) > locIntersectionPoints(2) )
+                        locIntersectionPoints = locIntersectionPoints(end:-1:1);
+                        intersectionPoints = intersectionPoints(:,end:-1:1);
+                    end
+                    
+                    data{3} = intersectionPoints;
+                    data{4} = locIntersectionPoints;
+                    data{5} = intersections;
+                    
+                    newNURBS = oNURBS;
+                    
+                    for j = 1:length(intersections)
+                        % loop over newKnotVals
+                        % for knotVal in newknots
+                        KnotVal = intersections(j);
+                        numKnotIns = newNURBS.degree-sum(abs(newNURBS.knots(:) - KnotVal) < 1e-10);
+                        % Insert knot numKnotsIns times
+                        if numKnotIns > 0
+                            [newNURBS.knots, newNURBS.controlPoints, newNURBS.weights] = CurveKnotIns(newNURBS.degree,...
+                                newNURBS.knots, newNURBS.controlPoints, newNURBS.weights, KnotVal, numKnotIns);
+                        end
+                    end
+                    
+                    [newNURBS] = extractNURBS_segment(intersections, newNURBS);
+                    
+                    % update NURBS segment
+                    data{6} = newNURBS;
+                end
+            else % no
+                % update intersection points
+                data{3} = LEAF.vertexCoor;
+                data{5} = LEAF.vertexCoor(3);
             end
+            
+            % update quad vertices
+            data{7} = quadVertices;
+            % update data stored in current leaf's Neigbour
+            Quadtree = Quadtree.set(idx, data);
+            
             
             % plot quad
             patch(quadVertices(1,:),quadVertices(2,:),'g','FaceAlpha',0.1,'LineStyle','-','LineWidth',1);
