@@ -163,9 +163,10 @@ for i = 1:numleaves
             % distance to current edge's endpoint
             dist_AP = norm(P-A);
             dist_AM = norm(M-A);
+            dist_MP = norm(P-M);
             
             % is P closer to A than M?
-            if dist_AP < dist_AM 
+            if dist_AP < dist_AM
                 % check if P == A?
                 if dist_AP < tol
                     idxIntersectionPoints(iIp) = nPv;
@@ -175,22 +176,27 @@ for i = 1:numleaves
                     poly(:,nPv) = P;
                     idxIntersectionPoints(iIp) = nPv;
                 end
-                % insert mid point 
+                % insert mid point
                 nPv = nPv + 1;
                 poly(:,nPv) = M;
             else
-                % insert mid point 
+                % insert mid point
                 nPv = nPv + 1;
                 poly(:,nPv) = M;
-                % insert intersection point
-                nPv = nPv + 1;
-                poly(:,nPv) = P;
-                idxIntersectionPoints(iIp) = nPv;
+                % check if P == M ?
+                if dist_MP < tol
+                    idxIntersectionPoints(iIp) = nPv;
+                else
+                    % insert intersection point
+                    nPv = nPv + 1;
+                    poly(:,nPv) = P;
+                    idxIntersectionPoints(iIp) = nPv;
+                end
             end
             
         %  a mid point lies on the current edge  
         elseif  iIp ~= 0
-            
+
             % intersection point 
             P = intersectionPoints(1:2,iIp);
             
@@ -232,10 +238,7 @@ for i = 1:numleaves
         coordinates = zeros(6, 4);
          % quad vertices
         coordinates(1:2,1:4) = quadVertices; % nodal x-coor and y-coor
-        coordinates(3,1:4) = 1;       % weights
         coordinates(4,1:4) = 1;       % type
-        coordinates(6,1:4) = -1;      % inside_region
-        
     else
         % NURBS segment definition
         NURBS_segment = data{6};
@@ -245,10 +248,10 @@ for i = 1:numleaves
         knots = NURBS_segment.knots;
         % control points
         controlPoints = NURBS_segment.controlPoints;
-        % intersection points
-        intersectionPoints = [controlPoints(:,1),controlPoints(:,end)];
         % weights
         weights = NURBS_segment.weights;
+         % intersection points
+        intersectionPoints = [controlPoints(:,1),controlPoints(:,end)];
         % number of knots
         nknots = length(knots);
         % number of control points / weights
@@ -269,13 +272,10 @@ for i = 1:numleaves
         coordinates = zeros(6, 4 + ncp);
         % quad vertices 
         coordinates(1:2,1:4) = quadVertices; % nodal x-coor and y-coor
-        coordinates(3,1:4) = 1;       % weights
         coordinates(4,1:4) = 1;       % type
-        coordinates(6,1:4) = -1;      % inside_region
         % control points 
         coordinates(1:2,5:4+ncp) = controlPoints; % ctrlPts x-coor and y-coor
-        coordinates(3,5:4+ncp)   = weights; % weights
-         
+        coordinates(4,5:4+ncp)   = 2; % type
     end
     
     intersections_coor{i} = intersectionPoints';% intersection points
@@ -284,7 +284,7 @@ for i = 1:numleaves
     % check if leaf has intersections
     % leaf is splitted in 2 elements if it has 2 intersection points
     if numIntersectionPoints == 0 || numIntersectionPoints == 1
-        elements{ielno} = poly(:,1:numPolyVertices);
+        elements{ielno} = poly(1:2,1:numPolyVertices);
         % element number
         connectivity{ielno}(1,1) = ielno;
         % knot vector number
@@ -294,22 +294,22 @@ for i = 1:numleaves
         ielno = ielno+1;
     else
         % insert control points and split leaf in 2 elements 
-        I1 = poly(:,idxIntersectionPoints(1));
+        I1 = poly(1:2,idxIntersectionPoints(1));
         
         % control points are arrange CW
         if norm( I1 - controlPoints(:,1) ) < tol
-            elements{ielno} = [poly(:,1:idxIntersectionPoints(1)),...
+            elements{ielno} = [poly(1:2,1:idxIntersectionPoints(1)),...
                 controlPoints(:,2:end-1),...
-                poly(:,idxIntersectionPoints(2):numPolyVertices)];
+                poly(1:2,idxIntersectionPoints(2):numPolyVertices)];
             
-            elements{ielno+1} = [poly(:,idxIntersectionPoints(1):idxIntersectionPoints(2)),...
+            elements{ielno+1} = [poly(1:2,idxIntersectionPoints(1):idxIntersectionPoints(2)),...
                 controlPoints(:,end-1:-1:2)];
         else
-            elements{ielno} = [poly(:,1:idxIntersectionPoints(1)),...
+            elements{ielno} = [poly(1:2,1:idxIntersectionPoints(1)),...
                 controlPoints(:,end-1:-1:2),...
-                poly(:,idxIntersectionPoints(2):numPolyVertices)];
+                poly(1:2,idxIntersectionPoints(2):numPolyVertices)];
             
-            elements{ielno+1} = [poly(:,idxIntersectionPoints(1):idxIntersectionPoints(2)),...
+            elements{ielno+1} = [poly(1:2,idxIntersectionPoints(1):idxIntersectionPoints(2)),...
                 controlPoints(:,2:end-1)];
         end
         % element numbers
@@ -332,7 +332,8 @@ intersections_coor = cell2mat(intersections_coor);
 % coordinates in matrix form
 coor = [coor{:}]';
 % remove repeated coordinates and rearrange them by increasing x-coor value
-tmp_coor = uniquetol(coor,tol,'ByRows',true);
+[~, idxTemp, ~] = uniquetol(coor(:,1:2),tol,'ByRows',true);
+tmp_coor = coor(idxTemp,:);
 
 % number of coordinates without counting scaling centers
 numcoor0 = size(tmp_coor,1);
@@ -358,6 +359,26 @@ end
 
 % coor numbers
 coor(:,1) = (1:numcoor);
+
+numIdxControlPoints = countKnotVectors;
+% loop over control points
+for ictrlp = 1:numIdxControlPoints
+    ctrlp = controlPoints_coor{ictrlp};
+    nctrlp = idxControlPoints{ictrlp}(1,2);
+    
+    for n = 1 : nctrlp
+        % search for control points in coor 
+        % and get its index
+        index = find ( vecnorm(coor(:,2:3)-ctrlp(n,1:2),2,2)<tol);
+        idxControlPoints{ictrlp}(1,n+2) = index;
+        
+        % update nodes weights and type 
+        coor(index,4) = ctrlp(n,3);
+        coor(index,5) = 2;
+    end
+end
+
+coor(coor(:,5) == 1,7) = -1;
 
 % loop over nodes, excluding control points
 for ii = find(coor(:,5) == 1)'
@@ -424,20 +445,6 @@ for ikv = 1:numKnotVectors
     idx = idx + 2;  
 end
 
-numIdxControlPoints = countKnotVectors;
-for ictrlp = 1:numIdxControlPoints
-    ctrlp = controlPoints_coor{ictrlp};
-    nctrlp = idxControlPoints{ictrlp}(1,2);
-    
-    for n = 1 : nctrlp
-        
-        a = find ( abs(coor(:,2)-ctrlp(n,1))<tol);
-        b = find ( abs(coor(:,3)-ctrlp(n,2))<tol);
-        indices = intersect(a,b);
-        
-        idxControlPoints{ictrlp}(1,n+2) = indices';
-    end
-end
 
 end
 
