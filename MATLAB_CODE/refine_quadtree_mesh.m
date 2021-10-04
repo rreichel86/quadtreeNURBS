@@ -43,16 +43,13 @@ figure
 hold on 
 
 %% Quadtree decomposition
-
 % Get NURBS curve
 data = Quadtree.Node{1,1};
 NURBS = data{3};
 
-% [Quadtree] = QuadtreeMerge(Quadtree,seedingPoints_merge);
 [Quadtree] = QuadtreeSplit(Quadtree,NURBS,seedingPoints_splitt);
 
 [Quadtree] = QuadtreeBalance(Quadtree,NURBS);
-
 [Quadtree] = check_leaf(Quadtree);
 
 %% Extract polygonal elements 
@@ -63,5 +60,5 @@ NURBS = data{3};
 
 [nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] = splittIntoSections(nnode,coor,numel,connectivity,...
                                                                     numKnotVectors,knotVectors,maxnknots,idxControlPoints);
-
+                                                  
 end

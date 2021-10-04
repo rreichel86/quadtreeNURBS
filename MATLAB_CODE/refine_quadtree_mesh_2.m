@@ -37,14 +37,12 @@ function [Quadtree,nnode,coor,numsec,maxnsec,sections,ord,knots,wgt] = refine_qu
 %% Quadtree decomposition
 % Get NURBS curve
 data = Quadtree.Node{1,1};
-NURBS.degree = data{3};
-NURBS.knots  = data{4};
-NURBS.controlPoints = data{5};
-NURBS.weights = data{6};
+NURBS = data{3};
 
 [Quadtree] = QuadtreeSplit(Quadtree,NURBS,seedingPoints);
 
 [Quadtree] = QuadtreeBalance(Quadtree,NURBS);
+[Quadtree] = check_leaf(Quadtree);
 
 %% Extract polygonal elements 
 [nnode,coor,numel,connectivity,~,...
