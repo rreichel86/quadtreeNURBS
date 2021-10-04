@@ -39,19 +39,32 @@ numRef = 0;
 NURBS = hRefinement1d(NURBS,numRef);     
 
 %% Plot NURBS curve
-figure(1)
-hold on
 if f_plotNURBS == 1
-    plot(NURBS_pts(:,1),NURBS_pts(:,2),'r','LineWidth',2.5);
+    
+    xmin = min(Boundary(1,:));
+    xmax = max(Boundary(1,:));
+    ymin = min(Boundary(2,:));
+    ymax = max(Boundary(2,:));
+    
+    figure(1)
+    xticks([])
+    yticks([])
+    daspect([1 1 1])
+    box on
+    set(gca,'TickLabelInterpreter','latex','FontSize',18,'FontName','Times');
+    axis square
+    axis([xmin xmax ymin ymax])
     hold on
-    plot(NURBS.controlPoints(1, :), NURBS.controlPoints(2, :), 'b-.','LineWidth',1);
-    plot(NURBS.controlPoints(1, :), NURBS.controlPoints(2, :), 'o','Color','red','MarkerFaceColor','r','MarkerSize',6);
+    
+    plot(NURBS.controlPoints(1, :), NURBS.controlPoints(2, :),'b-.','LineWidth',1);
     hold on 
-    patch(Boundary(1,:),Boundary(2,:), 'w','FaceAlpha',0)
+    plot(NURBS_pts(:,1),NURBS_pts(:,2),'r','LineWidth',2.0);
+    hold on
+    plot(NURBS.controlPoints(1, :), NURBS.controlPoints(2, :),'o','Color','red','MarkerFaceColor','r','MarkerSize',6);
+    hold on
+    patch(Boundary(1,:),Boundary(2,:), 'w','FaceAlpha',0,'LineWidth',1.5)
+    
 end
-box on
-axis square
-
 
 %% Quadtree decomposition
 k_min = 2;
