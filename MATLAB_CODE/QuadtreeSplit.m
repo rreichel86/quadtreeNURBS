@@ -2,10 +2,13 @@ function [Quadtree] = QuadtreeSplit(Quadtree,NURBS,seedingPoints)
 
 % number of seeding points
 nSeedingPoints = size(seedingPoints,1);
+splitted = [];
+fatherWasSplitted =  0;
 
 for i = 1:nSeedingPoints
     
     idx = 1;
+    fatherWasSplitted =  0;
     while true
         
         idxChildren = Quadtree.getchildren(idx);
@@ -26,12 +29,17 @@ for i = 1:nSeedingPoints
         end
         
     end
+  
+    idxFather = Quadtree.Parent(idx);
     
-    %     idxRef = Quadtree.Node{idx,1}{2,1};
-    %     idxFather = Quadtree.Parent(idx);
-    %     idxLoc = ref2loc(idxRef);
+    if  any (splitted == idxFather)
+        fatherWasSplitted =  1;
+    end
     
-    [Quadtree] = Decompose_helper(Quadtree,NURBS,idx);
+    if fatherWasSplitted ~= 1
+        [Quadtree] = Decompose_helper(Quadtree,NURBS,idx);
+        splitted = [splitted idx];
+    end
     
 end
 
