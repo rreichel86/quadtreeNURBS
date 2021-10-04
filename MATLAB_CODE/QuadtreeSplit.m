@@ -8,12 +8,6 @@ for i = 1:nSeedingPoints
     idx = 1;
     while true
         
-        %         if idx == 1
-        %             idxChildren = Quadtree.Node{idx,1}{2,1};
-        %         else
-        %             idxChildren = Quadtree.Node{idx,1}{11,1};
-        %         end
-        
         idxChildren = Quadtree.getchildren(idx);
         
         if isempty(idxChildren)
