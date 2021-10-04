@@ -12,6 +12,8 @@ function [Q_aux, Quadtree,numInterPoints] = splitting(Quadtree,Q_aux,Quad,...
 % 
 % -------------------------------------------------------------------------
 
+tol = 1e-10;
+numIntersections = 0;
 % array that contains intersection points
 Ip = []; 
 % array that contains corresponding intersection points location
@@ -32,8 +34,22 @@ else % other levels of decomposition
     refFQ = Q_aux(1:end-2);
     idxFQ = findQ(Quadtree,refFQ);
     data = Quadtree.get(idxFQ);
+    intersections = data{5};
+    numIntersections = length(intersections);
     NURBS = data{6};
 end
+
+if  isempty(NURBS) && numIntersections == 1
+    
+    vertexNum = [4,1,3,2];
+    intersectionPoint = data{3};
+   
+    if norm(Quad(:,vertexNum(i)) - intersectionPoint(1:2)) < tol
+      Ip = data{3};
+      newKnotVals = data{5}; 
+    end     
+    
+end     
 
 if ~isempty(NURBS)
     
