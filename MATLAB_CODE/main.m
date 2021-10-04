@@ -67,37 +67,6 @@ end
 [nnode,coor,numel,connectivity,maxnel,...
  numKnotVectors,knotVectors,maxnknots,idxControlPoints] = extractElements(Quadtree);
 
-%% Plot polygonal elements 
-% if f_plotPolyElmt == 1
-%     for ielno = 1:numel
-%         
-%         region_nro = connectivity{ielno}(3);
-%         nel = connectivity{ielno}(6);
-%         elmt = connectivity{ielno}(7:6+nel);
-%         sc = connectivity{ielno}(end);
-%         
-%         ex = coor( elmt, 2);
-%         ey = coor( elmt, 3);
-%         
-%         sc_x = coor( sc, 2);
-%         sc_y = coor( sc, 3);
-%         
-%         % determine if a polygonal element is
-%         % inside or outside the region enclosed 
-%         % by the NURBS curve
-%         if region_nro == 1
-%         %if sum(coor( elmt, 7)) < 0 % outside
-%           color = 'red';
-%         else % inside
-% %           continue
-%           color = 'blue';
-%         end
-%         
-%         patch(ex,ey, color,'FaceAlpha',.5)
-%         hold on
-%         plot(sc_x, sc_y, 'k*')
-%     end
-% end
 
 %% Splitt polygonal elements into section
 [nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] = splittIntoSections(nnode,coor,numel,connectivity,...
