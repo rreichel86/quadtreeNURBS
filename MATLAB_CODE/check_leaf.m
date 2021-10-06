@@ -1,10 +1,16 @@
-function [Quadtree] = check_leaf(Quadtree)
+function [Quadtree] = check_leaf(Quadtree,dbg)
 % check_leaf
 
 
-figure(2)
-axis square
-hold on
+if ~exist('dbg','var')
+    dbg = 0;
+end
+
+if dbg == 1
+    figure(2)
+    axis square
+    hold on
+end 
 
 tol = 1e-10;
 % get Quadtree leaves
@@ -111,10 +117,11 @@ for i = 1:numLeaves
             % replace quad vertex by its projection
             quadVertices(:,vertexNum) = newVertexCoor;
             
-            % plot vertex
-            plot(quadVertices(1,vertexNum),quadVertices(2,vertexNum), 'o','Color','k','MarkerFaceColor','k','MarkerSize',8);
-            % plot quad
-            patch(quadVertices(1,:),quadVertices(2,:),'r','FaceAlpha',0.1,'LineStyle','-','LineWidth',1);
+            % plot newVertex and quad (current leaf)
+            if dbg == 1
+                plot(quadVertices(1,vertexNum),quadVertices(2,vertexNum), 'o','Color','k','MarkerFaceColor','k','MarkerSize',8);
+                patch(quadVertices(1,:),quadVertices(2,:),'r','FaceAlpha',0.1,'LineStyle','-','LineWidth',1);
+            end
             
             % update intersection points 
             data{3} = [newVertexCoor; u];
@@ -358,9 +365,10 @@ for i = 1:numLeaves
             % update data stored in current leaf's Neigbour
             Quadtree = Quadtree.set(idx, data);
             
-            
-            % plot quad
-            patch(quadVertices(1,:),quadVertices(2,:),'g','FaceAlpha',0.1,'LineStyle','-','LineWidth',1);
+            % plot quad (current leaf's Neighbour)
+            if dbg == 1
+                patch(quadVertices(1,:),quadVertices(2,:),'g','FaceAlpha',0.1,'LineStyle','-','LineWidth',1);
+            end
         end
     end
 end
