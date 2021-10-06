@@ -83,12 +83,13 @@ for i = 1:num_intrsc_2
     % points that define the intersected segment. It obtains the first
     % approximation of the solution as output (u0 )
     
-    [u0 ,flag] = findIntrscApprox(intrsc_2((2*i-1):2*i),degree,knots,...
+    [u0 ,flag] = findIntrscApprox(intrsc_2((2*i-1):(2*i-1)),degree,knots,...
         controlPoints,weights,A,B,StartValues(:,1:numStartValues));
     if flag == 1
         numStartValues = numStartValues + 1;
         StartValues(:,numStartValues) = u0;
     end
+       
 end
 
 for i = 1:num_intrsc_1
@@ -144,7 +145,7 @@ for i = 1:numStartValues
             
             % Avoiding to obtain multiplicities
             
-            if numIntrsc == 0 || any(abs(intrscU(1:numIntrsc)-u) > tol)  
+            if numIntrsc == 0 || all(abs(intrscU(1:numIntrsc)-u) > tol)  
                 alpha = (C - A)'*tVec/(tVec'*tVec);
                 
                 % check if intersection point lies on line segment AB
