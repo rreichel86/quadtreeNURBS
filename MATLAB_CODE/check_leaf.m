@@ -187,7 +187,7 @@ for i = 1:numLeaves
                     
                     if Quadtree.isleaf(idxNQ) && levelLeaf > levelNQ
                         
-                        [Quadtree] = Decompose_helper(Quadtree,NURBS,idxNQ);
+%                         [Quadtree] = Decompose_helper(Quadtree,NURBS,idxNQ);
                     
                     end
                     
