@@ -43,7 +43,7 @@ function [Quadtree,nnode,coor,numsec,maxnsec,sections,ord,knots,wgt] = nurbs_qua
 
 %% Quadtree decomposition
 [Quadtree] = nurbs_brep_quadtree(k_min,NURBS,Boundary);
-
+[Quadtree] = check_leaf(Quadtree);
 %% Extract polygonal elements 
 [nnode,coor,numel,connectivity,~,...
  numKnotVectors,knotVectors,idxControlPoints] = extractElements_2(Quadtree);
