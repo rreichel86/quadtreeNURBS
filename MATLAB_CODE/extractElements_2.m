@@ -125,7 +125,7 @@ for i = 1:numleaves
     % polygon vertices
     poly = zeros(2, numPolyVertices);
     % intersection points indices
-    idxIntersectionPoints = zeros(1,2);
+    idxIntersectionPoints = zeros(1,numIntersectionPoints);
     
     % arrange quadVertices, midPoints and intersectionPoints CCW in poly
     iMp = 0;
@@ -229,7 +229,7 @@ for i = 1:numleaves
     end
     
     % check if leaf has intersections
-    if numIntersectionPoints == 0 || numIntersectionPoints == 1
+    if numIntersectionPoints == 0
         
         % intersection points
         intersectionPoints = [];
@@ -238,6 +238,16 @@ for i = 1:numleaves
          % quad vertices
         coordinates(1:2,1:4) = quadVertices; % nodal x-coor and y-coor
         coordinates(4,1:4) = 1;       % type  
+        
+%     elseif  numIntersectionPoints == 1
+%          
+%         % intersection points
+%         intersectionPoints = [];
+%         % nodal coordinates
+%         coordinates = zeros(6, 4);
+%          % quad vertices
+%         coordinates(1:2,1:4) = quadVertices; % nodal x-coor and y-coor
+%         coordinates(4,1:4) = 1;       % type 
     else
         % degree
         degree = NURBS.degree;
@@ -247,10 +257,22 @@ for i = 1:numleaves
         controlPoints = NURBS.controlPoints;
         % weights
         weights = NURBS.weights;
-        % intersections
-        intersections = data{5};
-        % intersection points
-        intersectionPoints = intersectionPoints(1:2,:);
+        
+        if numIntersectionPoints == 1
+            % intersections
+            iknot = data{5}(1);
+            jknot = data{5}(1);
+            % intersection points
+            intersectionPoints = [intersectionPoints(1:2,:),intersectionPoints(1:2,:)];
+            
+        elseif numIntersectionPoints == 2
+            % intersections
+            iknot = data{5}(1);
+            jknot = data{5}(2);
+            % intersection points
+            intersectionPoints = intersectionPoints(1:2,:);
+            
+        end
         % number of knots
         nknots = length(knots);
         % number of control points / weights
@@ -258,7 +280,7 @@ for i = 1:numleaves
         
         % counter for the number of knot vectors
         countKnotVectors = countKnotVectors + 1;
-        knotVectors{countKnotVectors} = [countKnotVectors,degree,intersections,nknots,knots];
+        knotVectors{countKnotVectors} = [countKnotVectors,degree,iknot,jknot,nknots,knots];
         controlPoints_coor{countKnotVectors} = [controlPoints',weights'];
         
         idxControlPoints{countKnotVectors} = zeros(1,ncp+2);
@@ -283,12 +305,21 @@ for i = 1:numleaves
     
     % check if leaf has intersections
     % leaf is splitted in 2 elements if it has 2 intersection points
-    if numIntersectionPoints == 0 || numIntersectionPoints == 1
+    if numIntersectionPoints == 0 
         elements{ielno} = poly(1:2,1:numPolyVertices);
         % element number
         connectivity{ielno}(1,1) = ielno;
         % knot vector number
         connectivity{ielno}(1,2) = 0;
+        % region number
+        connectivity{ielno}(1,3) = 1;
+        ielno = ielno+1;
+    elseif  numIntersectionPoints == 1
+        elements{ielno} = poly(1:2,1:numPolyVertices);
+        % element number
+        connectivity{ielno}(1,1) = ielno;
+        % knot vector number
+        connectivity{ielno}(1,2) = countKnotVectors;
         % region number
         connectivity{ielno}(1,3) = 1;
         ielno = ielno+1;
@@ -337,7 +368,7 @@ coor(1:numcoor0,2:7) = tmp_coor;
 % compute scaling center of polygonal elements
 for iel = 1:numel
     % compute kernel
-    kernel = computePolygonKernel( elements{iel}' );
+    kernel = computePolygonKernel( elements{iel}' ,0);
     % compute scaling center
     % compute centroid of the kernel
     [scx,scy] = centroid(polyshape(kernel,'Simplify',false));
@@ -366,6 +397,18 @@ for ictrlp = 1:numIdxControlPoints
     end   
 end
 
+indices = zeros(size(intersections_coor,1),1);
+% loop over intersection points
+for k = 1:size(intersections_coor,1)
+    % search for intersection point in coor
+    % and get its index
+    index = find( vecnorm(coor(:,2:3)-intersections_coor(k,1:2),2,2) < tol);
+    indices(k,1) = index;
+    
+    % update type
+    coor(index,5) = 2;
+end
+
 coor(coor(:,5) == 1,7) = -1;
 
 % loop over nodes, excluding control points
@@ -382,14 +425,7 @@ end
 % delete tmp_coor
 clearvars tmp_coor
 
-indices = zeros(size(intersections_coor,1),1);
-% loop over intersection points
-for k = 1:size(intersections_coor,1)
-    % search for intersection point in coor
-    % and get its index
-    index = find( vecnorm(coor(:,2:3)-intersections_coor(k,1:2),2,2) < tol);
-    indices(k,1) = index;
-end
+
 
 maxnel = 0;
 % loop over elements
