@@ -27,6 +27,7 @@ refQ = position(l,k,i,pos_aux,Quadtree);
 Q_aux = refQ;
 
 % get NURBS curve
+% NOTE: it doesn't work if the NURBS curve encloses a non star-shaped domain !!
 if k == 1 % first level of decomposition
     data = Quadtree.get(1);
     NURBS = data{3};
@@ -39,7 +40,8 @@ else % other levels of decomposition
     NURBS = data{6};
 end
 
-if  isempty(NURBS) && numIntersections == 1
+% NOTE: when does this happen?
+if  isempty(NURBS) && numIntersections == 1 
     
     vertexNum = [4,1,3,2];
     intersectionPoint = data{3};
