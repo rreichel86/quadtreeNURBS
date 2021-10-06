@@ -13,8 +13,8 @@ elseif flag == 2
                      -1 -1 0 1 1 1 0 -1 -1];
     knots = [0 0 0 0.25 0.25 0.5 0.5 0.75 0.75 1 1 1];  
     weights = [1 0.707 1 0.707 1 0.707 1 0.707 1];
-    Boundary = [-2.5 2.5 2.5 -2.5;...
-                -2.5 -2.5 2.5 2.5];
+    Boundary = [-5 5 5 -5;...
+                -5 -5 5 5];
 
 elseif flag == 3
     degree = 2;
@@ -52,21 +52,19 @@ elseif flag == 6
 
 elseif flag == 7
     degree = 3;
-%     controlPoints = [ 0 -5 -2 0 2 5 0;...
-%                    -3 2 5 2 5 2 -3];
-    controlPoints = [ 0 -5 -2 0 2 5 0;...
-                     -4 1 4 2 4 1 -4];
+    controlPoints = [ 0 -5 -2 0 2 5  0;...
+                     -4  1  4 1 4 1 -4];
     knots = [0 0 0 0 0.5 0.5 0.5 1 1 1 1];  
     weights = [1 2 2 1 2 2 1];
-    Boundary = [-6 -6 6 6;...
-                 6 -6 -6 6];
+    
+    controlPoints = [10/12 0; 0 10/12]*controlPoints;
+    
+            
+    Boundary=[-5 5 5 -5;...
+          -5 -5 5 5];            
 
 elseif flag == 8
     degree = 2;
-%     controlPoints=[  0  1 1;...
-%                      1  1 0];
-%     knots=[0.25 0.25 0.25 0.5 0.5 0.5];  
-%     weights=[1 0.707 1];
     
     controlPoints = [ 0 -1 -1 -1 0 1 1 1 0;...
                      -1 -1 0 1 1 1 0 -1 -1];
@@ -77,16 +75,15 @@ elseif flag == 8
                 0 0 5 5]; 
 
 elseif flag == 9
-    degree = 2;
-    controlPoints = [ 0 -1 -1 -1 0 1 1 1 0;...
-                     -1 -1 0 1 1 1 0 -1 -1];
-    knots = [0 0 0 0.25 0.25 0.5 0.5 0.75 0.75 1 1 1];  
-    weights = [1 sqrt(2)/2 1 sqrt(2)/2 1 sqrt(2)/2 1 sqrt(2)/2 1];
+    degree = 4;
+    controlPoints = [ 5 7 8 5.5 6 4 4.5 2 3 5;...
+                      3 3 6 7 4 4  7 6 3 3];
+    knots = [0 0 0 0 0 0.357 0.429 0.5 0.571 0.643 1 1 1 1 1];  
+    weights = [1 1 1 1 1 1 1 1 1 1];
+    Boundary = [0 10 10 0;...
+                0 0  10 10];
     
-    controlPoints = [8 0; 0 8]*controlPoints + [12;32];
-        
-    Boundary = [0 48 48 0;...
-                0 44 60 44];
+            
 end
 
     NURBS.degree = degree;
