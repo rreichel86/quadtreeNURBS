@@ -6,6 +6,11 @@ leaves = Quadtree.findleaves();
 numLeaves = length(leaves);
 
 figure(2)
+xticks([])
+yticks([])
+daspect([1 1 1])
+box on
+set(gca,'TickLabelInterpreter','latex','FontSize',18,'FontName','Times');
 axis square
 hold on
 
@@ -34,9 +39,11 @@ for i = 1:numLeaves
     Quad = data{7};
     
     % check if leaf has intersections
-    if isempty(intersections) || length(intersections) == 1
+    if isempty(intersections) %|| length(intersections) == 1
         % Plot Quad
         patch(Quad(1,:),Quad(2,:),'w','FaceAlpha',0,'LineStyle','-','LineWidth',1);
+    elseif length(intersections) == 1  
+        patch(Quad(1,:),Quad(2,:),'r','FaceAlpha',0,'LineStyle','-','LineWidth',1);
     else
         % Obtain definition of the NURBS curve contained in each leaf
         NURBS = data{6};
