@@ -51,7 +51,7 @@ function [Quadtree,nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] =
 [Quadtree] = check_leaf(Quadtree);
 %% Extract polygonal elements 
 [nnode,coor,numel,connectivity,~,...
- numKnotVectors,knotVectors,maxnknots,idxControlPoints] = extractElements_elevateOrder0(Quadtree);
+ numKnotVectors,knotVectors,maxnknots,idxControlPoints] = extractElements_elevateOrder(Quadtree);
 
 %% Splitt polygonal elements into section
 

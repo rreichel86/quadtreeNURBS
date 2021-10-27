@@ -1,5 +1,5 @@
 function [numcoor,coor,numel,connectivity,maxnel,...
-          numKnotVectors,knotVectors,maxnknots,idxControlPoints] = extractElements_elevateOrder0(Quadtree)
+          numKnotVectors,knotVectors,maxnknots,idxControlPoints] = extractElements_elevateOrder(Quadtree)
 % extractElements: get polygonal elements from Quadtree data structure(with
 % insertion of idxLeaf in the connectivity matrix)
 %
