@@ -49,7 +49,7 @@ newLeaves = zeros(1, 4*length(leaves));
 for i = 1:length(leaves)
     [Quadtree] = Decompose_helper(Quadtree,NURBS,leaves(i));
     % get children pointers of current Quad 
-    newLeaves(4*i-3:4*i) = Quadtree.Node{leaves(i),1}{11,1};
+    newLeaves(4*i-3:4*i) = Quadtree.Node{leaves(i),1}{8,1};
 end
 
 % chech if new Quadtree leaves are shar-shaped

@@ -66,7 +66,8 @@ while l <= length(idxLeaves)
                 [Quadtree] = Decompose_helper(Quadtree,NURBS,idxLeaf);
                 
                 is_splitted = 1;
-                idxNewLeaves = Quadtree.Node{idxLeaf,1}{11,1}';
+                % idxNewLeaves = Quadtree.Node{idxLeaf,1}{11,1}';
+                idxNewLeaves = Quadtree.getchildren(idxLeaf)';
                 % insert current Quad children into array with leaves indices
                 idxLeaves = [idxLeaves; idxNewLeaves];
                 
@@ -85,7 +86,8 @@ while l <= length(idxLeaves)
             % neighbour Quad level
             levelNQ = length(refNQ);
             % is neighbour Quad a leaf?
-            children = Quadtree.Node{iNQs(i),1}{11,1}';
+            % children = Quadtree.Node{iNQs(i),1}{11,1}';
+            children = Quadtree.getchildren(iNQs(i));
             if isempty(children) % yes
 
                 % Check if neighbour Quad is larger than 
@@ -108,13 +110,15 @@ function splitt = splittQ(Quadtree,idxQ,dir,idxNQ)
 
 splitt = 0;
 % check if current Quad is a leaf
-children = Quadtree.Node{idxQ,1}{11,1}';
+% children = Quadtree.Node{idxQ,1}{11,1}';
+children = Quadtree.getchildren(idxQ);
 if ~isempty(children)
     return % no
 end
 
 % has neighbour Quad children ?
-children = Quadtree.Node{idxNQ,1}{11,1}';
+% children = Quadtree.Node{idxNQ,1}{11,1}';
+children = Quadtree.getchildren(idxNQ);
 if isempty(children)
     return % no
 end
@@ -129,8 +133,10 @@ elseif dir == 4 % North NQ
     idx = children([2,4]); % SW and SE children
 end
 % check if the corresponding neighbour Quad child has also children
-child_1 = Quadtree.Node{idx(1),1}{11,1};
-child_2 = Quadtree.Node{idx(2),1}{11,1};
+% child_1 = Quadtree.Node{idx(1),1}{11,1};
+child_1 = Quadtree.getchildren(idx(1));
+% child_2 = Quadtree.Node{idx(2),1}{11,1};
+child_2 = Quadtree.getchildren(idx(2));
 if ~isempty(child_1) || ~isempty(child_2)
     splitt = 1;
 end

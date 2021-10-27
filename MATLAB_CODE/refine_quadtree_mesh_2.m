@@ -37,55 +37,12 @@ function [Quadtree,nnode,coor,numsec,maxnsec,sections,ord,knots,wgt] = refine_qu
 %% Quadtree decomposition
 % Get NURBS curve
 data = Quadtree.Node{1,1};
-NURBS.degree = data{3};
-NURBS.knots  = data{4};
-NURBS.controlPoints = data{5};
-NURBS.weights = data{6};
+NURBS = data{3};
 
-% number of seeding points
-nSeedingPoints = size(seedingPoints,1);
-
-for i = 1:nSeedingPoints
-    
-    idx = 1;
-    while true
-        
-        if idx == 1
-            idxChildren = Quadtree.Node{idx,1}{2,1};
-        else
-            idxChildren = Quadtree.Node{idx,1}{11,1};
-        end
-        
-        if isempty(idxChildren)
-            break
-        end
-        
-        for j = 1:4
-            
-            Quad = Quadtree.Node{idxChildren(j),1}{10,1}(1:2,1:4);
-            
-            minCoords = [Quad(1,1),Quad(2,1)];
-            maxCoords = [Quad(1,2),Quad(2,3)];
-            
-            ptInQuad = isPointInQuad(minCoords,maxCoords,seedingPoints(i,:));
-            
-            if ptInQuad == 1
-                idx = idxChildren(j);
-                break
-            end
-        end
-        
-    end
-    
-    idxRef = Quadtree.Node{idx,1}{2,1};
-%     idxFather = Quadtree.Parent(idx);
-%     idxLoc = ref2loc(idxRef);
-    
-    [Quadtree] = Decompose_helper(Quadtree,NURBS,idx);
-    
-end
+[Quadtree] = QuadtreeSplit(Quadtree,NURBS,seedingPoints);
 
 [Quadtree] = QuadtreeBalance(Quadtree,NURBS);
+[Quadtree] = check_leaf(Quadtree);
 
 %% Extract polygonal elements 
 [nnode,coor,numel,connectivity,~,...

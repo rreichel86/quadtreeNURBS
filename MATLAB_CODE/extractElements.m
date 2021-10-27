@@ -7,18 +7,18 @@ function [numcoor,coor,numel,connectivity,maxnel,...
 %
 % OUTPUT:
 % numcoor -------------------- number of coordinates = number of nodes
-% coor ----------------------- nodes coordinates and weights 
+% coor ----------------------- nodes coordinates and weights
 % coor = [number, x-coor, y-coor, weight, type, which_region, inside_region]
 %
 %                              type: 1 -  node
 %                                    2 - control point or intersection point
 %                              which_region: region number
 %                              inside_region: 0 - at the boundary
-%                                             1 - inside 
+%                                             1 - inside
 %                                            -1 - outside
 %
 % numel ---------------------- number of elements
-% connectivity --------------- elements connectivity matrix as nel-tupel of 
+% connectivity --------------- elements connectivity matrix as nel-tupel of
 %                              nodes, where the first three entries
 %                              iel - element number
 %                              ikv - knot vector number
@@ -39,17 +39,15 @@ function [numcoor,coor,numel,connectivity,maxnel,...
 % knotVectors = [ikv, degree, icp, ecp, nknots, knot_1,...,knot_nknots]
 % maxnknots ------------------ maximun number of knot on any knot vector
 % idxControlPoints ----------- control points indices
-% idxControlPoints = [icp, ncp, idx_1,...idx_ncp] 
+% idxControlPoints = [icp, ncp, idx_1,...idx_ncp]
 %
 % -----------------------------------------------------------------------------
 
-%% 
-% Get NURBS curve 
+tol = 1e-10;
+%%
+% Get NURBS curve
 data = Quadtree.Node{1,1};
-NURBS.degree = data{3};
-NURBS.knots  = data{4};
-NURBS.controlPoints = data{5};
-NURBS.weights = data{6};
+NURBS = data{3};
 
 % compute point of the NURBS curve
 NURBS_pts = CalculateNURBS(NURBS);
@@ -78,164 +76,191 @@ connectivity = cell(numel,1);
 intersections_coor = cell(numleaves,1);
 idxControlPoints = cell(numleaves,1);
 
-j = 1;
+% counter for the number of elements
+ielno = 1;
 % counter for the number of knot vectors
 countKnotVectors = 0;
-maxnknots = 0;% maximun number of knot on any knot vector
-% loop over leaves 
+% maximun number of knot on any knot vector
+maxnknots = 0;
+% loop over leaves
 for i = 1:numleaves
     
-     % current Quad reference
-    refLeaf = Quadtree.Node{leaves(i),1}{2,1}(1:end);
-    intersections = Quadtree.Node{leaves(i),1}{5,1};
+    idxLeaf = leaves(i);
     
+    % get data stored in current leaf
+    
+    % 1. Quad name
+    % 2. Quad location
+    % 3. intersections points (physical space)
+    % 4.
+    % 5. intersection in parametric space of the curve
+    % 6. NURBS definition
+    %    NURBS degree
+    %    NURBS control points
+    %    NURBS Knot vector
+    %    NURBS weights
+    % 7. Quad definition
+    % 8. Pointer to the children
+    
+    data = Quadtree.Node{idxLeaf,1};
+    
+    % leaf reference
+    refLeaf = data{2};
+    % quad vertices
+    quadVertices = data{7};
+    % number of quad vertices
+    numQuadVertices = size(quadVertices,2);
+    % intersecion points
+    intersectionPoints = data{3};
+    % number of intersection points
+    numIntersectionPoints = size(intersectionPoints,2);
+    % intersection points location
+    locIntersectionPoints = data{4};
+
     % Check neighborhood of current leaf
     % get mid points if they exist
-    [midPoints] = getMidPoints(Quadtree,leaves(i),refLeaf);
+    [numMidPoints,midPoints,locMidPoints] = getMidPoints(Quadtree,idxLeaf,refLeaf);
 
-    if isempty(intersections) || length(intersections) == 1
-        
-        % quad's geometry
-        quad = Quadtree.Node{leaves(i),1}{10,1}(1:2,1:4);
+    % number of polygon's vertices
+    numPolyVertices = numQuadVertices + numMidPoints + numIntersectionPoints;
+    % polygon vertices
+    poly = zeros(2, numPolyVertices);
+    % intersection points indices
+    idxIntersectionPoints = zeros(1,2);
+
+    % arrange quadVertices, midPoints and intersectionPoints CCW in poly 
+    iMp = 0;
+    iIp = 0;
+    nPv = 0; 
+    for iQv = 1:numQuadVertices
+        % current edge's endpoint
+        A = quadVertices(:,iQv);
+        % insert quad's edge endpoint 
+        nPv = nPv + 1;
+        poly(:,nPv) = A;
+        % check if a mid point lies on the current edge
+        if numMidPoints ~= 0
+            iMp = find(locMidPoints == iQv);
+            if isempty(iMp)
+                iMp = 0;
+            end
+        end
+        % check if an intersection point lies on the current edge
+        if numIntersectionPoints ~= 0
+            iIp = find(locIntersectionPoints == iQv);
+            if isempty(iIp)
+                iIp = 0;
+            end
+        end
+        % a mid point and an intersection point lie on the current edge
+        if iMp ~= 0 && iIp ~= 0
+            
+            % mid point 
+            M = midPoints(:,iMp); 
+            % intersection point 
+            P = intersectionPoints(1:2,iIp);
+            
+            % distance to current edge's endpoint
+            dist_AP = norm(P-A);
+            dist_AM = norm(M-A);
+            dist_MP = norm(P-M);
+            
+            % is P closer to A than M?
+            if dist_AP < dist_AM
+                % check if P == A?
+                if dist_AP < tol
+                    idxIntersectionPoints(iIp) = nPv;
+                else
+                    % insert intersection point
+                    nPv = nPv + 1;
+                    poly(:,nPv) = P;
+                    idxIntersectionPoints(iIp) = nPv;
+                end
+                % insert mid point
+                nPv = nPv + 1;
+                poly(:,nPv) = M;
+            else
+                % insert mid point
+                nPv = nPv + 1;
+                poly(:,nPv) = M;
+                % check if P == M ?
+                if dist_MP < tol
+                    idxIntersectionPoints(iIp) = nPv;
+                else
+                    % insert intersection point
+                    nPv = nPv + 1;
+                    poly(:,nPv) = P;
+                    idxIntersectionPoints(iIp) = nPv;
+                end
+            end
+            
+        %  a mid point lies on the current edge  
+        elseif  iIp ~= 0
+
+            % intersection point 
+            P = intersectionPoints(1:2,iIp);
+            
+            % distance to current edge's endpoint
+            dist_AP = norm(P-A);
+            
+            % check if P == A?
+            if dist_AP < tol
+                idxIntersectionPoints(iIp) = nPv;
+            else
+                % insert intersection point 
+                nPv = nPv + 1;
+                poly(:,nPv) = P;
+                idxIntersectionPoints(iIp) = nPv;
+            end
+            
+        % a mid point lies on the current edge    
+        elseif  iMp ~= 0
+            
+            % mid point 
+            M = midPoints(:,iMp);
+            % insert mid point 
+            nPv = nPv + 1;
+            poly(:,nPv) = M;
+        end  
+    end
+    
+    % update number of polygon's vertices
+    if (nPv ~= numPolyVertices)
+        numPolyVertices = nPv;
+    end
+    
+    % check if leaf has intersections
+    if numIntersectionPoints == 0 || numIntersectionPoints == 1
         
         % intersection points
         intersectionPoints = [];
-
-        
-        coordinates = [quad;...       % nodal x-coor and y-coor
-                       ones(1,4);...  % weights
-                       ones(1,4);...  % type 
-                       zeros(1,4);... % which_region
-                       -1*ones(1,4)]; % inside_region
-                   
-        element = [quad,midPoints];
-        
-    elseif isempty(Quadtree.Node{leaves(i),1}{3,1}) == 1
-        
-        % quad's geometry 
-        quad = Quadtree.Node{leaves(i),1}{10,1}(1:2,1:4);
-        
-        % intersection points
-        intersectionPoints = [Quadtree.Node{leaves(i),1}{7,1}(:,1),Quadtree.Node{leaves(i),1}{7,1}(:,end)];
-        
-        % degree
-        degree = Quadtree.Node{leaves(i),1}{6,1};
-        
-        % knot vector 
-        knots = Quadtree.Node{leaves(i),1}{8,1};
-        
-        % number of knots 
-        nknots = length(knots);
-        
-        % control points
-        controlPoints = Quadtree.Node{leaves(i),1}{7,1};
-        
-        % weights
-        weights = Quadtree.Node{leaves(i),1}{9,1};
-        
-        % number of control points / weights 
-        ncp = length(controlPoints);
-       
-        % maximun number of knots on any knot vector
-        maxnknots = max(maxnknots,nknots);
-        
-        % counter for the number of knot vectors
-        countKnotVectors = countKnotVectors + 1;
-        
-        knotVectors{countKnotVectors} = [countKnotVectors,degree,0,0,nknots,knots];
-        controlPoints_coor{countKnotVectors} = [controlPoints',weights'];
-        
-        idxControlPoints{countKnotVectors} = zeros(1,ncp+2);
-        idxControlPoints{countKnotVectors}(1,1) = countKnotVectors;
-        idxControlPoints{countKnotVectors}(1,2) = ncp;
-        
-        coordinates = [quad, controlPoints;...   % nodal/ctrlPts x-coor and y-coor
-                       ones(1,4), weights;...    % weights
-                       ones(1,4), 2*ones(1,ncp);... % type
-                       zeros(1,4), zeros(1,ncp);... % which_region
-                       -1*ones(1,4), zeros(1,ncp)]; % inside_region
-                       
-        element = [quad,midPoints,intersectionPoints];
-        
-    elseif isempty(Quadtree.Node{leaves(i),1}{4,1}) == 1
-        
-        % quad's geometry 
-        quad = Quadtree.Node{leaves(i),1}{10,1}(1:2,1:4);
-        
-        % intersection points
-        intersectionPoints = [Quadtree.Node{leaves(i),1}{7,1}(:,1),Quadtree.Node{leaves(i),1}{7,1}(:,end)];
-        
-        % degree
-        degree = Quadtree.Node{leaves(i),1}{6,1};
-        
-        % knot vector 
-        knots = Quadtree.Node{leaves(i),1}{8,1};
-        
-        % number of knots 
-        nknots = length(knots);
-        
-        % control points 
-        controlPoints = Quadtree.Node{leaves(i),1}{7,1};
-        
-        % weights
-        weights = Quadtree.Node{leaves(i),1}{9,1};
-        
-        % number of control points / weights
-        ncp = length(controlPoints);
-        
-        % maximun number of knots on any knot vector  
-        maxnknots = max(maxnknots,nknots);
-        
-        % counter for the number of knot vectors
-        countKnotVectors = countKnotVectors + 1;
-        
-        knotVectors{countKnotVectors} = [countKnotVectors,degree,0,0,nknots,knots];
-        controlPoints_coor{countKnotVectors} = [controlPoints',weights'];
-        
-        idxControlPoints{countKnotVectors} = zeros(1,ncp+2);
-        idxControlPoints{countKnotVectors}(1,1) = countKnotVectors;
-        idxControlPoints{countKnotVectors}(1,2) = ncp;
-
-        coordinates = [quad, controlPoints;...   % nodal/ctrlPts x-coor and y-coor
-                       ones(1,4), weights;...    % weights
-                       ones(1,4), 2*ones(1,ncp);... % type
-                       zeros(1,4), zeros(1,ncp);... % which_region
-                       -1*ones(1,4), zeros(1,ncp)]; % inside_region
-                   
-        element = [quad,midPoints,intersectionPoints];
-        
+        % nodal coordinates
+        coordinates = zeros(6, 4);
+         % quad vertices
+        coordinates(1:2,1:4) = quadVertices; % nodal x-coor and y-coor
+        coordinates(4,1:4) = 1;       % type
     else
-
-        % quad's geometry 
-        quad = Quadtree.Node{leaves(i),1}{10,1}(1:2,1:4);
-        
-        % intersection points
-        intersectionPoints = [Quadtree.Node{leaves(i),1}{7,1}(:,1),Quadtree.Node{leaves(i),1}{7,1}(:,end)];
-        
+        % NURBS segment definition
+        NURBS_segment = data{6};
         % degree
-        degree = Quadtree.Node{leaves(i),1}{6,1};
-        
+        degree = NURBS_segment.degree;
         % knot vector
-        knots = Quadtree.Node{leaves(i),1}{8,1};
-        
-         % number of knots
-        nknots = length(knots);
-        
-        % control points 
-        controlPoints = Quadtree.Node{leaves(i),1}{7,1};
-        
+        knots = NURBS_segment.knots;
+        % control points
+        controlPoints = NURBS_segment.controlPoints;
         % weights
-        weights = Quadtree.Node{leaves(i),1}{9,1};
-        
+        weights = NURBS_segment.weights;
+         % intersection points
+        intersectionPoints = [controlPoints(:,1),controlPoints(:,end)];
+        % number of knots
+        nknots = length(knots);
         % number of control points / weights
         ncp = length(controlPoints);
-       
         % maximun number of knots on any knot vector
         maxnknots = max(maxnknots,nknots);
-        
+ 
         % counter for the number of knot vectors
         countKnotVectors = countKnotVectors + 1;
-        
         knotVectors{countKnotVectors} = [countKnotVectors,degree,0,0,nknots,knots];
         controlPoints_coor{countKnotVectors} = [controlPoints',weights'];
         
@@ -243,90 +268,72 @@ for i = 1:numleaves
         idxControlPoints{countKnotVectors}(1,1) = countKnotVectors;
         idxControlPoints{countKnotVectors}(1,2) = ncp;
         
-        coordinates = [quad, controlPoints;...   % nodal/ctrlPts x-coor and y-coor
-                       ones(1,4), weights;...    % weights
-                       ones(1,4), 2*ones(1,ncp);... % type
-                       zeros(1,4), zeros(1,ncp);... % which_region
-                       -1*ones(1,4), zeros(1,ncp)]; % inside_region
-                   
-        element = [quad,midPoints,intersectionPoints];
-        
+        % nodal coordinates
+        coordinates = zeros(6, 4 + ncp);
+        % quad vertices 
+        coordinates(1:2,1:4) = quadVertices; % nodal x-coor and y-coor
+        coordinates(4,1:4) = 1;       % type
+        % control points 
+        coordinates(1:2,5:4+ncp) = controlPoints; % ctrlPts x-coor and y-coor
+        coordinates(4,5:4+ncp)   = 2; % type
     end
     
     intersections_coor{i} = intersectionPoints';% intersection points
     coor{i} = coordinates;% nodal coordinates
     
-    % remove -99 values and arrange the element nodal coordinates
-    % counterclockwise starting from the left bottom corner
-    element = element(element ~= -99);
-    ncol = size(element, 1);
-    element = reshape(element,[2,ncol/2]);
-    x = element(1,:);
-    y = element(2,:);
-    cx = mean(x);
-    cy = mean(y);
-    a = atan2(y - cy, x - cx);% angle counterclockwise from [-pi,pi]
-    [~, order] = sort(a, 'ascend');
-    x_1 = x(order);
-    y_1 = y(order);
-    if a(1,1) > min(a(1,2:end))
-        %if there is any point angle which is less than the left bottom
-        %point than it should be end point
-        element(1,:) = [x_1(1,2:end),x_1(1,1)];
-        element(2,:) = [y_1(1,2:end),y_1(1,1)];
-    else
-        element(1,:) = x_1;
-        element(2,:) = y_1;
-    end
-    %if int_cor empty than there is only one element that was itself leaf
-    %otherwise it would be two elements
-    if isempty(intersectionPoints)    
-        elements{j} = element;
+    % check if leaf has intersections
+    % leaf is splitted in 2 elements if it has 2 intersection points
+    if numIntersectionPoints == 0 || numIntersectionPoints == 1
+        elements{ielno} = poly(1:2,1:numPolyVertices);
         % element number
-        connectivity{j}(1,1) = j;
+        connectivity{ielno}(1,1) = ielno;
         % knot vector number
-        connectivity{j}(1,2) = 0;
-        % region number 
-        connectivity{j}(1,3) = 1;
-        j = j+1;
+        connectivity{ielno}(1,2) = 0;
+        % region number
+        connectivity{ielno}(1,3) = 1;
+        ielno = ielno+1;
     else
-        % loop over intersection points 
-        for k = 1:2
-            % search for intersection points in current element nodal coordinates
-            [b] = find ( abs(intersectionPoints(1,k) - element(1,:))<1e-10);
-            [d] = find (abs(intersectionPoints(2,k) - element(2,:))<1e-10);
-            col(:,k) = intersect(b,d);
-        end
-        % for the control points in Clockwise direction 
-        if col(1,1) < col(1,2)
-            elements{j} = [element(:,[1:col(1,1)]),controlPoints(:,[2:end-1]),element(:,[col(1,2):end])];
-            elements{j+1} = [element(:,[col(1,1):col(1,2)]),fliplr(controlPoints(:,[2:end-1]))];
+        % insert control points and split leaf in 2 elements 
+        I1 = poly(1:2,idxIntersectionPoints(1));
+        
+        % control points are arrange CW
+        if norm( I1 - controlPoints(:,1) ) < tol
+            elements{ielno} = [poly(1:2,1:idxIntersectionPoints(1)),...
+                controlPoints(:,2:end-1),...
+                poly(1:2,idxIntersectionPoints(2):numPolyVertices)];
+            
+            elements{ielno+1} = [poly(1:2,idxIntersectionPoints(1):idxIntersectionPoints(2)),...
+                controlPoints(:,end-1:-1:2)];
         else
-            elements{j} = [element(:,[1:col(1,2)]),fliplr(controlPoints(:,[2:end-1])),element(:,[col(1,1):end])];
-            elements{j+1} = [element(:,[col(1,2):col(1,1)]),controlPoints(:,[2:end-1])];   
+            elements{ielno} = [poly(1:2,1:idxIntersectionPoints(1)),...
+                controlPoints(:,end-1:-1:2),...
+                poly(1:2,idxIntersectionPoints(2):numPolyVertices)];
+            
+            elements{ielno+1} = [poly(1:2,idxIntersectionPoints(1):idxIntersectionPoints(2)),...
+                controlPoints(:,2:end-1)];
         end
         % element numbers
-        connectivity{j}(1,1) = j;
-        connectivity{j+1}(1,1) = j+1;
+        connectivity{ielno}(1,1) = ielno;
+        connectivity{ielno+1}(1,1) = ielno+1;
         % knot vector number
-        connectivity{j}(1,2) = countKnotVectors;
-        connectivity{j+1}(1,2) = countKnotVectors;
-        % region number 
-        connectivity{j}(1,3) = 1;
-        connectivity{j+1}(1,3) = 1;
-        j = j+2;
+        connectivity{ielno}(1,2) = countKnotVectors;
+        connectivity{ielno+1}(1,2) = countKnotVectors;
+        % region number
+        connectivity{ielno}(1,3) = 1;
+        connectivity{ielno+1}(1,3) = 1;
+        ielno = ielno+2;
     end
 end % end loop over leaves
 
 %%
 % intersection point coordinates in matrix form
 intersections_coor = cell2mat(intersections_coor);
-tol = 1e-10;
 
 % coordinates in matrix form
 coor = [coor{:}]';
 % remove repeated coordinates and rearrange them by increasing x-coor value
-tmp_coor = uniquetol(coor,tol,'ByRows',true);
+[~, idxTemp, ~] = uniquetol(coor(:,1:2),tol,'ByRows',true);
+tmp_coor = coor(idxTemp,:);
 
 % number of coordinates without counting scaling centers
 numcoor0 = size(tmp_coor,1);
@@ -335,9 +342,9 @@ numsc = numel;
 % update numcoor
 numcoor = numcoor0 + numsc;
 
-% prealloc coor matrix 
+% prealloc coor matrix
 coor = zeros(numcoor, 7);
-% coordinates 
+% coordinates
 coor(1:numcoor0,2:7) = tmp_coor;
 
 % compute scaling center of polygonal elements
@@ -350,21 +357,39 @@ for iel = 1:numel
     coor(numcoor0+iel,2:7) = [scx,scy,1,1,0,-1];
 end
 
-% coor numbers 
+% coor numbers
 coor(:,1) = (1:numcoor);
+
+numIdxControlPoints = countKnotVectors;
+% loop over control points
+for ictrlp = 1:numIdxControlPoints
+    ctrlp = controlPoints_coor{ictrlp};
+    nctrlp = idxControlPoints{ictrlp}(1,2);
+    
+    for n = 1 : nctrlp
+        % search for control points in coor 
+        % and get its index
+        index = find ( vecnorm(coor(:,2:3)-ctrlp(n,1:2),2,2)<tol);
+        idxControlPoints{ictrlp}(1,n+2) = index;
+        
+        % update nodes weights and type 
+        coor(index,4) = ctrlp(n,3);
+        coor(index,5) = 2;
+    end
+end
+
+coor(coor(:,5) == 1,7) = -1;
 
 % loop over nodes, excluding control points
 for ii = find(coor(:,5) == 1)'
     % Check if current node is inside the bounding box
     if ( isPointInQuad([x_min,y_min], [x_max,y_max], coor(ii,2:3)) == 1 )
-        % Check if current node is also inside 
+        % Check if current node is also inside
         % the region enclosed by the NURBS curve
         pointInPoly = isPointInPolygon(NURBS_pts(1:end-1,1:2), coor(ii,2:3));
         coor(ii,7) = pointInPoly;
     end
 end
-
-
 
 % delete tmp_coor
 clearvars tmp_coor
@@ -372,11 +397,9 @@ clearvars tmp_coor
 indices = zeros(size(intersections_coor,1),1);
 % loop over intersection points
 for k = 1:size(intersections_coor,1)
-    % search for intersection point in coor 
+    % search for intersection point in coor
     % and get its index
-    [a] = find ( abs(coor(:,2)-intersections_coor(k,1))<1e-10);
-    [b] = find ( abs(coor(:,3)-intersections_coor(k,2))<1e-10);
-    index = intersect(a,b);
+    index = find( vecnorm(coor(:,2:3)-intersections_coor(k,1:2),2,2) < tol);
     indices(k,1) = index;
 end
 
@@ -384,31 +407,31 @@ maxnel = 0;
 % loop over elements
 for iel = 1:numel
     % number of nodes per element
-    nel = size(elements{iel},2); 
+    nel = size(elements{iel},2);
     % search for element nodal coordinates in coor
     % and get the corresponding node numbers
     for n = 1 : nel
-        [a] = find ( abs(coor(:,2) - elements{iel}(1,n))<1e-10);
-        [b] = find ( abs(coor(:,3) - elements{iel}(2,n))<1e-10);
-        nodeNumber = intersect(a,b);   
+        [a] = find ( abs(coor(:,2) - elements{iel}(1,n))<tol);
+        [b] = find ( abs(coor(:,3) - elements{iel}(2,n))<tol);
+        nodeNumber = intersect(a,b);
         connectivity{iel}(1,4+n) = nodeNumber;
     end
     % remove repeated values without changing the order
     connectivity{iel}(1,5:end) = unique(connectivity{iel}(1,5:end),'stable');
     % update number of nodes per element
-    nel = size(connectivity{iel}(5:end),2); 
+    nel = size(connectivity{iel}(5:end),2);
     
     if sum(coor( connectivity{iel}(1,5:4+nel), 7)) < 0 % outside
-          connectivity{iel}(1,3) = 1;
-        else % inside
-          connectivity{iel}(1,3) = 2;
+        connectivity{iel}(1,3) = 1;
+    else % inside
+        connectivity{iel}(1,3) = 2;
     end
     
     connectivity{iel}(1,4) = nel;
     % maximum number of nodes on any element
-    maxnel = max(nel,maxnel);  
+    maxnel = max(nel,maxnel);
     % append correspondig scaling center index
-    connectivity{iel}(1,end+1) = numcoor0+iel;  
+    connectivity{iel}(1,end+1) = numcoor0+iel;
 end
 
 numKnotVectors = countKnotVectors;
@@ -419,26 +442,9 @@ for ikv = 1:numKnotVectors
     knotVectors{ikv}(1,3) = indices(idx);
     % index last control point
     knotVectors{ikv}(1,4) = indices(idx + 1);
-    idx = idx + 2;
-    
+    idx = idx + 2;  
 end
 
-numIdxControlPoints = countKnotVectors;
-for ictrlp = 1:numIdxControlPoints
-    ctrlp = controlPoints_coor{ictrlp};
-    nctrlp = idxControlPoints{ictrlp}(1,2);
-    
-    for n = 1 : nctrlp
-    
-    a = find ( abs(coor(:,2)-ctrlp(n,1))<1e-10);
-    b = find ( abs(coor(:,3)-ctrlp(n,2))<1e-10);
-    indices = intersect(a,b);
-        
-   idxControlPoints{ictrlp}(1,n+2) = indices';
-   
-    end
-    
-end
 
 end
 

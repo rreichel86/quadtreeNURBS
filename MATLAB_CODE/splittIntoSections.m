@@ -1,6 +1,6 @@
-function [nnode,coor,numsec,maxnsec,sections,ord,knots,wgt] = splittIntoSections(nnode,coor,numel,connectivity,...
+function [nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] = splittIntoSections(nnode,coor,numel,connectivity,...
     numKnotVectors,knotVectors,maxnknots,idxControlPoints)
-% splittIntoSections: Splitt polygonal elements into section 
+% splittIntoSections: Splitt polygonal elements into sections 
 %
 % INPUT:
 % nnnode -------------------- number of coordinates = number of nodes
@@ -52,7 +52,7 @@ function [nnode,coor,numsec,maxnsec,sections,ord,knots,wgt] = splittIntoSections
 %
 % numsec ---------------------- number of sections
 % maxnsec --------------------- maximum number of nodes on any section
-% sections -------------------- sectionsconnectivity matrix as nsec-tupel of 
+% sections -------------------- sections connectivity matrix as nsec-tupel of 
 %                               nodes, where the first three entries
 %                               isec - section number
 %                               ikv - knot vector number
@@ -65,6 +65,9 @@ function [nnode,coor,numsec,maxnsec,sections,ord,knots,wgt] = splittIntoSections
 %
 % knots = [ikv, iw, nknots, iknot, jknot, knot_1,...,knot_nknots]
 % wgt = [iw, nweights, weight_1,...,weigth_nweigths]
+%
+% polyElmts -------------------- relate sections and polygonal elements
+% polyElmts = [ipoly, region, numSecPoly, sec_1,...,sec_numSecPoly]
 %
 % -----------------------------------------------------------------------------
 
@@ -85,6 +88,8 @@ numsec_w_NURBS = 0;
 maxnsec = 0; 
 % max number of control points
 maxncp = 0; 
+% max number of sections on any polygonal element
+maxNumSecPoly = 0;
 % list containing the number of control points every NURBS curve segment
 % apply function to the 5. and 2. entry of knotVectors cell array. 
 % This entries correspond to the degree of the curve and the
@@ -100,6 +105,7 @@ for ielno = 1:numel
     % polygon that have curve edges
     if ikv ~= 0
        ncp = ncpoints(ikv); % number of control points
+       numSecPoly = nel - ncp + 2;
        numsec = numsec + nel - ncp + 2; % number of sections
        numsec_w_NURBS = numsec_w_NURBS + 1; % number of sections with 
                                             % boundary defined by a NURBS
@@ -108,13 +114,17 @@ for ielno = 1:numel
        
     % polygon that dont have curve edges   
     else
+       numSecPoly = nel;
        numsec = numsec + nel; % number of sections
        nsec = 3; % number of nodes per section
     end
     
+    maxNumSecPoly = max(maxNumSecPoly, numSecPoly);
     maxnsec = max(maxnsec,nsec); % max number of nodes on any section 
 end
 
+% polyElmts = [ipoly, region, numSecPoly, sec_1,...,sec_numSecPoly]
+polyElmts = zeros(numel,maxNumSecPoly + 3);
 % sections = [isec, ikv, region, nsec, node_1,...,node_nsec]
 sections = zeros(numsec, maxnsec + 4);
 % knots = [ikv, iw, nknots, iknot, jknot, knot_1,...,knot_nknots]
@@ -133,7 +143,11 @@ for ielno = 1:numel
     elmt = connectivity{ielno}(5:end); % element connectivity matrix
     ecoor = coor( elmt(1:end), 2:3);
     wg = coor( elmt(1:end), 4);
-
+    
+    polyElmts(ielno,1) = ielno;
+    polyElmts(ielno,2) = region_nro;
+    polyElmts(ielno,3) = nel;
+    
     if kvno ~= 0
 
         nKnot = knotVectors{kvno}(5);
@@ -143,6 +157,9 @@ for ielno = 1:numel
 
         % number of control points
         ncp = (nKnot - 1) - pgrad;
+        
+        % update number of sections per polygonal element
+        polyElmts(ielno,3) = nel - ncp + 2;
 
         % scaling center coordinates
         sc_coor = ecoor(end,:);
@@ -184,7 +201,10 @@ for ielno = 1:numel
         end            
     end
 
+    
+    
     % plot polygon that dont have curve edges
+    ipsec = 0;
     if kvno == 0
         for ii = 1:nel
             if ii ~= nel
@@ -204,6 +224,9 @@ for ielno = 1:numel
             sections(isec,5:7) = elmt(idx); 
 
             ord(isec,:) = [isec,1,1];
+            
+            ipsec = ipsec + 1;
+            polyElmts(ielno,3+ipsec) = isec;
 
 %                 patch(ecoor(idx,1).', ecoor(idx,2).', color, 'FaceAlpha',.5)
 %                 hold on
@@ -228,6 +251,9 @@ for ielno = 1:numel
                 sections(isec,5:5+ncp) = elmt(idx);
 
                 ord(isec,:) = [isec,pgrad,1];
+                
+                ipsec = ipsec + 1;
+                polyElmts(ielno,3+ipsec) = isec;
 
                 % knot vector number (ikv)
                 knots(isec_w_NURBS,1) = isec_w_NURBS;
@@ -262,6 +288,9 @@ for ielno = 1:numel
                 sections(isec,5:7) = elmt(idx);
 
                 ord(isec,:) = [isec,1,1];
+                
+                ipsec = ipsec + 1;
+                polyElmts(ielno,3+ipsec) = isec;
 
             elseif ii == nel
                 a = nel;
@@ -276,12 +305,16 @@ for ielno = 1:numel
                 sections(isec,5:7) = elmt(idx);
 
                 ord(isec,:) = [isec,1,1];
-
+                
             end
+            
+            ipsec = ipsec + 1;
+            polyElmts(ielno,3+ipsec) = isec;
 %                 patch(ecoor(idx,1).', ecoor(idx,2).', color, 'FaceAlpha',.5)
 %                 hold on
             ii = ii + 1;
         end
+        
     elseif kvno ~= 0 && icp < ecp && icp ~= 1
         ii = 1;
         while ii <= nel
@@ -350,10 +383,14 @@ for ielno = 1:numel
                 ord(isec,:) = [isec,1,1];
 
             end
+            
+            ipsec = ipsec + 1;
+            polyElmts(ielno,3+ipsec) = isec;
 %                 patch(ecoor(idx,1).', ecoor(idx,2).', color, 'FaceAlpha',.5)
 %                 hold on
             ii = ii + 1;
         end
+        
     elseif kvno ~= 0 && icp > ecp && ecp == 1
         ii = 1;
         while ii <= nel
@@ -422,11 +459,14 @@ for ielno = 1:numel
                 ord(isec,:) = [isec,1,1];
 
             end
+            
+            ipsec = ipsec + 1;
+            polyElmts(ielno,3+ipsec) = isec;
 %                 patch(ecoor(idx,1).', ecoor(idx,2).', color, 'FaceAlpha',.5)
 %                 hold on
             ii = ii + 1;
         end
-
+        
     elseif kvno ~= 0 && icp > ecp && ecp ~= 1
         ii = 1;
         while ii <= nel
@@ -495,10 +535,14 @@ for ielno = 1:numel
                 ord(isec,:) = [isec,1,1];
 
             end
+            
+            ipsec = ipsec + 1;
+            polyElmts(ielno,3+ipsec) = isec;
 %                 patch(ecoor(idx,1).', ecoor(idx,2).', color, 'FaceAlpha',.5)
 %                 hold on
             ii = ii + 1;
         end
+        
     end
 end
 

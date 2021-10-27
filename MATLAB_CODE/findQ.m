@@ -16,11 +16,13 @@ function idxQ = findQ(Quadtree,refQ)
             loc = 4;
         end
         
-        if idxQ ~= 1
-           children = Quadtree.Node{idxQ,1}{11,1};
-        else   
-           children = Quadtree.Node{idxQ,1}{2,1};
-        end 
+%         if idxQ ~= 1
+%            children = Quadtree.Node{idxQ,1}{11,1};
+%         else   
+%            children = Quadtree.Node{idxQ,1}{2,1};
+%         end 
+
+        children = Quadtree.getchildren(idxQ);
          
         if ~isempty(children)
             idxQ = children(loc);

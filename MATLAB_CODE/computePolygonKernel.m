@@ -1,56 +1,18 @@
-function ker = computePolygonKernel(poly)
-% clear all
-%    p = [20.4 13.5;...
-%         5.6 40.9;...
-%         24.7 49.2;...
-%         30.2 69.5;...
-%         67.4 64.3;...
-%         59.9 48.4;...
-%         63.6 27.6;...
-%         43.5 31.6;...
-%         41 18.8];
-%       
-    
-%     p = [14.4 7.2;...
-%          9.2 22.2;...
-%         23.2 32.1;...
-%         14.7 48.4;...
-%         30.8 64.4;...
-%         59.2 55.9;...
-%         53.9 33.3;...
-%         73.7 22.3;...
-%         53.1 12.5;...
-%         41.8 21.8];
-    
-%      p = [41.2 6;...
-%          18.6 9.3;...
-%         20.4 31.9;...
-%         7.1 21.8;...
-%         4.1 38.4;...
-%         17.4 56.3;...
-%         38.3 51;...
-%         61.9 62.3;...
-%         61.9 22.9;...
-%         44.8 31.9];
-    
-%     p = [7.7 39.9;...
-%          17 59.7;...
-%         30.8 43.2;...
-%         51.2 62;...
-%         65.3 41.6;...
-%         48.7 43.7;...
-%         62 26;...
-%         41.4 10;...
-%         22.6 26.3;...
-%         15 6.5];
-%     
-% n = size(p,1);    
-% for  i = 1 : n
-%     
-%     poly(n-i+1,:) = p(i,:);
-%     
-% end 
+function ker = computePolygonKernel(poly,dbg)
+% computePolygonKernel: compute kernel of given polygon
+%
+% INPUT:
+% poly ----------------------- polygon's vertices given in CCW order
+% poly = [x-coor, y-coor]
+%             
+% ker ------------------------ contains the vertices of the polygon's kernel
+%                              only if the given polygon is star-shaped
+%   
+% -------------------------------------------------------------------------
 
+if ~exist('dbg','var')
+    dbg = 0;
+end  
 
 % area = poly(n,1) * poly(1,2) - poly(1,1) * poly(n,2);
 % 
@@ -64,23 +26,30 @@ function ker = computePolygonKernel(poly)
 % if area > 0   
 %     OP = 1;
 % else 
-%     OP = -1; 
+%     OP = -1;
 % end
 
-n = size(poly,1);
+% plot polygon 
+if dbg == 1
+x = [ poly(:,1)', poly(1,1)'];
+y = [ poly(:,2)', poly(1,2)'];  
+plot(x,y, '-r')    
+hold on 
+end
 
+n = size(poly,1); % number of vertices
+% Identify concave vertices
 zhl = 0;
 cc = [];
 for j = n:-1:1
 
-
-    if (j-1) == 0 
+    if j == 1 
         a = n;
     else
         a = j-1;
     end     
     
-    if (j+1) == n+1
+    if j == n
         b = 1;
     else
         b = j+1;
@@ -94,35 +63,31 @@ for j = n:-1:1
     
     if s == -1 
         zhl = zhl + 1;
-        cc(zhl,:) =j;
+        cc(zhl,:) = j;
     end 
 
 end 
 ker = poly;
 
 if ~isempty(cc)
-    ncc = size(cc,1);
-    
+    ncc = size(cc,1); % number of convace vertices
 else     
     ker = poly;
+    % plot polygon's kernel
+    if dbg == 1
+        x = [ poly(:,1)', poly(1,1)'];
+        y = [ poly(:,2)', poly(1,2)'];
+        patch(x,y,'green','FaceAlpha',0.5);
+    end 
     return
 end
 
-x = [ poly(:,1)', poly(1,1)'];
-y = [ poly(:,2)', poly(1,2)'];  
-
-
-% plot(x,y, '-r')    
-
-% hold on 
-
-
-
-
+% loop over convace vertices
 for idx = 1:ncc 
     
-cc_i = poly(cc(idx),:);    
-
+    % A - vertex adjacent to current concave vertex (prev)
+    % B - current concave vertex 
+    % D - vertex adjacent to current concave vertex (next)
     if cc(idx) == 1
         Ai = poly(size(poly,1),:);
     else
@@ -131,133 +96,152 @@ cc_i = poly(cc(idx),:);
     
     Bi = poly(cc(idx),:);
     
-    if cc(idx) >= size(poly,1)
+    if cc(idx) == size(poly,1)
         Di = poly(1,:);
     else
         Di = poly(cc(idx)+1,:);
     end
-    
 
-for k = 1:size(ker,1)            
-  
-    %v(i-1)v(i)s(j)
-    %v(i-1)v(i)s(j+1)
-    A = Ai ;
-    B = Bi ;
-    C1 = ker(k,:);
-    if (k+1) > size(ker,1)
-        b = 1;
+    k = 1;
+    while k <= ( size(ker,1) )
+        
+        % triangle A-B-C1
+        % triangle A-B-C2
+        A = Ai;
+        B = Bi;
+        C1 = ker(k,:);
+        if k == size(ker,1)
+            b = 1;
+        else
+            b = k+1;
+        end
+        C2 = ker(b,:);
+        
+        % compute orientation of A-B-C1 and A-B-C2 
+        s1 = orientation(A,B,C1);
+        s2 = orientation(A,B,C2);
+        
+        if s1 == 0 || s2 == 0
+            k = k + 1;
+            continue
+        end
+        
+        % if the triangles A-B-C1 and A-B_C2 have opposite orientation
+        % compute intersection U of the ray A-B and polygon edge C1-C2
+        if ( s1 == -s2 )
+            
+            DD = [(B-A)' -(C2-C1)'];
+            Dt = [(C1-A)' -(C2-C1)'];
+            Ds = [(B-A)' (C1-A)'];
+            
+            tt = det(Dt)/det(DD);
+            ss = det(Ds)/det(DD);
+            
+            tt*(B-A) + A;
+            U = ss*(C2-C1) + C1;
+            
+            % insert U in Kernel between C1-C2
+            if b == 1
+                ker(size(ker,1)+1,:) = U;
+            else
+                temp = ker(b:end,:);
+                ker(k+1,:) = U;
+                ker(b+1:end+1,:) = temp;
+            end
+            
+        end
+        k = k + 1;
+    end
+    
+    k = 1;
+    while k <= ( size(ker,1) )
+        
+        % triangle B-D-C1
+        % triangle B-D-C2
+        A = Bi ;
+        B = Di ;
+        C1 = ker(k,:);
+        if k == size(ker,1)
+            b = 1;
+        else
+            b = k+1;
+        end
+        C2 = ker(b,:);
+        
+        % compute orientation of B-D-C1 and B-D-C2 
+        s1 = orientation(A,B,C1);
+        s2 = orientation(A,B,C2);
+        
+        if s1 == 0 || s2 == 0
+            k = k + 1;
+            continue
+        end
+        
+        % if the triangles B-D-C1 and B-D_C2 have opposite orientation
+        % compute intersection U of the ray B-D and polygon edge C1-C2
+        if ( s1 == -s2)
+            
+            DD = [(B-A)' -(C2-C1)'];
+            Dt = [(C1-A)' -(C2-C1)'];
+            Ds = [(B-A)' (C1-A)'];
+            
+            tt = det(Dt)/det(DD);
+            ss = det(Ds)/det(DD);
+            
+            tt*(B-A) + A;
+            U = ss*(C2-C1) + C1;
+            
+            % insert U in Kernel between C1-C2
+            if b == 1
+                ker(size(ker,1)+1,:) = U;
+            else
+                temp = ker(b:end,:);
+                ker(k+1,:) = U;
+                ker(b+1:end+1,:) = temp;
+            end
+            
+        end
+        k = k + 1;
+    end
+    
+    zhl = 0;
+    tmp = [];
+    for k = 1 : size(ker,1)
+        C1 = ker(k,:);
+        
+        % compute orientation of A-B-C1 and B-D-C1
+        s1 = orientation(Ai,Bi,C1);
+        s2 = orientation(Bi,Di,C1);
+        
+        % if triangle A-B-C1 or triangle B-D-C1 is oriented CW
+        % Store C1s
+        if ( s1 == -1 || s2 == -1)
+            
+%             plot(C1(1),C1(2),'ro')
+%             hold on
+            
+            zhl = zhl + 1;
+            tmp(zhl) = k;
+        end
+    end
+    
+    % Delete C1s from the polygon's kernel
+    ker(tmp,:)=[];
+    if ~isempty(ker)
+%         x = [ ker(:,1)', ker(1,1)'];
+%         y = [ ker(:,2)', ker(1,2)'];
+%         plot(x,y, '-')
+%         hold on
     else
-        b = k+1;
-    end 
-       C2 = ker(b,:);
-         
-    s1 = orientation(A,B,C1);
-    s2 = orientation(A,B,C2);
-
-    if ( s1 ~= 0 && s2 ~= 0 && s1 == -s2) 
-        k;
-        b;
-        DD = [(B-A)' -(C2-C1)'];
-        Dt = [(C1-A)' -(C2-C1)'];
-        Ds = [(B-A)' (C1-A)'];
-        
-        tt = det(Dt)/det(DD);
-        ss = det(Ds)/det(DD);
-        
-        tt*(B-A) + A;
-        U = ss*(C2-C1) + C1;
-        
-       
-        if b == 1 
-            ker(size(ker,1)+1,:) = U;
-        else 
-            temp = ker(b:end,:);
-            ker(k+1,:) = U;
-            ker(b+1:end+1,:) = temp;
-        end 
-
-    end     
-end
-
-
-for k = 1:size(ker,1)      
-  
-    %v(i)v(i+1)s(j)
-    %v(i)v(i+1)s(j+1)
-    A = Bi ;
-    B = Di ;
-    C1 =ker(k,:);
-    if (k+1) > size(ker,1)
-        b = 1;
-    else
-        b = k+1;
-    end 
-       C2 = ker(b,:);
-       
-    s1 = orientation(A,B,C1);
-    s2 = orientation(A,B,C2);
-
-    if ( s1 ~= 0 && s2 ~= 0 && s1 == -s2) 
-        k;
-        b;
-        DD = [(B-A)' -(C2-C1)'];
-        Dt = [(C1-A)' -(C2-C1)'];
-        Ds = [(B-A)' (C1-A)'];
-        
-        tt = det(Dt)/det(DD);
-        ss = det(Ds)/det(DD);
-        
-        tt*(B-A) + A;
-        U = ss*(C2-C1) + C1;
-        
-       
-        if b == 1 
-            ker(size(ker,1)+1,:) = U;
-        else 
-            temp = ker(b:end,:);
-            ker(k+1,:) = U;
-            ker(b+1:end+1,:) = temp;
-        end 
-
-    end     
+        break
+    end
     
     
 end
+% end loop over concave vertices 
 
-
-zhl = 0;
-tmp = [];
-for k = 1 : size(ker,1)
-   C1 = ker(k,:);
-                 
-   s1 = orientation(Ai,Bi,C1);
-   s2 = orientation(Bi,Di,C1);
-          
-   if ( s1 == -1 || s2 == -1)
-       zhl = zhl + 1;
-       k;      
-       tmp(zhl) = k;
-   end    
-end
-
-ker(tmp,:)=[];
-if ~isempty(ker)
-    x = [ ker(:,1)', ker(1,1)'];
-    y = [ ker(:,2)', ker(1,2)'];  
-
-%     plot(x,y, '-')    
-%     hold on
-else
-    break
-end     
-
-
-end
-ker;
 nvertices = size(ker,1);
-
-% check if kernel is not empty or 
+% check if kernel is not empty or
 % consist of at least 3 noncollinear vertices
 if nvertices < 3
     ker = [];
@@ -268,7 +252,10 @@ elseif nvertices == 3
 end
 
 if ~isempty(ker)
-   %patch(x,y,'green');
+    % plot polygon's kernel
+    if dbg == 1
+        patch(x,y,'green','FaceAlpha',0.5);
+    end 
 end
 
 end

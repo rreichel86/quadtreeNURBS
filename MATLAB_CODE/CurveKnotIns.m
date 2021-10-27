@@ -1,83 +1,79 @@
-function [knots_new, Q, weights] = CurveKnotIns(degree, controlPoints, knots, weights, newKnot)
-% Adapted form the NURBS book
-p=degree;
+function [knots_new, Q, weights] = CurveKnotIns(degree, knots, controlPoints, weights, newKnot, numKnotIns)
+% CurveKnotIns: Compute  new curve from knot insertion
+% Adapted from the NURBS book (Algorithm A5.1)
+
+p = degree;
+s = 0;
+r = numKnotIns;
+
+% number of control points before knot insertion
 np = length(controlPoints);
-s=0;
-r=1;
+% number of control points after knot insertion
+nq = np + r;
 
-k=find(knots>=newKnot(1),1)-1;
+k = find(knots >= newKnot(1),1) - 1;
 
-Pw=[controlPoints(1,:) .* weights ;controlPoints(2,:) .* weights; weights];
+% Control points before knot insertion 
+Pw = [controlPoints(1,:) .* weights ;controlPoints(2,:) .* weights; weights];
+% Control points after knot insertion 
+Qw = zeros(3,nq);
+% Local array of length p+1
+Rw = zeros(3,p+1);
 
-mp= np+degree+1;
-nq= np+ r;
+% number of knots before knot insertion
+mp = np + p + 1;
+% number of knots after knot insertion
+mq = nq + p + 1;
 
-for i = 1:k 
+% knot vector after knot insertion
+knots_new = zeros(1,mp);
+
+% Load new knot vector
+for i = 1:k
     knots_new(i) = knots(i);
 end
 
 for i = 1:r
-knots_new(k+i)= newKnot;
+    knots_new(k+i)= newKnot;
 end
 
-for i = k+1:mp 
+for i = k+1:mp
     knots_new(i+r) = knots(i);
-
 end
 
-for i = 1:k-p 
-    Qw(1,i) = Pw(1,i);
-    Qw(2,i) = Pw(2,i);
-    Qw(3,i) = Pw(3,i);
-
+% Save unaltered control points 
+for i = 1:k-p
+    Qw(:,i) = Pw(:,i);
 end
 
 for i = k-s:np
-    Qw(1,i+r) = Pw(1,i);
-    Qw(2,i+r) = Pw(2,i);
-    Qw(3,i+r) = Pw(3,i);
+    Qw(:,i+r) = Pw(:,i);
 end
 
-for i = 1:p-s+1 
-    Rw(1,i) = Pw(1,k-p+i-1);
-    Rw(2,i) = Pw(2,k-p+i-1);
-    Rw(3,i) = Pw(3,k-p+i-1);
-
+for i = 1:p-s+1
+    Rw(:,i) = Pw(:,k-p+i-1);
 end
 
+% Insert the knot r times
 for j = 1:r
-    L= k-p+j;
+    L = k-p+j;
     
-
     for i = 1:p-j-s+1
-        alpha = (newKnot- knots(L+i-1))/(knots(i+k) - knots(L+i-1));
-        Rw(1,i) = alpha*Rw(1,i+1) + (1.0-alpha)*Rw(1,i); 
-        Rw(2,i) = alpha*Rw(2,i+1) + (1.0-alpha)*Rw(2,i); 
-        Rw(3,i) = alpha*Rw(3,i+1) + (1.0-alpha)*Rw(3,i); 
+        alpha = (newKnot - knots(L+i-1))/(knots(i+k) - knots(L+i-1));
+        Rw(:,i) = alpha*Rw(:,i+1) + (1.0-alpha)*Rw(:,i);
     end
     
-    Qw(1,L) = Rw(1,1);
-    Qw(2,L) = Rw(2,1);
-    Qw(3,L) = Rw(3,1);
-    Qw(1,k+r-j-s) = Rw(1,p-j-s+1); 
-    Qw(2,k+r-j-s) = Rw(2,p-j-s+1);
-    Qw(3,k+r-j-s) = Rw(3,p-j-s+1);
+    Qw(:,L) = Rw(:,1);
+    Qw(:,k+r-j-s) = Rw(:,p-j-s+1);
 end
 
-for i = (L+1):(k-s-1) 
-    Qw(1,i) = Rw(1,i-L+1);
-    Qw(2,i) = Rw(2,i-L+1);
-    Qw(3,i) = Rw(3,i-L+1);
+% Load remaining control points
+for i = (L+1):(k-s-1)
+    Qw(:,i) = Rw(:,i-L+1);
 end
 
-for i=1:length(Qw)
-Q(1,i) = Qw(1,i)/ Qw(3,i);
-Q(2,i) = Qw(2,i)/ Qw(3,i);
-weights(i) =  Qw(3,i);
-end
-
-
-
+Q = Qw(1:2,:) ./ Qw(3,:);
+weights = Qw(3,:);
 
 end
 

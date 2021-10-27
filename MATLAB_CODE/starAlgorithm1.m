@@ -15,89 +15,100 @@ function [star_shaped, Quadtree] = starAlgorithm1(Quadtree,idx)
 % -------------------------------------------------------------------------
 
 tol = 1e-10;
-% Quad vertices
-vertices = Quadtree.Node{idx,1}{10,1}(:,1:end-1)';
+
+% get data stored in current leaf
+
+% 1. Quad name
+% 2. Quad location
+% 3. intersection points (physical space)
+% 4.
+% 5. intersection in parametric space of the curve
+% 6. NURBS definition
+%    NURBS degree
+%    NURBS control points
+%    NURBS Knot vector
+%    NURBS weights
+% 7. Quad definition
+% 8. Pointer to the children
+
+data = Quadtree.Node{idx,1};
+
+% quad vertices 
+quadVertices = data{7};
+% number of quad vertices
+numQuadVertices = size(quadVertices,2);
 % control points
-controlPoints = Quadtree.Node{idx,1}{7,1}';
-nControlPoints = size(controlPoints,1);
-% vertical intersections [left; right] 
-vertIntrsc = Quadtree.Node{idx,1}{4,1}';
-nVertIntrsc = size(vertIntrsc,1);
-% horizontal intersections [bottom; top]
-horzIntrsc = Quadtree.Node{idx,1}{3,1}';
-nHorzIntrsc = size(horzIntrsc,1);
-% intersections
-intrsc = [horzIntrsc;vertIntrsc];
+NURBS_segment = data{6};
+controlPoints = NURBS_segment.controlPoints; 
+% intersecion points
+intersectionPoints = data{3}; 
+% number of intersection points
+numIntersectionPoints = size(intersectionPoints,2);
+% intersection points location 
+locIntersectionPoints = data{4};
 
-% Quad left corner
-Qxmin = min(vertices(:,1));
-Qymin = min(vertices(:,2));
-
+% number of polygon's vertices
+numPolyVertices = numQuadVertices + numIntersectionPoints;
+% polygon vertices
+poly = zeros(2, numPolyVertices); 
 % intersection points indices
-iintrsc = zeros(2,1);
-poly = zeros(9,2) - 99;
-poly(1:2:8,:) = vertices;
-poly(9,:) = vertices(1,:);
+idxIntersectionPoints = zeros(1,2);
 
-if nVertIntrsc == 2
-    poly(4,:) = intrsc(2,:);
-    poly(8,:) = intrsc(1,:); 
-    iintrsc = [4,8];
-elseif nHorzIntrsc == 2
-    poly(2,:) = intrsc(1,:); 
-    poly(6,:) = intrsc(2,:);
-    iintrsc = [2,6];
-else
-    % horizontal intersection
-    if abs(intrsc(1,2) - Qymin) < tol % bottom 
-        poly(2,:) = intrsc(1,:);
-        iintrsc(1) = 2;
-    else % top
-        poly(6,:) = intrsc(1,:);
-        iintrsc(1) = 6;
-    end
-    % vertical intersection
-    if abs(intrsc(2,1) - Qxmin) < tol % left 
-        poly(8,:) = intrsc(2,:);
-        iintrsc(2) = 8;
-    else % right
-        poly(4,:) = intrsc(2,:);
-        iintrsc(2) = 4;
+nPv = 0;
+for iQv = 1:numQuadVertices 
+    
+    A = quadVertices(:,iQv);
+    
+    nPv = nPv + 1;
+    poly(:,nPv) = A;
+     
+    for iIp = 1:numIntersectionPoints
+        
+        if locIntersectionPoints(iIp) ~= iQv
+           continue 
+        end    
+        
+        P = intersectionPoints(1:2,iIp);
+        
+        
+        if norm(A-P) < tol
+            idxIntersectionPoints(iIp) = nPv;
+        else
+            nPv = nPv + 1;
+            poly(:,nPv) = P;
+            idxIntersectionPoints(iIp) = nPv;
+        end
+            
     end
 end
 
-% swap intersection points indices
-if iintrsc(1) > iintrsc(2) 
-    tmp = iintrsc(1);
-    iintrsc(1) = iintrsc(2);
-    iintrsc(2) = tmp;
-end
+% update number of polygon's vertices
+if (nPv ~= numPolyVertices)
+    numPolyVertices = nPv;
+end     
 
-% insert control point
-if norm( poly(iintrsc(1),:) - controlPoints(1,:) ) < tol 
-    polygon_1 = [poly(1:iintrsc(1),:);...
-                 controlPoints(2:end-1,:);...
-                 poly(iintrsc(2):end,:)];
+% insert control points and split quad 
+I1 = poly(:,idxIntersectionPoints(1));
+
+if norm( I1 - controlPoints(:,1) ) < tol 
+    polygon_1 = [poly(:,1:idxIntersectionPoints(1)),...
+                 controlPoints(:,2:end-1),...
+                 poly(:,idxIntersectionPoints(2):numPolyVertices)];
              
-    polygon_2 = [poly(iintrsc(1):iintrsc(2),:);...
-                 controlPoints(end-1:-1:1,:);...
-                ];
+    polygon_2 = [poly(:,idxIntersectionPoints(1):idxIntersectionPoints(2)),...
+                 controlPoints(:,end-1:-1:2)];
 else
-    polygon_1 = [poly(1:iintrsc(1),:);...
-                 controlPoints(end-1:-1:2,:);...
-                 poly(iintrsc(2):end,:)];
+    polygon_1 = [poly(:,1:idxIntersectionPoints(1)),...
+                 controlPoints(:,end-1:-1:2),...
+                 poly(:,idxIntersectionPoints(2):numPolyVertices)];
              
-    polygon_2 = [poly(iintrsc(1):iintrsc(2),:);...
-                 controlPoints(2:end,:);...
-                ];
+    polygon_2 = [poly(:,idxIntersectionPoints(1):idxIntersectionPoints(2)),...
+                 controlPoints(:,2:end-1)];
 end
 
-polygon_1 = polygon_1(polygon_1(:,1) ~= -99,:);
-polygon_2 = polygon_2(polygon_2(:,1) ~= -99,:);
-
-% Compute polygons kernel
-K1 = computePolygonKernel(polygon_1);
-K2 = computePolygonKernel(polygon_2);
+% compute polygons kernel
+K1 = computePolygonKernel(polygon_1');
+K2 = computePolygonKernel(polygon_2');
 star_shaped = ~isempty(K1) && ~isempty(K2);
 end
 

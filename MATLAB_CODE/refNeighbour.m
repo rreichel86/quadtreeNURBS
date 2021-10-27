@@ -1,5 +1,9 @@
-function [exist_NQ, refNQ] = refNeighbour(refQ,dir)
+function [exist_NQ, refNQ] = refNeighbour(refQ,dir,Ntyp)
 % refNeighbour: determine reference of searched neighbour
+
+if ~exist('Ntyp','var')
+    Ntyp = 0;
+end    
 
 posQ = refQ(end-1:end);
 level = length(refQ)/2;
@@ -18,7 +22,12 @@ lim(2) = calcLim(level, N(:,2)); % lim_y
 %   4 - North
 % and determine reference of searched edge neighbour by interweaving
 % new N_x and N_y
-[exist_NQ, refNQ] = edgeNeighbour(posQ, dir, level, N, lim);
+if Ntyp == 0
+    [exist_NQ, refNQ] = edgeNeighbour(posQ, dir, level, N, lim);
+elseif Ntyp == 1
+   [exist_NQ, refNQ] = cornerNeighbour(posQ, dir, level, N, lim);
+end     
+
 end
 
 function lim = calcLim(level, N)
@@ -84,6 +93,58 @@ else % no
         [exist_NQ, N(:,2)] = binaryTransformation(level, N(:,2), lim(2));
     end
 end
+
+% determine reference of searched neighbour by interweaving new N_x and N_y
+if exist_NQ == 1
+    refNQ = zeros(1,2*level);
+    refNQ(2:2:end) = N(:,1) + 1; % N_x
+    refNQ(1:2:end) = N(:,2) + 1; % N_y
+else
+    refNQ = -1;
+end
+end
+
+
+function [exist_NQ, refNQ] = cornerNeighbour(posQ, dir, level, N, lim)
+% edgeNeighbour: perform binary transformation to obtain the
+% 4 possible edge neighbours:
+%   1 - South West
+%   2 - South East
+%   3 - North East
+%   4 - North West
+% and determine reference of searched edge neighbour by interweaving
+% new N_x and N_y
+
+if posQ(1) == 1 % N
+    if dir == 1 || dir == 2
+        [exist_NQ_2, N(:,2)] = binaryTransformation(level, N(:,2));
+    elseif dir == 3 || dir == 4
+        [exist_NQ_2, N(:,2)] = binaryTransformation(level, N(:,2), lim(2));
+    end     
+elseif posQ(1) == 2 % S
+    if dir == 1 || dir == 2
+        [exist_NQ_2, N(:,2)] = binaryTransformation(level, N(:,2), lim(2));
+    elseif dir == 3 || dir == 4
+        [exist_NQ_2, N(:,2)] = binaryTransformation(level, N(:,2));
+    end
+end
+
+
+if posQ(2) == 1 % W
+    if dir == 2 || dir == 3
+        [exist_NQ_1, N(:,1)] = binaryTransformation(level, N(:,1));
+    elseif dir == 1 || dir == 4
+        [exist_NQ_1, N(:,1)] = binaryTransformation(level, N(:,1), lim(1));
+    end     
+elseif posQ(2) == 2 % E
+    if dir == 2 || dir == 3
+        [exist_NQ_1, N(:,1)] = binaryTransformation(level, N(:,1), lim(1));
+    elseif dir == 1 || dir == 4
+        [exist_NQ_1, N(:,1)] = binaryTransformation(level, N(:,1));
+    end
+end
+
+exist_NQ = exist_NQ_1 * exist_NQ_2;
 
 % determine reference of searched neighbour by interweaving new N_x and N_y
 if exist_NQ == 1

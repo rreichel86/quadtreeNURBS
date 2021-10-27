@@ -1,4 +1,4 @@
-function [Quadtree,nnode,coor,numsec,maxnsec,sections,ord,knots,wgt] = refine_quadtree_mesh(Quadtree,seedingPoints)
+function [Quadtree,nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] = refine_quadtree_mesh(Quadtree,seedingPoints_splitt,seedingPoints_merge)
 % refine_quadtree_mesh: refine given quadtree based mesh
 %
 % INPUT: 
@@ -33,7 +33,11 @@ function [Quadtree,nnode,coor,numsec,maxnsec,sections,ord,knots,wgt] = refine_qu
 %
 % knots = [ikv, iw, nknots, iknot, jknot, knot_1,...,knot_nknots]
 % wgt = [iw, nweights, weight_1,...,weigth_nweigths]
-
+%
+% polyElmts -------------------- relate sections and polygonal elements
+% polyElmts = [ipoly, region, numSecPoly, sec_1,...,sec_numSecPoly]
+%
+% -------------------------------------------------------------------------
 
 figure 
 hold on 
@@ -41,55 +45,12 @@ hold on
 %% Quadtree decomposition
 % Get NURBS curve
 data = Quadtree.Node{1,1};
-NURBS.degree = data{3};
-NURBS.knots  = data{4};
-NURBS.controlPoints = data{5};
-NURBS.weights = data{6};
+NURBS = data{3};
 
-% number of seeding points
-nSeedingPoints = size(seedingPoints,1);
-
-for i = 1:nSeedingPoints
-    
-    idx = 1;
-    while true
-        
-        if idx == 1
-            idxChildren = Quadtree.Node{idx,1}{2,1};
-        else
-            idxChildren = Quadtree.Node{idx,1}{11,1};
-        end
-        
-        if isempty(idxChildren)
-            break
-        end
-        
-        for j = 1:4
-            
-            Quad = Quadtree.Node{idxChildren(j),1}{10,1}(1:2,1:4);
-            
-            minCoords = [Quad(1,1),Quad(2,1)];
-            maxCoords = [Quad(1,2),Quad(2,3)];
-            
-            ptInQuad = isPointInQuad(minCoords,maxCoords,seedingPoints(i,:));
-            
-            if ptInQuad == 1
-                idx = idxChildren(j);
-                break
-            end
-        end
-        
-    end
-    
-    idxRef = Quadtree.Node{idx,1}{2,1};
-%     idxFather = Quadtree.Parent(idx);
-%     idxLoc = ref2loc(idxRef);
-    
-    [Quadtree] = Decompose_helper(Quadtree,NURBS,idx);
-    
-end
+[Quadtree] = QuadtreeSplit(Quadtree,NURBS,seedingPoints_splitt);
 
 [Quadtree] = QuadtreeBalance(Quadtree,NURBS);
+[Quadtree] = check_leaf(Quadtree);
 
 %% Extract polygonal elements 
 [nnode,coor,numel,connectivity,~,...
@@ -97,7 +58,7 @@ end
 
 %% Splitt polygonal elements into section
 
-[nnode,coor,numsec,maxnsec,sections,ord,knots,wgt] = splittIntoSections(nnode,coor,numel,connectivity,...
+[nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] = splittIntoSections(nnode,coor,numel,connectivity,...
                                                                     numKnotVectors,knotVectors,maxnknots,idxControlPoints);
-
+                                                  
 end

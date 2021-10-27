@@ -1,9 +1,14 @@
-function [midPoints] = getMidPoints(Quadtree,idxQ,refQ)
+function [numMidPoints,midPoints,locMidPoints] = getMidPoints(Quadtree,idxQ,refQ)
 % getMidPoints: get current Quad mid points
 
 % current Quad level
 levelQ = length(refQ);
+% mid points coordinates
 midPoints = zeros(2,4) - 99;
+% mid points location 
+locMidPoints = zeros(1,4);
+% number of mid points 
+numMidPoints = 0;
 
 % search for current Quad neighbours
 % Loop over directions:
@@ -25,31 +30,38 @@ for dir = 1:4
         if levelQ == levelNQ
             
             % has neighbour Quad children ?
-            children = Quadtree.Node{idxNQ,1}{11,1}';
+            %children = Quadtree.Node{idxNQ,1}{11,1}';
+            children = Quadtree.getchildren(idxNQ);
             if ~isempty(children) % yes
                 
                 % select neighbour Quad children
                 if dir == 1 % West NQ
                     idxC = children([3,4]); % NE and SE children
                     idxV = [2,3];
+                    idxM = 4;
+                elseif dir == 2 % South NQ
+                    idxC = children([1,3]); % NW and NE children
+                    idxV = [3,4];  
+                    idxM = 1;
                 elseif dir == 3 % East NQ
                     idxC = children([1,2]); % NW and SW children
                     idxV = [1,4];
-                elseif dir == 2 % South NQ
-                    idxC = children([1,3]); % NW and NE children
-                    idxV = [3,4];
+                    idxM = 2;
                 elseif dir == 4 % North NQ
                     idxC = children([2,4]); % SW and SE children
                     idxV = [2,1];
+                    idxM = 3;
                 end
                 
                 % get midPoint from neighbour Quad children
-                pt1 = Quadtree.Node{idxC(1),1}{10,1}(:,idxV(1));
-                pt2 = Quadtree.Node{idxC(2),1}{10,1}(:,idxV(2));
+                pt1 = Quadtree.Node{idxC(1),1}{7,1}(:,idxV(1));
+                pt2 = Quadtree.Node{idxC(2),1}{7,1}(:,idxV(2));
                 
                 % compare midPoints
                 if norm(pt1-pt2) < 1e-10
-                    midPoints(:,dir) = pt1;
+                    numMidPoints = numMidPoints + 1;
+                    midPoints(:,idxM) = pt1;
+                    locMidPoints(idxM) = idxM;
                 end 
                 
             else % no
@@ -63,8 +75,9 @@ for dir = 1:4
     end
 end
 
-
-
+existMidPoints = midPoints(1,:) ~= -99;
+midPoints = midPoints(:,existMidPoints);
+locMidPoints = locMidPoints(existMidPoints);
 
 
 end

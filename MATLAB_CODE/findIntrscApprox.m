@@ -1,17 +1,15 @@
-function [s,flag] = findIntrscApprox(coorVal,coorIdx,interval,degree,knots,...
-    controlPoints,weights,x1,x2,y1,y2,intrscArr)
-% findIntrscApprox: determine first intersection approximation between
-% a Quad edge and a NURBS curve.
+function [s,flag] = findIntrscApprox(interval,degree,knots,...
+    controlPoints,weights,A,B,intrscArr)
+% findIntrscApprox: determine first intersection approximations between
+% a quad's edge AB and a NURBS curve.
 %
 % INPUT:
-% coorVal ----------------------- x or y coordinate of Quad edge
-% coorIdx ------------------------ index of the corresponding Quad edge coordiante
 % interval ------------------- knot vector interval 
 % degree --------------------- NURBS degree
 % knots ---------------------- NURBS knot vector
 % controlPoints -------------- NURBS control points 
 % weights -------------------- NURBS weights
-% x1, y1, x2, y2 ------------- geometrical definition of Quad edge
+% A, B ----------------------- geometrical definition of quad's edge
 % intrscArr ------------------ record of previous intersections
 %
 % OUTPUT:
@@ -47,97 +45,79 @@ for k = kts
     
 end
 
-g = P(:,coorIdx)-coorVal;
+% Line that passes through A and B
+tVec = B - A; % tangent vector
+nVec = [-tVec(2);tVec(1)]; % normal vector
+nVec = nVec/norm(nVec); % normalized normal vector
+
+% compute distances from P to the line that passes through A and B
+g = nVec' * ( P(:,1:2)' - A );
 pos = 0;
-if coorIdx == 1
-    for i = 1: nkts - 1
+for i = 1: nkts - 1
+    
+    p = P(i,1:2)';
+    q = P(i+1,1:2)';
+    
+    if g(i)*g(i+1) < 0
         
-        if g(i)*g(i+1) < 0
-            
-            if P(i,2) > y1 && P(i,2) < y2 
-                pos = i;
-                break
-            elseif  ( abs( P(i,2) - y1 ) < tol ) || abs( P(i,2) - y2 ) < tol 
-                pos = i;
-                break
-            end     
-            
-            if P(i+1,2) > y1 && P(i+1,2) < y2 
-                pos = i;
-                break
-            elseif ( abs( P(i+1,2) - y1 ) < tol ) || ( abs( P(i+1,2) - y2 ) < tol )
-                pos = i;
-                break
-            end
-            
-        elseif  abs(g(i)) < tol
-            
-            if P(i,2) > y1 && P(i,2) < y2 
-                pos = i;
-                break
-            elseif  ( abs( P(i,2) - y1 ) < tol ) || ( abs( P(i,2) - y2 ) < tol )
-                pos = i;
-                break
-            end 
-            
-        elseif abs(g(i+1)) < tol
-            
-            if P(i+1,2) > y1 && P(i+1,2) < y2 
-                pos = i+1;
-                break
-            elseif  ( abs( P(i+1,2) - y1 ) < tol ) || ( abs( P(i+1,2) - y2 ) < tol )
-                pos = i+1;
-                break
-            end 
-            
+        % projection of p onto the line that passes through A and B
+        p = p + nVec'*(A - p)* nVec;
+        alpha = (p - A)'*tVec/(tVec'*tVec);
+        
+        % check if projection lies on line segment AB
+        if alpha > 0 && alpha < 1
+            pos = i;
+            break
+        elseif abs(alpha) < tol || abs(alpha - 1) < tol
+            pos = i;
+            break
+        end
+        
+        % projection of q onto the line that passes through A and B
+        q = q + nVec'*(A - q)* nVec;
+        alpha = (q - A)'*tVec/(tVec'*tVec);
+        
+        % check if projection lies on line segment AB
+        if alpha > 0 && alpha < 1
+            pos = i;
+            break
+        elseif abs(alpha) < tol || abs(alpha - 1) < tol
+            pos = i;
+            break
+        end
+        
+    elseif  abs(g(i)) < tol
+        
+        % projection of p onto the line that passes through A and B
+        p = p + nVec'*(A - p)* nVec;
+        alpha = (p - A)'*tVec/(tVec'*tVec);
+        
+        % check if projection lies on line segment AB
+        if alpha > 0 && alpha < 1
+            pos = i;
+            break
+        elseif abs(alpha) < tol || abs(alpha - 1) < tol
+            pos = i;
+            break
+        end
+        
+    elseif abs(g(i+1)) < tol
+        
+        % projection of q onto the line that passes through A and B
+        q = q + nVec'*(A - q)* nVec;
+        alpha = (q - A)'*tVec/(tVec'*tVec);
+        
+        % check if projection lies on line segment AB
+        if alpha > 0 && alpha < 1
+            pos = i;
+            break
+        elseif abs(alpha) < tol || abs(alpha - 1) < tol
+            pos = i;
+            break
         end
     end
-    
-elseif coorIdx == 2
-    for i = 1: nkts - 1
-        
-        if g(i)*g(i+1) < 0
-            
-            if P(i,1) > x1 && P(i,1) < x2 
-                pos = i;
-                break
-            elseif  ( abs( P(i,1) - x1 ) < tol ) || abs( P(i,1) - x2 ) < tol 
-                pos = i;
-                break
-            end     
-            
-            if P(i+1,1) > x1 && P(i+1,1) < x2 
-                pos = i;
-                break
-            elseif ( abs( P(i+1,1) - x1 ) < tol ) || ( abs( P(i+1,1) - x2 ) < tol )
-                pos = i;
-                break
-            end
-            
-        elseif  abs(g(i)) < tol
-            
-            if P(i,1) > x1 && P(i,1) < x2 
-                pos = i;
-                break
-            elseif  ( abs( P(i,1) - x1 ) < tol ) || ( abs( P(i,1) - x2 ) < tol )
-                pos = i;
-                break
-            end 
-            
-        elseif abs(g(i+1)) < tol
-            
-            if P(i+1,1) > x1 && P(i+1,1) < x2 
-                pos = i + 1;
-                break
-            elseif  ( abs( P(i+1,1) - x1 ) < tol ) || ( abs( P(i+1,1) - x2 ) < tol )
-                pos = i + 1;
-                break
-            end 
-            
-        end
-    end   
 end
-    
+
 if pos ~= 0
     flag = 1;
     s = P(pos,:)';
@@ -150,10 +130,8 @@ if pos ~= 0
             
             flag = 0;
             s = -99;
-        end
-        
+        end  
     end
-    
 end
 
 
