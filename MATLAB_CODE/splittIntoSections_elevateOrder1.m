@@ -1,5 +1,5 @@
-function [nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] = splittIntoSections_elevateOrder1(nnode,coor,numel,connectivity,...
-    numKnotVectors,knotVectors,maxnknots,idxControlPoints)
+function [nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts,secNQ,secN] = splittIntoSections_elevateOrder1(nnode,coor,numel,connectivity,...
+    numKnotVectors,knotVectors,maxnknots,idxControlPoints,seedingPoints_splitt,Quadtree,ep,eq)
 % splittIntoSections: Splitt polygonal elements into sections 
 %
 % INPUT:
@@ -38,6 +38,11 @@ function [nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] = splittIn
 % maxnknots ------------------ maximun number of knot on any knot vector
 % idxControlPoints ----------- control points indices
 % idxControlPoints = [icp, ncp, idx_1,...idx_ncp] 
+% Quadtree
+% ep/eq ------ elevated p-/q-grad
+%
+%
+%
 %
 % OUTPUT:
 % nnode ---------------------- number of coordinates = number of nodes
@@ -58,9 +63,10 @@ function [nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] = splittIn
 %                               isec - section number
 %                               idxLeaf - index of Leaf
 %                               ikv - knot vector number
+%                               iel - quad element number
 %                               region - region number 
 %                               nsec - number of nodes per section
-% sections = [isec, idxLeaf, ikv, region, nsec, node_1,...,node_nsec]
+% sections = [isec, idxLeaf, ikv, iel, region, nsec, node_1,...,node_nsec]
 % 
 % ord ------------------------- section polynomial order
 % ord = [isec, pgrad, qgrad]
@@ -70,6 +76,19 @@ function [nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] = splittIn
 %
 % polyElmts -------------------- relate sections and polygonal elements
 % polyElmts = [ipoly, region, numSecPoly, sec_1,...,sec_numSecPoly,idxLeaf]
+% secNQ -------------------------matrix of all sections from neighbour quad
+% secNQ = [idx_sec,numSecNQ,isecNQ1,isecNQ2....isecNQ_numSecNQ]
+%
+%                     idx_sec --- section number of the unqualified section
+%                     numSecNQ --- number of sections from neighbour quad
+%                                  per unqualified section
+%                     isecNQ --- section number from the neighbour quad 
+% 
+%
+% secN  -------------------------number of the neighbour section
+% secN = [idx_sec, isecN]
+%                      idx_sec --- section number of the unqualified section
+%                      isecN --- number of the neighbour section related to the unqualified section
 %
 % -----------------------------------------------------------------------------
 
