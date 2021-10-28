@@ -1,9 +1,10 @@
-function [Quadtree,nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] = elevateOrder_quadtree_mesh(Quadtree,seedingPoints_splitt,seedingPoints_merge)
+function [Quadtree,nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] = elevateOrder_quadtree_mesh(Quadtree,seedingPoints_splitt,seedingPoints_merge,ep,eq)
 % refine_quadtree_mesh: refine given quadtree based mesh
 %
 % INPUT: 
 % Quadtree ------------------- Quadtree data structure 
 % seedingPoints -------------- list of seeding points
+% ep/eq ---------------------- elevated p-/q-grad
 %
 % OUTPUT:
 % Quadtree ------------------- updated Quadtree data structure 
@@ -61,7 +62,7 @@ NURBS = data{3};
 
 %% Splitt polygonal elements into section
 
-[nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] = splittIntoSections(nnode,coor,numel,connectivity,...
-                                                                    numKnotVectors,knotVectors,maxnknots,idxControlPoints);
+[nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] = splittIntoSections_elevateOrder1(nnode,coor,numel,connectivity,...
+                                                                    numKnotVectors,knotVectors,maxnknots,idxControlPoints,seedingPoints_splitt,Quadtree,ep,eq);
                                                   
 end
