@@ -594,4 +594,117 @@ for ielno = 1:numel
     end
 end
 
+
+%% get the neighbours of unqualified sections
+
+%seedingPoints = [isec, isec0, idxLeaf, xcoor, ycoor]
+
+num_seedingPoints = length(seedingPoints_splitt(:,1));
+
+
+secNQ = cell(num_seedingPoints,1); %array for all section numbers of neighbour quad
+%secNQ = {idx_sec,sumSecNQ,sec_NQ1,sec_NQ2, ... ,sec_NQ_sumSecNQ]
+
+secN = []; %array for section numbers of the neighbour section
+%secN = [idx_sec,isecN]
+
+
+for isp = 1: num_seedingPoints
+    idx_sec = seedingPoints_splitt(isp,2); %(old) number of unqualified sections 
+    ikvo = sections(idx_sec,3);
+    
+    idxLeaf_sec = seedingPoints_splitt(isp, 3); %idxLeaf of unqualified sections
+      
+    refLeaf_sec = Quadtree.Node{idxLeaf_sec,1}{2,1}(1:end);
+    secNQ{isp}(1,1) = isp;
+   
+    % search for current Quad neighbours
+    % Loop over directions:
+    % 1 - West
+    % 2 - South
+    % 3 - East
+    % 4 - North
+    idxNQa = [];
+    for dir = 1:4 % determine possible neighbour Quad in current direction 
+        [exist_NQ, refNQ_sec] = refNeighbour(refLeaf_sec,dir);
+        if exist_NQ == 1
+            % look for neighbour Quad reference in reference array          
+            
+            idxNQ = findNeighbour(Quadtree,idxLeaf_sec,refLeaf_sec, refNQ_sec);
+            if Quadtree.isleaf(idxNQ)
+                idxNQa = [idxNQa;idxNQ];
+            else
+                idxNQchildren = Quadtree.getchildren(idxNQ);
+                    if dir == 1 
+                      idxNQc1 = idxNQchildren(3);
+                      idxNQc2 = idxNQchildren(4);
+                
+                    elseif dir == 2  
+                      idxNQc1 = idxNQchildren(1);
+                      idxNQc2 = idxNQchildren(3); 
+                    
+                    elseif dir == 3  
+                      idxNQc1 = idxNQchildren(1);
+                      idxNQc2 = idxNQchildren(2); 
+                    elseif dir == 4  
+                      idxNQc1 = idxNQchildren(2);
+                      idxNQc2 = idxNQchildren(4); 
+                                
+                    end 
+                idxNQa = [idxNQa;idxNQc1;idxNQc2];
+            end
+        end
+    end
+
+    
+    % sections = [isec, idxLeaf, ikv, iel,region, nsec, node_1,...,node_nsec]
+    % polyElmts = [ipoly, region, numSecPoly, sec_1,...,sec_numSecPoly,idxLeaf]
+
+      %get all section numbers of neighbour quad
+      sum_secNQ = 0;
+      isecNQ = [];
+      
+      for j = 1: length(idxNQa)                 
+          idxsecNQ = find(idxNQa(j,1) == sections(:,2));
+          isecNQ = [isecNQ;idxsecNQ];         
+          sum_secNQ = sum_secNQ + length(idxsecNQ);
+      end
+      secNQ{isp}(1,2) = sum_secNQ;
+      secNQ{isp}(1,3:2+length(isecNQ)) = isecNQ';
+      
+   
+      
+     % sections = [isec, idxLeaf, ikv, iel,region, nsec, node_1,...,node_nsec]
+      %get the neighbour section 
+      isecN = 0;
+      if ikvo ~= 0 
+          sec_NURBS = find(sections(:,3) ~= 0); %get the number of all sections with NURBS curve
+          jj = 1;
+          while jj <= length(sec_NURBS) && isecN == 0
+              idxsecN = sec_NURBS(jj,1);             
+              if idxsecN ~= idx_sec
+                  if sections(idxsecN,7:end-1) == rot90(sections(idx_sec,7:end-1),2)                 
+                      isecN = idxsecN; %section number of the neighbour section 
+                  end 
+              end
+              jj = jj + 1;
+          end
+          
+          
+      else %(ikvo == 0)
+          
+          jj = 1;
+          while jj <= length(secNQ{isp}(1,3:end)) && isecN == 0          
+              idxsecNQ = secNQ{isp}(1,2+jj);
+              if length(sections(idxsecNQ,7:end-1)) == length(sections(idx_sec,7:end-1))                           
+                  if sections(idxsecNQ,7:end-2) == rot90(sections(idx_sec,7:end-2),2)            
+                      isecN = sections(idxsecNQ,1); %section number of the neighbour section 
+                  end 
+              end 
+              jj = jj + 1;
+          end
+      end
+      secN = [secN;idx_sec,isecN];                        
+end
+
 end
