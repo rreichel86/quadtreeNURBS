@@ -146,8 +146,8 @@ end
 
 % polyElmts = [ipoly, region, numSecPoly, sec_1,...,sec_numSecPoly,idxLeaf]
 polyElmts = zeros(numel,maxNumSecPoly + 4);
-% sections = [isec, idxLeaf, ikv, region, nsec, node_1,...,node_nsec]
-sections = zeros(numsec, maxnsec + 5);
+% sections = [isec, idxLeaf, ikv, iel, region, nsec, node_1,...,node_nsec]
+sections = zeros(numsec, maxnsec + 6);
 % knots = [ikv, iw, nknots, iknot, jknot, knot_1,...,knot_nknots]
 knots = zeros(numsec_w_NURBS, maxnknots + 5);
 % ord = [isec, pgrad, qgrad]
@@ -241,11 +241,12 @@ for ielno = 1:numel
 
             isec = isec + 1;
             sections(isec,1) = isec; % section number (isec)
-            sections(isec,2) = idxLeaf; %index of leaf
+            sections(isec,2) = idxLeaf; %index of leaf (idxLeaf)
             sections(isec,3) = 0; % knot vector number (ikv)
-            sections(isec,5) = 3; % number of nodes per section (nsec)
-            sections(isec,4) = region_nro; % region number
-            sections(isec,6:8) = elmt(idx); 
+            sections(isec,4) = ielno; % element number(iel)
+            sections(isec,6) = 3; % number of nodes per section (nsec)
+            sections(isec,5) = region_nro; % region number
+            sections(isec,7:9) = elmt(idx);
 
             ord(isec,:) = [isec,1,1];
             
@@ -271,9 +272,10 @@ for ielno = 1:numel
                 sections(isec,1) = isec; % section number (isec)
                 sections(isec,2) = idxLeaf; %index of leaf
                 sections(isec,3) = isec_w_NURBS; % knot vector number (ikv)
-                sections(isec,5) = ncp + 1; % number of nodes per section (nsec)
-                sections(isec,4) = region_nro; % region number
-                sections(isec,6:6+ncp) = elmt(idx);
+                sections(isec,4) = ielno; % element number(iel)
+                sections(isec,6) = ncp + 1; % number of nodes per section (nsec)
+                sections(isec,5) = region_nro; % region number
+                sections(isec,7:7+ncp) = elmt(idx);
 
                 ord(isec,:) = [isec,pgrad,1];
                 
@@ -309,9 +311,11 @@ for ielno = 1:numel
                 sections(isec,1) = isec; % section number (isec)
                 sections(isec,2) = idxLeaf; %index of leaf
                 sections(isec,3) = 0; % knot vector number (ikv)
-                sections(isec,5) = 3; % number of nodes per section (nsec)
-                sections(isec,4) = region_nro; % region number
-                sections(isec,6:8) = elmt(idx);
+                sections(isec,4) = ielno; % element number (iel)
+                sections(isec,6) = 3; % number of nodes per section (nsec)
+                sections(isec,5) = region_nro; % region number
+                sections(isec,7:9) = elmt(idx);
+
 
                 ord(isec,:) = [isec,1,1];
                 
@@ -327,10 +331,10 @@ for ielno = 1:numel
                 sections(isec,1) = isec; % section number (isec)
                 sections(isec,2) = idxLeaf; %index of leaf
                 sections(isec,3) = 0; % knot vector number (ikv)
-                sections(isec,5) = 3; % number of nodes per section (nsec)
-                sections(isec,4) = region_nro; % region number
-                sections(isec,6:8) = elmt(idx);
-
+                sections(isec,4) = ielno; % element number (iel)
+                sections(isec,6) = 3; % number of nodes per section (nsec)
+                sections(isec,5) = region_nro; % region number
+                sections(isec,7:9) = elmt(idx);
                 ord(isec,:) = [isec,1,1];
                 
             end
@@ -356,9 +360,10 @@ for ielno = 1:numel
                 sections(isec,1) = isec; % section number (isec)
                 sections(isec,2) = idxLeaf; %index of leaf
                 sections(isec,3) = isec_w_NURBS; % knot vector number (ikv)
-                sections(isec,5) = ncp + 1; % number of nodes per section (nsec)
-                sections(isec,4) = region_nro; % region number
-                sections(isec,6:6+ncp) = elmt(idx);
+                sections(isec,4) = ielno; % element number(iel)
+                sections(isec,6) = ncp + 1; % number of nodes per section (nsec)
+                sections(isec,5) = region_nro; % region number
+                sections(isec,7:7+ncp) = elmt(idx);
                 ord(isec,:) = [isec,pgrad,1];
 
                 % knot vector number (ikv)
@@ -390,9 +395,10 @@ for ielno = 1:numel
                 sections(isec,1) = isec; % section number (isec)
                 sections(isec,2) = idxLeaf; %index of leaf
                 sections(isec,3) = 0; % knot vector number (ikv)
-                sections(isec,5) = 3; % number of nodes per section (nsec)
-                sections(isec,4) = region_nro; % region number
-                sections(isec,6:8) = elmt(idx);
+                sections(isec,4) = ielno; % element number (iel)
+                sections(isec,6) = 3; % number of nodes per section (nsec)
+                sections(isec,5) = region_nro; % region number
+                sections(isec,7:9) = elmt(idx);
 
                 ord(isec,:) = [isec,1,1];
 
@@ -405,9 +411,10 @@ for ielno = 1:numel
                 sections(isec,1) = isec; % section number (isec)
                 sections(isec,2) = idxLeaf; %index of leaf
                 sections(isec,3) = 0; % knot vector number (ikv)
-                sections(isec,5) = 3; % number of nodes per section (nsec)
-                sections(isec,4) = region_nro; % region number
-                sections(isec,6:8) = elmt(idx);
+                sections(isec,4) = ielno; % element number (iel)
+                sections(isec,6) = 3; % number of nodes per section (nsec)
+                sections(isec,5) = region_nro; % region number
+                sections(isec,7:9) = elmt(idx);
 
                 ord(isec,:) = [isec,1,1];
 
@@ -434,10 +441,10 @@ for ielno = 1:numel
                 sections(isec,1) = isec; % section number (isec)
                 sections(isec,2) = idxLeaf; %index of leaf
                 sections(isec,3) = isec_w_NURBS; % knot vector number (ikv)
-                sections(isec,5) = ncp + 1; % number of nodes per section (nsec)
-                sections(isec,4) = region_nro; % region number
-                sections(isec,6:6+ncp) = elmt(idx);
-
+                sections(isec,4) = ielno; % element number(iel)
+                sections(isec,6) = ncp + 1; % number of nodes per section (nsec)
+                sections(isec,5) = region_nro; % region number
+                sections(isec,7:7+ncp) = elmt(idx);
 
                 ord(isec,:) = [isec,pgrad,1];
 
@@ -470,9 +477,10 @@ for ielno = 1:numel
                 sections(isec,1) = isec; % section number (isec)
                 sections(isec,2) = idxLeaf; %index of leaf
                 sections(isec,3) = 0; % knot vector number (ikv)
-                sections(isec,5) = 3; % number of nodes per section (nsec)
-                sections(isec,4) = region_nro; % region number
-                sections(isec,6:8) = elmt(idx);
+                sections(isec,4) = ielno; % element number (iel)
+                sections(isec,6) = 3; % number of nodes per section (nsec)
+                sections(isec,5) = region_nro; % region number
+                sections(isec,7:9) = elmt(idx);
 
                 ord(isec,:) = [isec,1,1];
 
@@ -485,9 +493,10 @@ for ielno = 1:numel
                 sections(isec,1) = isec; % section number (isec)
                 sections(isec,2) = idxLeaf; %index of leaf
                 sections(isec,3) = 0; % knot vector number (ikv)
-                sections(isec,5) = 3; % number of nodes per section (nsec)
-                sections(isec,4) = region_nro; % region number
-                sections(isec,6:8) = elmt(idx);
+                sections(isec,4) = ielno; % element number (iel)
+                sections(isec,6) = 3; % number of nodes per section (nsec)
+                sections(isec,5) = region_nro; % region number
+                sections(isec,7:9) = elmt(idx);
 
                 ord(isec,:) = [isec,1,1];
 
@@ -514,9 +523,10 @@ for ielno = 1:numel
                 sections(isec,1) = isec; % section number (isec)
                 sections(isec,2) = idxLeaf; %index of leaf
                 sections(isec,3) = isec_w_NURBS; % knot vector number (ikv)
-                sections(isec,5) = ncp + 1; % number of nodes per section (nsec)
-                sections(isec,4) = region_nro; % region number
-                sections(isec,6:6+ncp) = elmt(idx);
+                sections(isec,4) = ielno; % element number(iel)
+                sections(isec,6) = ncp + 1; % number of nodes per section (nsec)
+                sections(isec,5) = region_nro; % region number
+                sections(isec,7:7+ncp) = elmt(idx);
 
                 ord(isec,:) = [isec,pgrad,1];
 
@@ -549,9 +559,10 @@ for ielno = 1:numel
                 sections(isec,1) = isec; % section number (isec)
                 sections(isec,2) = idxLeaf; %index of leaf
                 sections(isec,3) = 0; % knot vector number (ikv)
-                sections(isec,5) = 3; % number of nodes per section (nsec)
-                sections(isec,4) = region_nro; % region number
-                sections(isec,6:8) = elmt(idx);
+                sections(isec,4) = ielno; % element number (iel)
+                sections(isec,6) = 3; % number of nodes per section (nsec)
+                sections(isec,5) = region_nro; % region number
+                sections(isec,7:9) = elmt(idx);
 
                 ord(isec,:) = [isec,1,1];
 
@@ -564,9 +575,10 @@ for ielno = 1:numel
                 sections(isec,1) = isec; % section number (isec)
                 sections(isec,2) = idxLeaf; %index of leaf
                 sections(isec,3) = 0; % knot vector number (ikv)
-                sections(isec,5) = 3; % number of nodes per section (nsec)
-                sections(isec,4) = region_nro; % region number
-                sections(isec,6:8) = elmt(idx);
+                sections(isec,4) = ielno; % element number (iel)
+                sections(isec,6) = 3; % number of nodes per section (nsec)
+                sections(isec,5) = region_nro; % region number
+                sections(isec,7:9) = elmt(idx);
 
                 ord(isec,:) = [isec,1,1];
 
