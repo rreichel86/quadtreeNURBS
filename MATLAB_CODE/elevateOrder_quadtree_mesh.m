@@ -62,7 +62,7 @@ NURBS = data{3};
 
 %% Splitt polygonal elements into section
 
-[nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] = splittIntoSections_elevateOrder1(nnode,coor,numel,connectivity,...
+[nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts,~,~] = splittIntoSections_elevateOrder1(nnode,coor,numel,connectivity,...
                                                                     numKnotVectors,knotVectors,maxnknots,idxControlPoints,seedingPoints_splitt,Quadtree,ep,eq);
                                                   
 end
