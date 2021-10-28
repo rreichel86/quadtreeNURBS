@@ -9,12 +9,10 @@ function [coor,maxnsec,nnode,sections,ord]=elevtGrad(ep,eq,nnode,coor,sections,s
 %
 %                              type: 1 -  node
 %                                    2 - control point or intersection point
-%                                    3 - inserted nodes
 %                              which_region: region number
-%                              inside_region: 0 - at the boundary (NURBS
-%                                                         curve boundary?)
-%                                             1 - inside (inside of hole?)
-%                                            -1 - outside (out of hole?)
+%                              inside_region: 0 - at the boundary 
+%                                             1 - inside 
+%                                            -1 - outside 
 %
 % sections -------------------- sections connectivity matrix as nsec-tupel of 
 %                               nodes, where the first three entries
@@ -44,6 +42,14 @@ function [coor,maxnsec,nnode,sections,ord]=elevtGrad(ep,eq,nnode,coor,sections,s
 %
 %
 %OUTPUT: coor, nnode, sections, ord 
+% coor = [number, x-coor, y-coor, weight, type, which_region, inside_region]
+%
+%                              type: 1 -  node
+%                                    2 - control point or intersection point
+%                              which_region: region number
+%                              inside_region: 0 - at the boundary 
+%                                             1 - inside 
+%                                            -1 - outside 
 
 
 if ep >= 2 %in p-direction
