@@ -704,7 +704,10 @@ for isp = 1: num_seedingPoints
               jj = jj + 1;
           end
       end
-      secN = [secN;idx_sec,isecN];                        
+      secN = [secN;idx_sec,isecN];       
 end
+
+%% elevate the p-/q-Grad
+[coor,maxnsec,nnode,sections,ord]=elevtGrad(ep,eq,nnode,coor,sections,seedingPoints_splitt,ord,secN,polyElmts,connectivity);
 
 end
