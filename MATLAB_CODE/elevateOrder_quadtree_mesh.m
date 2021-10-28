@@ -13,6 +13,7 @@ function [Quadtree,nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] =
 %
 %                              type: 1 -  node
 %                                    2 - control point or intersection point
+%                                    3 - inserted nodes
 %                              which_region: region number
 %                              inside_region: 0 - at the boundary
 %                                             1 - inside 
@@ -23,10 +24,12 @@ function [Quadtree,nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] =
 % sections -------------------- sectionsconnectivity matrix as nsec-tupel of 
 %                               nodes, where the first three entries
 %                               isec - section number
+%                               idxLeaf - index of Leaf
 %                               ikv - knot vector number
+%                               iel - quad element number
 %                               region - region number 
 %                               nsec - number of nodes per section
-% sections = [isec, ikv, region, nsec, node_1,...,node_nsec]
+% sections = [isec, idxLeaf, ikv, iel, region, nsec, node_1,...,node_nsec]
 % 
 % ord ------------------------- section polynomial order
 % ord = [isec, pgrad, qgrad]
@@ -35,7 +38,7 @@ function [Quadtree,nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] =
 % wgt = [iw, nweights, weight_1,...,weigth_nweigths]
 %
 % polyElmts -------------------- relate sections and polygonal elements
-% polyElmts = [ipoly, region, numSecPoly, sec_1,...,sec_numSecPoly]
+% polyElmts = [ipoly, region, numSecPoly, sec_1,...,sec_numSecPoly, idxLeaf]
 %
 % -------------------------------------------------------------------------
 
@@ -47,14 +50,14 @@ hold on
 data = Quadtree.Node{1,1};
 NURBS = data{3};
 
-[Quadtree] = QuadtreeSplit(Quadtree,NURBS,seedingPoints_splitt);
-
-[Quadtree] = QuadtreeBalance(Quadtree,NURBS);
-[Quadtree] = check_leaf(Quadtree);
+% [Quadtree] = QuadtreeSplit(Quadtree,NURBS,seedingPoints_splitt);
+% 
+% [Quadtree] = QuadtreeBalance(Quadtree,NURBS);
+% [Quadtree] = check_leaf(Quadtree);
 
 %% Extract polygonal elements 
 [nnode,coor,numel,connectivity,~,...
- numKnotVectors,knotVectors,maxnknots,idxControlPoints] = extractElements(Quadtree);
+ numKnotVectors,knotVectors,maxnknots,idxControlPoints] = extractElements_elevateOrder(Quadtree);
 
 %% Splitt polygonal elements into section
 
