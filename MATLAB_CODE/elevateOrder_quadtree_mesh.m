@@ -1,4 +1,4 @@
-function [Quadtree,nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] = elevateOrder_quadtree_mesh(Quadtree,seedingPoints_splitt,seedingPoints_merge,ep,eq)
+function [Quadtree,nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] = elevateOrder_quadtree_mesh(Quadtree,seedingPoints_splitt,ep,eq)
 % refine_quadtree_mesh: refine given quadtree based mesh
 %
 % INPUT: 
