@@ -326,8 +326,8 @@ for i = 1:numleaves
         connectivity{ielno}(1,2) = countKnotVectors;
         connectivity{ielno+1}(1,2) = countKnotVectors;
         % region number
-        connectivity{ielno}(1,3) = 1;
-        connectivity{ielno+1}(1,3) = 1;
+        connectivity{ielno}(1,4) = 1;
+        connectivity{ielno+1}(1,4) = 1;
         ielno = ielno+2;
     end
 end % end loop over leaves
