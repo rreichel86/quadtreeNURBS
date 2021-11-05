@@ -48,8 +48,8 @@ hold on
 
 %% Quadtree decomposition
 % Get NURBS curve
-data = Quadtree.Node{1,1};
-NURBS = data{3};
+% data = Quadtree.Node{1,1};
+% NURBS = data{3};
 
 % [Quadtree] = QuadtreeSplit(Quadtree,NURBS,seedingPoints_splitt);
 % 
