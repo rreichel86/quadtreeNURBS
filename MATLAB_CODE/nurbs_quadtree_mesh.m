@@ -1,6 +1,5 @@
-function [Quadtree,nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] = nurbs_quadtree_mesh_elevateOrder0(k_min,NURBS,Boundary)
-% nurbs_quadtree_mesh: generate a quadtree based mesh(with change in
-% functions "extract" and "splittintosections")
+function [Quadtree,nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] = nurbs_quadtree_mesh(k_min,NURBS,Boundary)
+% nurbs_quadtree_mesh: generate a quadtree based mesh
 %
 % INPUT: 
 % k_min ---------------------- minimum level of decomposition
@@ -51,11 +50,11 @@ function [Quadtree,nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] =
 [Quadtree] = check_leaf(Quadtree);
 %% Extract polygonal elements 
 [nnode,coor,numel,connectivity,~,...
- numKnotVectors,knotVectors,maxnknots,idxControlPoints] = extractElements_elevateOrder(Quadtree);
+ numKnotVectors,knotVectors,maxnknots,idxControlPoints] = extractElements(Quadtree);
 
 %% Splitt polygonal elements into section
 
-[nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] = splittIntoSections_elevateOrder0(nnode,coor,numel,connectivity,...
+[nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] = splittIntoSections(nnode,coor,numel,connectivity,...
                                                                     numKnotVectors,knotVectors,maxnknots,idxControlPoints);
 
 end
