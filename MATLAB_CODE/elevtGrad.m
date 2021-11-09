@@ -6,7 +6,7 @@ function [coor,maxnsec,nnode,sections,ord]=elevtGrad(Quadtree,ep,eq,nnode,coor,s
 % Quadtree
 % ep = elevated pgrad 
 % eq = elevated qgrad 
-%
+% nnode = number of nodes 
 % coor = [number, x-coor, y-coor, weight, type, which_region, inside_region]
 %
 %                              type: 1 -  node
@@ -19,35 +19,43 @@ function [coor,maxnsec,nnode,sections,ord]=elevtGrad(Quadtree,ep,eq,nnode,coor,s
 % sections -------------------- sections connectivity matrix as nsec-tupel of 
 %                               nodes, where the first three entries
 %                               isec - section number
+%                               ipoly - polygonal element number
 %                               ikv - knot vector number
-%                               iel - element number
 %                               region - region number 
 %                               nsec - number of nodes per section
-% sections = [isec, idxLeaf, ikv, iel, region, nsec, node_1,...,node_nsec]
+% sections = [isec, ipoly, idxLeaf, ikv, region, nsec, node_1,...,node_nsec]
 %
 %
-% seedingPoints_splitt = [isec,isec0,idxLeaf,xcoor,ycoor,c]
+% seedingPoints_splitt = [isec,isec0,idxLeaf,xcoor,ycoor]
 %                         
 %                       isec  --- new section number of the unqualified section
 %                       isec0 --- old section number lof the unqualified section 
 %                       idxLeaf -- index of Leaf
 %                       x/y_coor - x/y coordinate of the scaling center
-%                       c  ----   error_measure
 %
 % ord = [isec,pgrad,qgrad]
-%
-% secN = [isec, isecN]
 %
 % polyElmts -------------------- relate sections and polygonal elements
 % polyElmts = [ipoly, region, numSecPoly, sec_1,...,sec_numSecPoly,idxLeaf]
 %
+% connectivity --------------- elements connectivity matrix as nel-tupel of 
+%                              nodes, where the first three entries
+%                              iel - element number
+%                              ikv - knot vector number
+%                              idxLeaf - index of Leaf
+%                              which_region - region number
+%                              nel - number of nodes per element
+%
+% connectivity = [iel, ikv, idxLeaf, which_region, nel, node_1,...,node_nel, scaling_center]
 %
 %
-%OUTPUT: coor, nnode, sections, ord 
+%
+%OUTPUT: coor, maxnsec, nnode, sections, ord 
 % coor = [number, x-coor, y-coor, weight, type, which_region, inside_region]
 %
 %                              type: 1 -  node
 %                                    2 - control point or intersection point
+%                                    3 - inserted nodes
 %                              which_region: region number
 %                              inside_region: 0 - at the boundary 
 %                                             1 - inside 
