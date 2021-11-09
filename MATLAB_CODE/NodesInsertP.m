@@ -9,31 +9,29 @@ function [coor,nnode,sections,ord] = NodesInsertP(ep,nnode,coor,sections,seeding
 %
 %                              type: 1 -  node
 %                                    2 - control point or intersection point
-%                                    3 - inserted nodes
 %                              which_region: region number
-%                              inside_region: 0 - at the boundary (NURBS
-%                                                         curve boundary?)
-%                                             1 - inside (inside of hole?)
-%                                            -1 - outside (out of hole?)
+%                              inside_region: 0 - at the boundary 
+%                                             1 - inside 
+%                                            -1 - outside 
 %
 % sections -------------------- sections connectivity matrix as nsec-tupel of 
 %                               nodes, where the first three entries
 %                               isec - section number
+%                               ipoly - polygonal element number 
+%                               idxLeaf - index of leaf 
 %                               ikv - knot vector number
-%                               iel - element number
 %                               region - region number 
 %                               nsec - number of nodes per section
-% sections = [isec, idxLeaf, ikv, iel,region, nsec, node_1,...,node_nsec]
+% sections = [isec, ipoly, idxLeaf, ikv, region, nsec, node_1,...,node_nsec]
 %
 %
-% seedingPoints_splitt = [isec,isec0,idxLeaf,xcoor,ycoor,c]
+% seedingPoints_splitt = [isec,isec0,idxLeaf,xcoor,ycoor]
 %                         
 %                       isec  - new section number of the unqualified section
 %                       isec0 - old section number lof the unqualified section 
 %                       idxLeaf - number of Leaf
 %                       x/y_coor - x/y coordinate of the scaling center
 %                                  of the unqualified sections
-%                       c  -   error_measure
 %
 % ord = [isec,pgrad,qgrad]
 %
@@ -44,19 +42,30 @@ function [coor,nnode,sections,ord] = NodesInsertP(ep,nnode,coor,sections,seeding
 %
 %
 %
-%OUTPUT: coor, nnode, sections, ord                   
+%OUTPUT: coor, nnode, sections, ord       
+
+% coor = [number, x-coor, y-coor, weight, type, which_region, inside_region]
+%
+%                              type: 1 -  node
+%                                    2 - control point or intersection point
+%                              which_region: region number
+%                              inside_region: 0 - at the boundary 
+%                                             1 - inside 
+%                                            -1 - outside 
 
 
-num_seedingPoints = length(seedingPoints_splitt(:,1));
+
 
 %% insert nodes in P-direction
+num_seedingPoints = length(seedingPoints_splitt(:,1));
 sections = [sections,zeros(length(sections(:,1)),ep-1)];
 ninode = ep - 1;
 for isp = 1: num_seedingPoints           
     isec0 = seedingPoints_splitt(isp,2);
     ikv = sections(isec0,3); 
     coor_nsec = []; %coor_matrix contains the information of all nodes including scalling center for each chosed section
-    % sections = [isec, idxLeaf, ikv, iel,region, nsec, node_1,...,node_nsec]
+
+    % sections = [isec, ipoly, idxLeaf, ikv, region, nsec, node_1,...,node_nsec]
     if ikv == 0
         if sections(isec0,6) == 3 %check if this section has been treated in secN
 
