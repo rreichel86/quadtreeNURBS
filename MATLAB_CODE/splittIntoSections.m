@@ -59,8 +59,8 @@ function [nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] = splittIn
 % sections -------------------- sections connectivity matrix as nsec-tupel of 
 %                               nodes, where the first three entries
 %                               isec - section number
-%                               idxLeaf - index of Leaf
 %                               ipoly - polygonal element number
+%                               idxLeaf - index of Leaf
 %                               ikv - knot vector number
 %                               region - region number 
 %                               nsec - number of nodes per section
