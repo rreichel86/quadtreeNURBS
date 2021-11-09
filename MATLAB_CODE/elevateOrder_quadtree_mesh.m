@@ -63,6 +63,9 @@ hold on
 %% Splitt polygonal elements into section
 
 [nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] = splittIntoSections(nnode,coor,numel,connectivity,...
-                                                                    numKnotVectors,knotVectors,maxnknots,idxControlPoints,seedingPoints_splitt,Quadtree,ep,eq);
+                                                                    numKnotVectors,knotVectors,maxnknots,idxControlPoints);
+%% Elevate Order in P-/Q-Direction
+
+[coor,maxnsec,nnode,sections,ord]=elevtGrad(Quadtree,ep,eq,nnode,coor,sections,seedingPoints_splitt,ord,polyElmts,connectivity;)
                                                   
 end
