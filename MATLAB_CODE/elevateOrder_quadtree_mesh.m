@@ -66,6 +66,6 @@ hold on
                                                                     numKnotVectors,knotVectors,maxnknots,idxControlPoints);
 %% Elevate Order in P-/Q-Direction
 
-[coor,maxnsec,nnode,sections,ord]=elevtGrad(Quadtree,ep,eq,nnode,coor,sections,seedingPoints_splitt,ord,polyElmts,connectivity)
+[coor,maxnsec,nnode,sections,ord]=elevtGrad(Quadtree,ep,eq,nnode,coor,sections,seedingPoints_splitt,ord,polyElmts,connectivity);
                                                   
 end
