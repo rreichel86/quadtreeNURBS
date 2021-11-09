@@ -1,4 +1,4 @@
-function [Quadtree,nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] = nurbs_quadtree_mesh(k_min,NURBS,Boundary)
+function [Quadtree,nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] = nurbs_quadtree_mesh_old(k_min,NURBS,Boundary)
 % nurbs_quadtree_mesh: generate a quadtree based mesh 
 %
 % INPUT: 
