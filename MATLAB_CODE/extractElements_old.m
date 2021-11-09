@@ -1,5 +1,5 @@
 function [numcoor,coor,numel,connectivity,maxnel,...
-          numKnotVectors,knotVectors,maxnknots,idxControlPoints] = extractElements(Quadtree)
+          numKnotVectors,knotVectors,maxnknots,idxControlPoints] = extractElements_old(Quadtree)
 % extractElements: get polygonal elements from Quadtree data structure
 %
 % INPUT:
