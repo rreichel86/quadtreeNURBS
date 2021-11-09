@@ -9,30 +9,29 @@ function [coor,nnode,sections,ord] = NodesInsertQ(eq,nnode,coor,sections,seeding
 %
 %                              type: 1 -  node
 %                                    2 - control point or intersection point
-%                                    3 - inserted nodes
 %                              which_region: region number
-%                              inside_region: 0 - at the boundary (NURBS
-%                                                         curve boundary?)
-%                                             1 - inside (inside of hole?)
-%                                            -1 - outside (out of hole?)
+%                              inside_region: 0 - at the boundary 
+%                                             1 - inside 
+%                                            -1 - outside 
 %
 % sections -------------------- sections connectivity matrix as nsec-tupel of 
 %                               nodes, where the first three entries
 %                               isec - section number
+%                               ipoly - polygonal element number
 %                               ikv - knot vector number
+%                               idxLeaf - index of leaf
 %                               region - region number 
 %                               nsec - number of nodes per section
-% sections = [isec, idxLeaf, ikv, iel,region, nsec, node_1,...,node_nsec]
+% sections = [isec, ipoly, idxLeaf, ikv, region, nsec, node_1,...,node_nsec]
 %
 %
-% seedingPoints_splitt = [isec,isec0,idxLeaf,xcoor,ycoor,c]
+% seedingPoints_splitt = [isec,isec0,idxLeaf,xcoor,ycoor]
 %                         
 %                       isec  - new section number of the unqualified section
 %                       isec0 - old section number lof the unqualified section 
 %                       idxLeaf - number of Leaf
 %                       x/ycoor - x/y coordinate of the scaling center
 %                                  of the unqualified sections
-%                       c  -   error_measure
 %
 % ord = [isec,pgrad,qgrad]
 %
@@ -45,23 +44,34 @@ function [coor,nnode,sections,ord] = NodesInsertQ(eq,nnode,coor,sections,seeding
 %
 %
 %
-%OUTPUT: coor, nnode, sections, ord                   
+%OUTPUT: coor, nnode, sections, ord   
+
+% coor = [number, x-coor, y-coor, weight, type, which_region, inside_region]
+%
+%                              type: 1 -  node
+%                                    2 - control point or intersection point
+%                              which_region: region number
+%                              inside_region: 0 - at the boundary 
+%                                             1 - inside 
+%                                            -1 - outside 
 
 
-num_seedingPoints = length(seedingPoints_splitt(:,1));
+
           
 %% insert nodes in Q-direction
+num_seedingPoints = length(seedingPoints_splitt(:,1));
 maxpgrad = max(ord(:,2));
 sections = [sections,zeros( size(sections,1), (maxpgrad+1)*(eq-1) )];
 
 % polyElmts = [ipoly, region, numSecPoly, sec_1,...,sec_numSecPoly,idxLeaf]
 % sections = [isec, idxLeaf, ikv, iel,region, nsec, node_1,...,node_nsec]
+% sections = [isec, ipoly, idxLeaf, ikv, region, nsec, node_1,...,node_nsec]
 
 
 Elmtsec = [];    %element which contain unqualified sections
 for isp = 1: num_seedingPoints
     isec0 = seedingPoints_splitt(isp,2);
-    iel = sections(isec0,4);
+    iel = sections(isec0,2);
     Elmtsec = [Elmtsec;iel];
 end
 Elmtsec = unique(Elmtsec);
@@ -103,8 +113,8 @@ for ielmt = 1: length(Elmtsec)
         
      
                
-        %insert nodes per section within element       
-        
+        %insert nodes per section within element  
+             
         for ise = 1:numSecPoly
             idxse = secElmts(ise);
             nsec = sections(idxse,6);
@@ -186,7 +196,7 @@ for ielmt = 1: length(Elmtsec)
         
         for ise = 1:numSecPoly
             idxse = secElmts(ise); %section number within element
-            ikv = sections(idxse,3);
+            ikv = sections(idxse,4);
             nsec = sections(idxse,6);
             pgrad = ord(idxse,2);
             
