@@ -74,19 +74,6 @@ function [nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] = splittIn
 %
 % polyElmts -------------------- relate sections and polygonal elements
 % polyElmts = [ipoly, region, numSecPoly, sec_1,...,sec_numSecPoly,idxLeaf]
-% secNQ -------------------------matrix of all sections from neighbour quad
-% secNQ = [idx_sec,numSecNQ,isecNQ1,isecNQ2....isecNQ_numSecNQ]
-%
-%                     idx_sec --- section number of the unqualified section
-%                     numSecNQ --- number of sections from neighbour quad
-%                                  per unqualified section
-%                     isecNQ --- section number from the neighbour quad 
-% 
-%
-% secN  -------------------------number of the neighbour section
-% secN = [idx_sec, isecN]
-%                      idx_sec --- section number of the unqualified section
-%                      isecN --- number of the neighbour section related to the unqualified section
 %
 % -----------------------------------------------------------------------------
 
