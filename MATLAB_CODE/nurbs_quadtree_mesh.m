@@ -28,11 +28,12 @@ function [Quadtree,nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] =
 % sections -------------------- sections connectivity matrix as nsec-tupel of 
 %                               nodes, where the first three entries
 %                               isec - section number
+%                               ipoly - polygonal element number
 %                               idxLeaf - index of Leaf
 %                               ikv - knot vector number
 %                               region - region number 
 %                               nsec - number of nodes per section
-% sections = [isec, idxLeaf, ikv, region, nsec, node_1,...,node_nsec]
+% sections = [isec, ipoly, idxLeaf, ikv, region, nsec, node_1,...,node_nsec]
 % 
 % ord ------------------------- section polynomial order
 % ord = [isec, pgrad, qgrad]
