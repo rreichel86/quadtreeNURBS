@@ -62,7 +62,7 @@ sections = [sections,zeros(length(sections(:,1)),ep-1)];
 ninode = ep - 1;
 for isp = 1: num_seedingPoints           
     isec0 = seedingPoints_splitt(isp,2);
-    ikv = sections(isec0,3); 
+    ikv = sections(isec0,4); 
     coor_nsec = []; %coor_matrix contains the information of all nodes including scalling center for each chosed section
 
     % sections = [isec, ipoly, idxLeaf, ikv, region, nsec, node_1,...,node_nsec]
