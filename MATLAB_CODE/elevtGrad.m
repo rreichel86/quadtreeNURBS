@@ -78,7 +78,7 @@ secN = []; %array for section numbers of the neighbour section
 
 for isp = 1: num_seedingPoints
     idx_sec = seedingPoints_splitt(isp,2); %(old) number of unqualified sections 
-    ikvo = sections(idx_sec,3);
+    ikvo = sections(idx_sec,4);
     
     idxLeaf_sec = seedingPoints_splitt(isp, 3); %idxLeaf of unqualified sections
       
