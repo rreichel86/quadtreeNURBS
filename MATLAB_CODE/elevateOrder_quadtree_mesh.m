@@ -1,4 +1,4 @@
-function [Quadtree,nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] = elevateOrder_quadtree_mesh(Quadtree,seedingPoints_splitt,ep,eq)
+function [Quadtree,nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] = elevateOrder_quadtree_mesh(Quadtree,seedingPoints_splitt,seedingPoints_merge)
 % refine_quadtree_mesh: refine given quadtree based mesh
 %
 % INPUT: 
@@ -66,6 +66,6 @@ hold on
                                                                     numKnotVectors,knotVectors,maxnknots,idxControlPoints);
 %% Elevate Order in P-/Q-Direction
 
-[coor,maxnsec,nnode,sections,ord]=elevtGrad(Quadtree,ep,eq,nnode,coor,sections,seedingPoints_splitt,ord,polyElmts,connectivity);
+[coor,maxnsec,nnode,sections,ord]=elevtGrad(Quadtree,nnode,coor,sections,seedingPoints_splitt,ord,polyElmts,connectivity);
                                                   
 end
