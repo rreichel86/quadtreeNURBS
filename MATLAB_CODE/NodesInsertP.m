@@ -52,7 +52,15 @@ function [coor,nnode,sections,ord] = NodesInsertP(nnode,coor,sections,ord,seedin
 %                                            -1 - outside 
 
 
+%% extend sections matrix
+pgrad_splitt = max(seedingPoints_splitt(:,6));
+pgrad_merge = max(seedingPoints_merge(:,6));
 
+if pgrad_splitt + 1 <= pgrad_merge 
+    sections = [sections,zeros(length(sections(:,1)),pgrad_merge-2)];
+else
+    sections = [sections,zeros(length(sections(:,1)),pgrad_splitt-1)];
+end
 
 %% insert nodes in P-direction
 num_seedingPoints = length(seedingPoints_splitt(:,1));
