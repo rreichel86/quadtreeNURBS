@@ -1,11 +1,9 @@
-function [coor,maxnsec,nnode,sections,ord]=elevtGrad(Quadtree,ep,eq,nnode,coor,sections,ord,polyElmts,connectivity,seedingPoints_splitt,seedingPoints_merge)
+function [coor,maxnsec,nnode,sections,ord]=elevtGrad(Quadtree,nnode,coor,sections,ord,polyElmts,connectivity,seedingPoints_splitt,seedingPoints_merge)
 % elevate order in p-direction and/or q-direction
 %
 %INPUT:
 
 % Quadtree
-% ep = elevated pgrad 
-% eq = elevated qgrad 
 % nnode = number of nodes 
 % coor = [number, x-coor, y-coor, weight, type, which_region, inside_region]
 %
@@ -26,13 +24,6 @@ function [coor,maxnsec,nnode,sections,ord]=elevtGrad(Quadtree,ep,eq,nnode,coor,s
 % sections = [isec, ipoly, idxLeaf, ikv, region, nsec, node_1,...,node_nsec]
 %
 %
-% seedingPoints_splitt = [isec,isec0,idxLeaf,xcoor,ycoor]
-%                         
-%                       isec  --- new section number of the unqualified section
-%                       isec0 --- old section number lof the unqualified section 
-%                       idxLeaf -- index of Leaf
-%                       x/y_coor - x/y coordinate of the scaling center
-%
 % ord = [isec,pgrad,qgrad]
 %
 % polyElmts -------------------- relate sections and polygonal elements
@@ -47,6 +38,14 @@ function [coor,maxnsec,nnode,sections,ord]=elevtGrad(Quadtree,ep,eq,nnode,coor,s
 %                              nel - number of nodes per element
 %
 % connectivity = [iel, ikv, idxLeaf, which_region, nel, node_1,...,node_nel, scaling_center]
+
+% seedingPoints = [isec,isec0,idxLeaf,xcoor,ycoor,pgrad,qgrad]
+%                         
+%                       isec  --- new section number of the (un)qualified section
+%                       isec0 --- old section number lof the (un)qualified section 
+%                       idxLeaf -- index of Leaf
+%                       x/y_coor - x/y coordinate of the scaling center
+%                       p-/qgrad  -- p-/qgrad from last calculation
 %
 %
 %
