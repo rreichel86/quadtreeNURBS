@@ -4,7 +4,7 @@ function [Quadtree,nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] =
 % INPUT: 
 % Quadtree ------------------- Quadtree data structure 
 % seedingPoints -------------- list of seeding points
-% ep/eq ---------------------- elevated p-/q-grad
+
 %
 % OUTPUT:
 % Quadtree ------------------- updated Quadtree data structure 
