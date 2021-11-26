@@ -62,15 +62,18 @@ else
     sections = [sections,zeros(length(sections(:,1)),pgrad_splitt-1)];
 end
 
-%% insert nodes in P-direction
-num_seedingPoints = length(seedingPoints_splitt(:,1));
-sections = [sections,zeros(length(sections(:,1)),ep-1)];
-ninode = ep - 1;
-for isp = 1: num_seedingPoints           
-    isec0 = seedingPoints_splitt(isp,2);
-    ikv = sections(isec0,4); 
-    coor_nsec = []; %coor_matrix contains the information of all nodes including scalling center for each chosed section
+%% insert nodes in P-direction for unqualified sections
+numSeedingPoints_splitt = length(seedingPoints_splitt(:,1));
 
+
+for isp = 1: numSeedingPoints_splitt           
+    isec0 = seedingPoints_splitt(isp,2);
+    pgrad = seedingPoints_splitt(isp,6); %pgrad from last calculation 
+    ep = pgrad + 1; %elevated pgrad
+    ninode = ep - 1; %number of inserted nodes
+    ikv = sections(isec0,4); 
+    
+    coor_nsec = []; %coor_matrix contains the information of all nodes including scalling center for each chosed section
     % sections = [isec, ipoly, idxLeaf, ikv, region, nsec, node_1,...,node_nsec]
     if ikv == 0
         if sections(isec0,6) == 3 %check if this section has been treated in secN
