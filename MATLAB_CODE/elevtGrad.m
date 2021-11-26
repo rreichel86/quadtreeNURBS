@@ -293,7 +293,7 @@ end
 %% elevate the p-/q-Grad
 
 
-[coor,nnode,sections,ord] = NodesInsertP(ep,nnode,coor,sections,seedingPoints_splitt,ord,secN_splitt);
+[coor,nnode,sections,ord] = NodesInsertP(nnode,coor,sections,ord,seedingPoints_splitt,secN_splitt,seedingPoints_merge,secN_merge);
 
 
 
