@@ -1,9 +1,7 @@
-function [coor,nnode,sections,ord] = NodesInsertP(ep,nnode,coor,sections,seedingPoints_splitt,ord,secN) 
+function [coor,nnode,sections,ord] = NodesInsertP(nnode,coor,sections,ord,seedingPoints_splitt,secN_splitt,seedingPoints_merge,secN_merge) 
 % Insert nodes in p_direction
 
 %INPUT:
-%ep = elevated pgrad 
-%eq = elevated qgrad 
 %
 % coor = [number, x-coor, y-coor, weight, type, which_region, inside_region]
 %
@@ -25,20 +23,19 @@ function [coor,nnode,sections,ord] = NodesInsertP(ep,nnode,coor,sections,seeding
 % sections = [isec, ipoly, idxLeaf, ikv, region, nsec, node_1,...,node_nsec]
 %
 %
-% seedingPoints_splitt = [isec,isec0,idxLeaf,xcoor,ycoor]
-%                         
-%                       isec  - new section number of the unqualified section
-%                       isec0 - old section number lof the unqualified section 
-%                       idxLeaf - number of Leaf
-%                       x/y_coor - x/y coordinate of the scaling center
-%                                  of the unqualified sections
-%
 % ord = [isec,pgrad,qgrad]
 %
-% secN = [isec, isecN]
+% seedingPoints = [isec,isec0,idxLeaf,xcoor,ycoor]
 %
-% polyElmts -------------------- relate sections and polygonal elements
-% polyElmts = [ipoly, region, numSecPoly, sec_1,...,sec_numSecPoly,idxLeaf]
+%                              isec  - new section number of the (un)qualified section
+%                              isec0 - old section number lof the (un)qualified section 
+%                              idxLeaf - number of Leaf
+%                              x/y_coor - x/y coordinate of the scaling center
+%                                         of the unqualified sections
+%                              p-/qgrad  - p-/qgrad from last calculation
+%
+% secN_splitt = [isec_splitt, isecN_splitt] ---  section number of unqualified section and its neighbour section 
+% secN_merge  = [isec_merge, isecN_merge]  ---   section number of qualified section and its neighbour section
 %
 %
 %
@@ -48,6 +45,7 @@ function [coor,nnode,sections,ord] = NodesInsertP(ep,nnode,coor,sections,seeding
 %
 %                              type: 1 -  node
 %                                    2 - control point or intersection point
+%                                    3 - inserted node
 %                              which_region: region number
 %                              inside_region: 0 - at the boundary 
 %                                             1 - inside 
@@ -92,8 +90,8 @@ for isp = 1: num_seedingPoints
             %update the ord matrix       
             ord(isec0,2) = ep;
 
-            idx_isecN = find(secN(:,1) == isec0);
-            isecN = secN(idx_isecN,2);
+            idx_isecN = find(secN_splitt(:,1) == isec0);
+            isecN = secN_splitt(idx_isecN,2);
             if isecN ~= 0 
                 sections(isecN,6) = 3 + ninode; 
                 sections(isecN,end-1) = sections(isecN,9);%shift of the scaling center
