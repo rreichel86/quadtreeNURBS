@@ -292,13 +292,13 @@ end
 
 %% elevate the p-/q-Grad
 
-if ep >= 2 %in p-direction
-    [coor,nnode,sections,ord] = NodesInsertP(ep,nnode,coor,sections,seedingPoints_splitt,ord,secN_splitt);
-end
 
-if eq >= 2 %in q-diretion
-    [coor,nnode,sections,ord] = NodesInsertQ(eq,nnode,coor,sections,seedingPoints_splitt,ord,polyElmts,connectivity);
-end
+[coor,nnode,sections,ord] = NodesInsertP(ep,nnode,coor,sections,seedingPoints_splitt,ord,secN_splitt);
+
+
+
+[coor,nnode,sections,ord] = NodesInsertQ(eq,nnode,coor,sections,seedingPoints_splitt,ord,polyElmts,connectivity);
+
 
 
 if ep >= 2 && eq == 1
