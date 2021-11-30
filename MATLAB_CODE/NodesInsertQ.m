@@ -110,8 +110,8 @@ end
 ElmtUQsec = ElmtUQsec(ia,:);
     
 % connectivity = [iel, ikv, idxLeaf, which_region, nel, node_1,...,node_nel, scaling_center]
-for ielmt = 1: length(ElmtUQsec)
-    iel = ElmtUQsec(ielmt); %element number
+for i = 1: length(ElmtUQsec)
+    iel = ElmtUQsec(i); %element number
     qgrad = ElmtUQsec(i,2); %qgrad from last calculation
     elmt = connectivity{iel}(1,6:end); % element connectivity matrix
     kvno = connectivity{iel}(2); %knot vector for element
