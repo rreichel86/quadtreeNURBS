@@ -303,7 +303,7 @@ for isp = 1: numSeedingPoints_merge
 end
 
 [~,ia] = unique(ElmtQsec(:,1));
-ElmtUQsec = ElmtQsec(ia,:);
+ElmtQsec = ElmtQsec(ia,:);
 
 if isempty(ElmtQsec) == 1
     return
