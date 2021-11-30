@@ -175,119 +175,121 @@ for isp = 1: numSeedingPoints_splitt
 end
 
 %% get the neighbours of qualified sections
-
-%seedingPoints_splitt = [isec, isec0, idxLeaf, xcoor, ycoor,pgrad,qgrad]
-
-numSeedingPoints_merge = length(seedingPoints_merge(:,1));
-
-
-secNQ_merge = cell(numSeedingPoints_merge,1); %array for all section numbers of neighbour quad
-%secNQ = {idx_sec,sumSecNQ,sec_NQ1,sec_NQ2, ... ,sec_NQ_sumSecNQ]
-
-secN_merge = []; %array for section numbers of the neighbour section
-%secN = [idx_sec,isecN]
-
-
-for isp = 1: numSeedingPoints_merge
-    idx_sec = seedingPoints_merge(isp,2); %(old) number of unqualified sections 
-    ikvo = sections(idx_sec,4);
+if isempty(seedingPoints_merge) == 0
     
-    idxLeaf_sec = seedingPoints_merge(isp, 3); %idxLeaf of unqualified sections
-      
-    refLeaf_sec = Quadtree.Node{idxLeaf_sec,1}{2,1}(1:end);
-    secNQ_merge{isp}(1,1) = isp;
-   
-    % search for current Quad neighbours
-    % Loop over directions:
-    % 1 - West
-    % 2 - South
-    % 3 - East
-    % 4 - North
-    idxNQa = [];
-    for dir = 1:4 % determine possible neighbour Quad in current direction 
-        [exist_NQ, refNQ_sec] = refNeighbour(refLeaf_sec,dir);
-        if exist_NQ == 1
-            % look for neighbour Quad reference in reference array          
-            
-            idxNQ = findNeighbour(Quadtree,idxLeaf_sec,refLeaf_sec, refNQ_sec);
-            if Quadtree.isleaf(idxNQ)
-                idxNQa = [idxNQa;idxNQ];
-            else
-                idxNQchildren = Quadtree.getchildren(idxNQ);
-                    if dir == 1 
-                      idxNQc1 = idxNQchildren(3);
-                      idxNQc2 = idxNQchildren(4);
-                
-                    elseif dir == 2  
-                      idxNQc1 = idxNQchildren(1);
-                      idxNQc2 = idxNQchildren(3); 
-                    
-                    elseif dir == 3  
-                      idxNQc1 = idxNQchildren(1);
-                      idxNQc2 = idxNQchildren(2); 
-                    elseif dir == 4  
-                      idxNQc1 = idxNQchildren(2);
-                      idxNQc2 = idxNQchildren(4); 
-                                
-                    end 
-                idxNQa = [idxNQa;idxNQc1;idxNQc2];
+    %seedingPoints_merge = [isec, isec0, idxLeaf, xcoor, ycoor,pgrad,qgrad]
+    numSeedingPoints_merge = length(seedingPoints_merge(:,1));
+
+    %array for all section numbers of neighbour quad
+    secNQ_merge = cell(numSeedingPoints_merge,1);  %secNQ = {idx_sec,sumSecNQ,sec_NQ1,sec_NQ2, ... ,sec_NQ_sumSecNQ]
+
+    %array for section numbers of the neighbour section
+    secN_merge = [];  %secN = [idx_sec,isecN]
+
+
+    for isp = 1: numSeedingPoints_merge
+        idx_sec = seedingPoints_merge(isp,2); %(old) number of unqualified sections 
+        ikvo = sections(idx_sec,4);
+
+        idxLeaf_sec = seedingPoints_merge(isp, 3); %idxLeaf of unqualified sections
+
+        refLeaf_sec = Quadtree.Node{idxLeaf_sec,1}{2,1}(1:end);
+        secNQ_merge{isp}(1,1) = isp;
+
+        % search for current Quad neighbours
+        % Loop over directions:
+        % 1 - West
+        % 2 - South
+        % 3 - East
+        % 4 - North
+        idxNQa = [];
+        for dir = 1:4 % determine possible neighbour Quad in current direction 
+            [exist_NQ, refNQ_sec] = refNeighbour(refLeaf_sec,dir);
+            if exist_NQ == 1
+                % look for neighbour Quad reference in reference array          
+
+                idxNQ = findNeighbour(Quadtree,idxLeaf_sec,refLeaf_sec, refNQ_sec);
+                if Quadtree.isleaf(idxNQ)
+                    idxNQa = [idxNQa;idxNQ];
+                else
+                    idxNQchildren = Quadtree.getchildren(idxNQ);
+                        if dir == 1 
+                          idxNQc1 = idxNQchildren(3);
+                          idxNQc2 = idxNQchildren(4);
+
+                        elseif dir == 2  
+                          idxNQc1 = idxNQchildren(1);
+                          idxNQc2 = idxNQchildren(3); 
+
+                        elseif dir == 3  
+                          idxNQc1 = idxNQchildren(1);
+                          idxNQc2 = idxNQchildren(2); 
+                        elseif dir == 4  
+                          idxNQc1 = idxNQchildren(2);
+                          idxNQc2 = idxNQchildren(4); 
+
+                        end 
+                    idxNQa = [idxNQa;idxNQc1;idxNQc2];
+                end
             end
         end
-    end
 
-    
 
-    % sections = [isec, ipoly, idxLeaf, ikv,region, nsec, node_1,...,node_nsec]    
-    % polyElmts = [ipoly, region, numSecPoly, sec_1,...,sec_numSecPoly,idxLeaf]
 
-      %get all section numbers of neighbour quad
-      sum_secNQ = 0;
-      isecNQ = [];
-      
-      for j = 1: length(idxNQa)                 
-          idxsecNQ = find(idxNQa(j,1) == sections(:,3));
-          isecNQ = [isecNQ;idxsecNQ];         
-          sum_secNQ = sum_secNQ + length(idxsecNQ);
-      end
-      secNQ_merge{isp}(1,2) = sum_secNQ;
-      secNQ_merge{isp}(1,3:2+length(isecNQ)) = isecNQ';
-      
-   
-      
-     % sections = [isec, ipoly, idxLeaf, ikv, region, nsec, node_1,...,node_nsec]
-      %get the neighbour section 
-      isecN = 0;
-      if ikvo ~= 0 
-          sec_NURBS = find(sections(:,4) ~= 0); %get the number of all sections with NURBS curve
-          jj = 1;
-          while jj <= length(sec_NURBS) && isecN == 0
-              idxsecN = sec_NURBS(jj,1);             
-              if idxsecN ~= idx_sec
-                  if sections(idxsecN,7:end-1) == rot90(sections(idx_sec,7:end-1),2)                 
-                      isecN = idxsecN; %section number of the neighbour section 
-                  end 
+        % sections = [isec, ipoly, idxLeaf, ikv,region, nsec, node_1,...,node_nsec]    
+        % polyElmts = [ipoly, region, numSecPoly, sec_1,...,sec_numSecPoly,idxLeaf]
+
+          %get all section numbers of neighbour quad
+          sum_secNQ = 0;
+          isecNQ = [];
+
+          for j = 1: length(idxNQa)                 
+              idxsecNQ = find(idxNQa(j,1) == sections(:,3));
+              isecNQ = [isecNQ;idxsecNQ];         
+              sum_secNQ = sum_secNQ + length(idxsecNQ);
+          end
+          secNQ_merge{isp}(1,2) = sum_secNQ;
+          secNQ_merge{isp}(1,3:2+length(isecNQ)) = isecNQ';
+
+
+
+         % sections = [isec, ipoly, idxLeaf, ikv, region, nsec, node_1,...,node_nsec]
+          %get the neighbour section 
+          isecN = 0;
+          if ikvo ~= 0 
+              sec_NURBS = find(sections(:,4) ~= 0); %get the number of all sections with NURBS curve
+              jj = 1;
+              while jj <= length(sec_NURBS) && isecN == 0
+                  idxsecN = sec_NURBS(jj,1);             
+                  if idxsecN ~= idx_sec
+                      if sections(idxsecN,7:end-1) == rot90(sections(idx_sec,7:end-1),2)                 
+                          isecN = idxsecN; %section number of the neighbour section 
+                      end 
+                  end
+                  jj = jj + 1;
               end
-              jj = jj + 1;
-          end
-          
-          
-      else %(ikvo == 0)
-          
-          jj = 1;
-          while jj <= length(secNQ_merge{isp}(1,3:end)) && isecN == 0          
-              idxsecNQ = secNQ_merge{isp}(1,2+jj);
-              if length(sections(idxsecNQ,7:end-1)) == length(sections(idx_sec,7:end-1))                           
-                  if sections(idxsecNQ,7:end-2) == rot90(sections(idx_sec,7:end-2),2)            
-                      isecN = sections(idxsecNQ,1); %section number of the neighbour section 
+
+
+          else %(ikvo == 0)
+
+              jj = 1;
+              while jj <= length(secNQ_merge{isp}(1,3:end)) && isecN == 0          
+                  idxsecNQ = secNQ_merge{isp}(1,2+jj);
+                  if length(sections(idxsecNQ,7:end-1)) == length(sections(idx_sec,7:end-1))                           
+                      if sections(idxsecNQ,7:end-2) == rot90(sections(idx_sec,7:end-2),2)            
+                          isecN = sections(idxsecNQ,1); %section number of the neighbour section 
+                      end 
                   end 
-              end 
-              jj = jj + 1;
+                  jj = jj + 1;
+              end
           end
-      end
-      secN_merge = [secN_merge;idx_sec,isecN];       
+          secN_merge = [secN_merge;idx_sec,isecN];       
+    end
+    
+else
+    secN_merge = [];
+
 end
-
-
 
 
 %% elevate the p-/q-Grad
@@ -297,17 +299,8 @@ end
 
 
 
-[coor,nnode,sections,ord] = NodesInsertQ(eq,nnode,coor,sections,seedingPoints_splitt,ord,polyElmts,connectivity);
+% [coor,nnode,sections,ord] = NodesInsertQ(eq,nnode,coor,sections,seedingPoints_splitt,ord,polyElmts,connectivity);
 
-
-
-if ep >= 2 && eq == 1
-    maxnsec = ep + 2;
-elseif ep == 1 && eq >= 2
-    maxnsec = 3*eq + 1;
-elseif ep>=2 && eq>=2
-    maxnsec = (ep+1)*eq+1;
-end
-
+maxnsec = max(sections(:,6));
 
 end
