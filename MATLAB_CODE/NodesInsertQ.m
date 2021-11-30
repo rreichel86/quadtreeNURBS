@@ -1,9 +1,7 @@
-function [coor,nnode,sections,ord] = NodesInsertQ(eq,nnode,coor,sections,seedingPoints_splitt,ord,polyElmts,connectivity) 
+function [coor,nnode,sections,ord] = NodesInsertQ(nnode,coor,sections,ord,polyElmts,connectivity,seedingPoints_splitt,seedingPoints_merge) 
 
 
 %INPUT:
-%ep = elevated pgrad 
-%eq = elevated qgrad 
 %
 % coor = [number, x-coor, y-coor, weight, type, which_region, inside_region]
 %
@@ -24,23 +22,37 @@ function [coor,nnode,sections,ord] = NodesInsertQ(eq,nnode,coor,sections,seeding
 %                               nsec - number of nodes per section
 % sections = [isec, ipoly, idxLeaf, ikv, region, nsec, node_1,...,node_nsec]
 %
-%
-% seedingPoints_splitt = [isec,isec0,idxLeaf,xcoor,ycoor]
-%                         
-%                       isec  - new section number of the unqualified section
-%                       isec0 - old section number lof the unqualified section 
-%                       idxLeaf - number of Leaf
-%                       x/ycoor - x/y coordinate of the scaling center
-%                                  of the unqualified sections
-%
 % ord = [isec,pgrad,qgrad]
-%
-% secN = [isec, isecN]
 %
 % polyElmts -------------------- relate sections and polygonal elements
 % polyElmts = [ipoly, region, numSecPoly, sec_1,...,sec_numSecPoly,idxLeaf]
 %
-% connectivity = [iel, ikv, idxLeaf, which_region, nel,node_1,...,node_nel, scaling_center]
+%
+% connectivity --------------- elements connectivity matrix as nel-tupel of 
+%                              nodes, where the first three entries
+%                              iel - element number
+%                              ikv - knot vector number
+%                              idxLeaf - index of Leaf
+%                              which_region - region number
+%                              nel - number of nodes per element
+%
+% connectivity = [iel, ikv, idxLeaf, which_region, nel, node_1,...,node_nel, scaling_center]
+%
+%
+% seedingPoints = [isec,isec0,idxLeaf,xcoor,ycoor,pgrad,qgrad]
+%                         
+%                       isec  --  new section number of the (un)qualified section
+%                       isec0 --  old section number lof the (un)qualified section 
+%                       idxLeaf -- number of Leaf
+%                       x/ycoor -- x/y coordinate of the scaling center
+%                                  of the unqualified sections
+%                       p-/qgrad -- p-/qgrad of section from last calculation
+
+
+%
+
+%
+
 %
 %
 %
@@ -50,6 +62,7 @@ function [coor,nnode,sections,ord] = NodesInsertQ(eq,nnode,coor,sections,seeding
 %
 %                              type: 1 -  node
 %                                    2 - control point or intersection point
+%                                    3 - inserted node
 %                              which_region: region number
 %                              inside_region: 0 - at the boundary 
 %                                             1 - inside 

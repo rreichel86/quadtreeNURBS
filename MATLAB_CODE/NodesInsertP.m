@@ -25,7 +25,7 @@ function [coor,nnode,sections,ord] = NodesInsertP(nnode,coor,sections,ord,seedin
 %
 % ord = [isec,pgrad,qgrad]
 %
-% seedingPoints = [isec,isec0,idxLeaf,xcoor,ycoor]
+% seedingPoints = [isec,isec0,idxLeaf,xcoor,ycoor,pgrad,qgrad]
 %
 %                              isec  - new section number of the (un)qualified section
 %                              isec0 - old section number lof the (un)qualified section 
