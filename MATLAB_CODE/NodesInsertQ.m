@@ -309,8 +309,6 @@ if isempty(ElmtQsec) == 1
     return
 end
 
-[~,ia] = unique(ElmtQsec(:,1));
-ElmtQsec = ElmtQsec(ia,:);
     
 % connectivity = [iel, ikv, idxLeaf, which_region, nel, node_1,...,node_nel, scaling_center]
 for i = 1: length(ElmtQsec)
