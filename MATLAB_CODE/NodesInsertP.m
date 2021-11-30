@@ -53,25 +53,30 @@ function [coor,nnode,sections,ord] = NodesInsertP(nnode,coor,sections,ord,seedin
 
 
 %% extend sections matrix
+
+% max. pgrad of all unqualified sections from last calculation
 pgrad_splitt = max(seedingPoints_splitt(:,6));
+% max. pgrad of all qualified sections from last calculation
 pgrad_merge = max(seedingPoints_merge(:,6));
+% number of sections 
+numsec = length(sections(:,1));
 
 if pgrad_splitt + 1 <= pgrad_merge 
-    sections = [sections,zeros(length(sections(:,1)),pgrad_merge-2)];
+    sections = [sections,zeros(numsec,pgrad_merge-2)];
 else
-    sections = [sections,zeros(length(sections(:,1)),pgrad_splitt-1)];
+    sections = [sections,zeros(numsec,pgrad_splitt-1)];
 end
 
 %% insert nodes in P-direction for unqualified sections
+
 numSeedingPoints_splitt = length(seedingPoints_splitt(:,1));
 
-
 for isp = 1: numSeedingPoints_splitt           
-    isec0 = seedingPoints_splitt(isp,2);
+    isec0 = seedingPoints_splitt(isp,2); %(old)section number
     pgrad = seedingPoints_splitt(isp,6); %pgrad from last calculation 
     ep = pgrad + 1; %elevated pgrad
     ninode = ep - 1; %number of inserted nodes
-    ikv = sections(isec0,4); 
+    ikv = sections(isec0,4); %knot vector
     
     coor_StrucNodes = []; %coor_matrix contains the information of all nodes including scalling center for each chosed section
     % sections = [isec, ipoly, idxLeaf, ikv, region, nsec, node_1,...,node_nsec]
@@ -116,6 +121,71 @@ for isp = 1: numSeedingPoints_splitt
         end        
     end
 end
-            
+
+
+%% insert nodes in P-direction for qualified sections
+
+if isempty(seedingPoints_merge) == 1
+    return
+end
+
+numSeedingPoints_merge = length(seedingPoints_merge(:,1));
+
+for isp = 1: numSeedingPoints_merge           
+    isec0 = seedingPoints_merge(isp,2); %(old)section number
+    pgrad = seedingPoints_merge(isp,6); %pgrad from last calculation
+    ninode = pgrad - 1; %number of inserted nodes
+    ikv = sections(isec0,4); %knot vector
+
+    coor_StrucNodes = []; %coordinate of structural nodes including scalling center for each chosed section
+    % sections = [isec, ipoly, idxLeaf, ikv, region, nsec, node_1,...,node_nsec]
+    
+    %check if current section is the neighbor section of one unqualified section
+    if ismember(isec0,secN_splitt(:,2)) ~= 1 %no        
+        if ikv == 0
+            if sections(isec0,6) == 3 %check if this section has been treated in secN_merge
+
+                StrucNodes = sections(isec0,7:9); %[node_1,node_2,scaling center]
+                for ii = 1:length(StrucNodes)
+                    number = StrucNodes(1,ii);
+                    coor_StrucNodes0 = coor(number,:);%extract nodes coordinates of each selected section
+                    coor_StrucNodes = [coor_StrucNodes;coor_StrucNodes0];
+                end
+                %the coordinate of the inserted node in p-direction           
+                coor_nodes_p = getLocation(coor_StrucNodes(1,2),coor_StrucNodes(2,2),coor_StrucNodes(1,3),coor_StrucNodes(2,3),pgrad);
+                coor(nnode+1:nnode+ninode,1) = nnode+1: nnode + ninode;
+                coor(nnode+1:nnode+ninode,4) = 1;  %weight
+                coor(nnode+1:nnode+ninode,5) = 3;  %typ(inserted nodes)
+                coor(nnode+1:nnode+ninode,6) = 0;  %which-region
+                coor(nnode+1:nnode+ninode,7) = -1; %inside-region  
+                coor(nnode+1:nnode+ninode,2:3) =[coor_nodes_p];
+                % update the section matrix
+                nsec_new = 3 + ninode;
+                sections(isec0,6) = nsec_new;
+                sections(isec0,6+nsec_new) = sections(isec0,9);%shift of the scaling center
+                sections(isec0,5+nsec_new) = sections(isec0,8);%shift of the structral points
+                sections(isec0,8:7+ninode) = (nnode+1:nnode+ninode);
+
+                %update the ord matrix       
+                ord(isec0,2) = pgrad;
+
+                idx_isecN = find(secN_merge(:,1) == isec0);
+                isecN = secN_merge(idx_isecN,2);
+                nsecN = sections(idx_isecN,6);
+                if isecN ~= 0 
+
+                    nsecN_new = 3 + ninode;
+                    sections(isecN,6) = nsecN_new; 
+                    sections(isecN,6+nsecN_new) = sections(isecN,9);%shift of the scaling center
+                    sections(isecN,5+nsecN_new) = sections(isecN,8);%shift of the structural point
+                    sections(isecN,8:7+ninode) = rot90(sections(isec0,8:7+ninode),2);
+                    ord(isecN,2) = pgrad;
+                end
+                nnode = nnode + ninode;
+            end        
+        end
+    end
+end
+
 
 end    
