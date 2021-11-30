@@ -110,7 +110,8 @@ end
 ElmtUQsec = ElmtUQsec(ia,:);
     
 % connectivity = [iel, ikv, idxLeaf, which_region, nel, node_1,...,node_nel, scaling_center]
-for i = 1: length(ElmtUQsec)
+[numElmtUQsec,~] = size(ElmtUQsec); %number of poly element
+for i = 1: numElmtUQsec
     iel = ElmtUQsec(i); %element number
     qgrad = ElmtUQsec(i,2); %qgrad from last calculation
     elmt = connectivity{iel}(1,6:end); % element connectivity matrix
@@ -311,7 +312,8 @@ end
 
     
 % connectivity = [iel, ikv, idxLeaf, which_region, nel, node_1,...,node_nel, scaling_center]
-for i = 1: length(ElmtQsec)
+[numElmtQsec,~] = size(ElmtQsec); %number of poly element
+for i = 1: numElmtQsec
     iel = ElmtQsec(i,1); %element number
     qgrad = ElmtQsec(i,2); % qgrad from last calculation
     elmt = connectivity{iel}(1,6:end); % vertices of element and scaling_center 
