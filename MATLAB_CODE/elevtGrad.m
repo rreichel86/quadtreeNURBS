@@ -299,7 +299,7 @@ end
 
 
 
-% [coor,nnode,sections,ord] = NodesInsertQ(eq,nnode,coor,sections,seedingPoints_splitt,ord,polyElmts,connectivity);
+[coor,nnode,sections,ord] = NodesInsertQ(nnode,coor,sections,ord,polyElmts,connectivity,seedingPoints_splitt,seedingPoints_merge);
 
 maxnsec = max(sections(:,6));
 
