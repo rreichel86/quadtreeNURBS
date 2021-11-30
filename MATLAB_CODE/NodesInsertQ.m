@@ -70,33 +70,54 @@ function [coor,nnode,sections,ord] = NodesInsertQ(nnode,coor,sections,ord,polyEl
 
 
 
-          
-%% insert nodes in Q-direction
-num_seedingPoints = length(seedingPoints_splitt(:,1));
-maxpgrad = max(ord(:,2));
-sections = [sections,zeros( size(sections,1), (maxpgrad+1)*(eq-1) )];
+%% extend sections matrix
+% max.qgrad of unqualified sections from last calculation
+qgrad_splitt = max(seedingPoints_splitt(:,7));
 
-% polyElmts = [ipoly, region, numSecPoly, sec_1,...,sec_numSecPoly,idxLeaf]
-% sections = [isec, idxLeaf, ikv, iel,region, nsec, node_1,...,node_nsec]
+if isempty(seedingPoints_merge) == 0
+    % max.qgrad of unqualified sections from last calculation
+    qgrad_merge = max(seedingPoints_merge(:,7));
+else
+    qgrad_merge = 1;
+end
+
+% max.pgrad of all sections
+maxpgrad = max(ord(:,2));
+%number of sections
+numsec = length(sections(:,1));
+
+if qgrad_splitt + 1 <= qgrad_merge 
+    sections = [sections,zeros(numsec,(qgrad_merge-1)*(maxpgrad+1))];
+else
+    sections = [sections,zeros(numsec,qgrad_splitt*(maxpgrad+1))];
+end
+
+          
+%% insert nodes in Q-direction for unqualified sections
+
 % sections = [isec, ipoly, idxLeaf, ikv, region, nsec, node_1,...,node_nsec]
 
+numSeedingPoints_splitt = length(seedingPoints_splitt(:,1));
 
-Elmtsec = [];    %element which contain unqualified sections
-for isp = 1: num_seedingPoints
+ElmtUQsec = [];    %element which contain unqualified sections
+for isp = 1: numSeedingPoints_splitt
     isec0 = seedingPoints_splitt(isp,2);
-    iel = sections(isec0,2);
-    Elmtsec = [Elmtsec;iel];
+    qgrad = seedingPoints_splitt(isp,7);
+    iel_splitt = sections(isec0,2);
+    ElmtUQsec = [ElmtUQsec;iel_splitt,qgrad];
 end
-Elmtsec = unique(Elmtsec);
+[~,ia] = unique(ElmtUQsec(:,1));
+ElmtUQsec = ElmtUQsec(ia,:);
     
 % connectivity = [iel, ikv, idxLeaf, which_region, nel, node_1,...,node_nel, scaling_center]
-for ielmt = 1: length(Elmtsec)
-    iel = Elmtsec(ielmt);
+for ielmt = 1: length(ElmtUQsec)
+    iel = ElmtUQsec(ielmt); %element number
+    qgrad = ElmtUQsec(i,2); %qgrad from last calculation
     elmt = connectivity{iel}(1,6:end); % element connectivity matrix
     kvno = connectivity{iel}(2); %knot vector for element
     numSecPoly = polyElmts(iel,3);
     secElmts = polyElmts(iel,4:3 + numSecPoly);
-    %secElmts(find(secElmts == isec0) = [];
+    eq = qgrad + 1; %elevated qgrad
        
     
     if kvno == 0 
