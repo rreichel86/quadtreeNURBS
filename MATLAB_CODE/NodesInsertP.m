@@ -56,8 +56,15 @@ function [coor,nnode,sections,ord] = NodesInsertP(nnode,coor,sections,ord,seedin
 
 % max. pgrad of all unqualified sections from last calculation
 pgrad_splitt = max(seedingPoints_splitt(:,6));
-% max. pgrad of all qualified sections from last calculation
-pgrad_merge = max(seedingPoints_merge(:,6));
+
+if isempty(seedingPoints_merge) == 0
+    
+    % max. pgrad of all qualified sections from last calculation
+    pgrad_merge = max(seedingPoints_merge(:,6));
+else
+    pgrad_merge = 1;
+end 
+
 % number of sections 
 numsec = length(sections(:,1));
 
