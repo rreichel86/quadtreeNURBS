@@ -73,19 +73,19 @@ for isp = 1: numSeedingPoints_splitt
     ninode = ep - 1; %number of inserted nodes
     ikv = sections(isec0,4); 
     
-    coor_nsec = []; %coor_matrix contains the information of all nodes including scalling center for each chosed section
+    coor_StrucNodes = []; %coor_matrix contains the information of all nodes including scalling center for each chosed section
     % sections = [isec, ipoly, idxLeaf, ikv, region, nsec, node_1,...,node_nsec]
     if ikv == 0
         if sections(isec0,6) == 3 %check if this section has been treated in secN
 
-            nodesNum = sections(isec0,7:9); %[node_1,node_2,scaling center]
-            for ii = 1:length(nodesNum)
-                number = nodesNum(1,ii);
-                coor_nsec0 = coor(number,:);%extract nodes coordinates of each selected section
-                coor_nsec = [coor_nsec;coor_nsec0];
+            StrucNodes = sections(isec0,7:9); %[node_1,node_2,scaling center]
+            for ii = 1:length(StrucNodes)
+                number = StrucNodes(1,ii);
+                coor_StrucNodes0 = coor(number,:);%extract nodes coordinates of each selected section
+                coor_StrucNodes = [coor_StrucNodes;coor_StrucNodes0];
             end
             %the coordinate of the inserted node in p-direction           
-            coor_nodes_p = getLocation(coor_nsec(1,2),coor_nsec(2,2),coor_nsec(1,3),coor_nsec(2,3),ep);
+            coor_nodes_p = getLocation(coor_StrucNodes(1,2),coor_StrucNodes(2,2),coor_StrucNodes(1,3),coor_StrucNodes(2,3),ep);
             coor(nnode+1:nnode+ninode,1) = nnode+1: nnode + ninode;
             coor(nnode+1:nnode+ninode,4) = 1;  %weight
             coor(nnode+1:nnode+ninode,5) = 3;  %typ(inserted nodes)
@@ -93,9 +93,10 @@ for isp = 1: numSeedingPoints_splitt
             coor(nnode+1:nnode+ninode,7) = -1; %inside-region  
             coor(nnode+1:nnode+ninode,2:3) =[coor_nodes_p];
             % update the section matrix 
-            sections(isec0,6) = 3 + ninode;
-            sections(isec0,end-1) = sections(isec0,9);%shift of the scaling center
-            sections(isec0,end-2) = sections(isec0,8);%shift of the structral points
+            nsec_new = 3 + ninode;
+            sections(isec0,6) = nsec_new;
+            sections(isec0,6+nsec_new) = sections(isec0,9);%shift of the scaling center
+            sections(isec0,5+nsec_new) = sections(isec0,8);%shift of the structral points
             sections(isec0,8:7+ninode) = (nnode+1:nnode+ninode);
 
             %update the ord matrix       
@@ -103,10 +104,11 @@ for isp = 1: numSeedingPoints_splitt
 
             idx_isecN = find(secN_splitt(:,1) == isec0);
             isecN = secN_splitt(idx_isecN,2);
-            if isecN ~= 0 
-                sections(isecN,6) = 3 + ninode; 
-                sections(isecN,end-1) = sections(isecN,9);%shift of the scaling center
-                sections(isecN,end-2) = sections(isecN,8);%shift of the structural point
+            if isecN ~= 0
+                nsecN_new = 3 + ninode;
+                sections(isecN,6) = nsecN_new;                 
+                sections(isecN,6+nsecN_new) = sections(isecN,9);%shift of the scaling center
+                sections(isecN,5+nsecN_new) = sections(isecN,8);%shift of the structural point
                 sections(isecN,8:7+ninode) = rot90(sections(isec0,8:7+ninode),2);
                 ord(isecN,2) = ep;
             end
