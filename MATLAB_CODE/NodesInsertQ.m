@@ -284,9 +284,211 @@ for i = 1: length(ElmtUQsec)
     end
 end
 
+%% insert nodes in Q-direction for qualified sections
 
+if isempty(seedingPoints_merge) == 1
+    return
+end
+
+numSeedingPoints_merge = length(seedingPoints_merge(:,1));
+
+ElmtQsec = [];    %element which contain qualified sections
+for isp = 1: numSeedingPoints_merge
+    isec0 = seedingPoints_merge(isp,2);
+    qgrad = seedingPoints_merge(isp,7);
+    iel_merge = sections(isec0,4);
+    if ismember(iel_merge,ElmtUQsec(:,1)) == 0
+        ElmtQsec = [ElmtQsec;iel_merge,qgrad];
+    end
+end
+
+[~,ia] = unique(ElmtQsec(:,1));
+ElmtUQsec = ElmtQsec(ia,:);
+
+if isempty(ElmtQsec) == 1
+    return
+end
+
+[~,ia] = unique(ElmtQsec(:,1));
+ElmtQsec = ElmtQsec(ia,:);
     
+% connectivity = [iel, ikv, idxLeaf, which_region, nel, node_1,...,node_nel, scaling_center]
+for i = 1: length(ElmtQsec)
+    iel = ElmtQsec(i,1); %element number
+    qgrad = ElmtQsec(i,2); % qgrad from last calculation
+    elmt = connectivity{iel}(1,6:end); % vertices of element and scaling_center 
+    kvno = connectivity{iel}(2); %knot vector for element
+    numSecPoly = polyElmts(iel,3);
+    secElmts = polyElmts(iel,4:3 + numSecPoly);
+    eq = qgrad; %elevated qgrad   
+    
+    if kvno == 0 
+       
+        
+        %insert nodes in shared edges between sections per element
+        xcoor2 = coor(elmt(end),2); %x_coordinate of sc
+        ycoor2 = coor(elmt(end),3); %y_coordinate of sc  
+        ninode = eq - 1;
+        nodeElmt = []; %vertices of this element
+        for inelmt = 1:length(elmt)-1
+            inode = elmt(inelmt);
+            xcoor1 = coor(inode,2);
+            ycoor1 = coor(inode,3);
+            coor_inodes_q = getLocation(xcoor1,xcoor2,ycoor1,ycoor2,eq);
+            %update coor matrix
+            coor(nnode+1:nnode+ninode,1) = nnode+1: nnode + ninode;
+            coor(nnode+1:nnode+ninode,4) = 1;  %weight
+            coor(nnode+1:nnode+ninode,5) = 3;  %typ(inserted nodes)
+            coor(nnode+1:nnode+ninode,6) = 0;  %which-region
+            coor(nnode+1:nnode+ninode,7) = -1; %inside-region  
+            coor(nnode+1:nnode+ninode,2:3) =[coor_inodes_q];
+            nodeElmt0 =[inode,nnode+1:nnode + ninode];
+            nodeElmt = [nodeElmt;nodeElmt0];
+            nnode = nnode + ninode;
+        end
+        
+     
+               
+        %insert nodes per section within element       
+        
+        for ise = 1:numSecPoly
+            idxse = secElmts(ise);
+            nsec = sections(idxse,6);
+            pgrad = ord(idxse,2);
             
+            nodeSec = []; %nodes of each section except vertices of element
+            %insert nodes 
+            for indsec = 1:nsec-1                        
+                inode = sections(idxse,6+indsec);
+                if ismember(inode,nodeElmt(:,1)) == 0 % vertices of element are not including
+                    xcoor1 = coor(inode,2);
+                    ycoor1 = coor(inode,3);
+                    coor_inodes_q = getLocation(xcoor1,xcoor2,ycoor1,ycoor2,eq);
+                    %update coor matrix
+                    coor(nnode+1:nnode+ninode,1) = nnode+1: nnode + ninode;
+                    coor(nnode+1:nnode+ninode,4) = 1;  %weight
+                    coor(nnode+1:nnode+ninode,5) = 3;  %typ(inserted nodes)
+                    coor(nnode+1:nnode+ninode,6) = 0;  %which-region
+                    coor(nnode+1:nnode+ninode,7) = -1; %inside-region  
+                    coor(nnode+1:nnode+ninode,2:3) =[coor_inodes_q];
+                    nodeSec0 =[inode,nnode+1:nnode + ninode];
+                    nodeSec = [nodeSec;nodeSec0];
+                    nnode = nnode + ninode; 
+                end
+            end
+                      
+            
+            
+            %divide inserted nodes
+            sc = sections(idxse,6+nsec); %number of scaling center
+            
+            for indsec =1: nsec-1
+                inode = sections(idxse,6+indsec);
+                for eta = 1:ninode                   
+                    if ismember(inode,nodeElmt(:,1)) == 1
+                        idx = find(inode == nodeElmt(:,1));
+                        idxnode = nodeElmt(idx,eta+1);
+                        sections(idxse,6+indsec+(pgrad+1)*eta) = idxnode;
+                    else 
+                        idx = find(inode == nodeSec(:,1));
+                        idxnode = nodeSec(idx,eta+1);
+                        sections(idxse,6+indsec+(pgrad+1)*eta) = idxnode;
+                    end
+                end
+            end
+            
+            sections(idxse,6) = (pgrad+1)*eq + 1; %nsec
+            sections(idxse,6+(pgrad+1)*eq + 1) = sc; %scaling center
+            
+            ord(idxse,3) = eq;
+        end
+        
+    else %kvno ~= 0
+        
+        %insert nodes in shared edges between sections per element
+        xcoor2 = coor(elmt(end),2); %x_coordinate of sc
+        ycoor2 = coor(elmt(end),3); %y_coordinate of sc  
+        ninode = eq - 1;
+        nodeElmt = [];
+        for inelmt = 1:length(elmt)-1
+            inode = elmt(inelmt);
+            xcoor1 = coor(inode,2);
+            ycoor1 = coor(inode,3);
+            coor_inodes_q = getLocation(xcoor1,xcoor2,ycoor1,ycoor2,eq);
+            %update coor matrix
+            coor(nnode+1:nnode+ninode,1) = nnode+1: nnode + ninode;
+            coor(nnode+1:nnode+ninode,4) = 1;  %weight
+            coor(nnode+1:nnode+ninode,5) = 3;  %typ(inserted nodes)
+            coor(nnode+1:nnode+ninode,6) = 0;  %which-region
+            coor(nnode+1:nnode+ninode,7) = -1; %inside-region  
+            coor(nnode+1:nnode+ninode,2:3) =[coor_inodes_q];
+            nodeElmt0 =[inode,nnode+1:nnode + ninode];
+            nodeElmt = [nodeElmt;nodeElmt0];
+            nnode = nnode + ninode;
+        end    
+                
+  
+        %insert nodes per section within element       
+        
+        for ise = 1:numSecPoly
+            idxse = secElmts(ise); %section number within element
+            ikv = sections(idxse,4);
+            nsec = sections(idxse,6);
+            pgrad = ord(idxse,2);
+            
+            nodeSec = [];
+            %insert nodes 
+            if ikv == 0                
+                for indsec = 1:nsec-1                        
+                    inode = sections(idxse,6+indsec);
+                    if ismember(inode,nodeElmt(:,1)) == 0
+                        xcoor1 = coor(inode,2);
+                        ycoor1 = coor(inode,3);
+                        coor_inodes_q = getLocation(xcoor1,xcoor2,ycoor1,ycoor2,eq);
+                        %update coor matrix
+                        coor(nnode+1:nnode+ninode,1) = nnode+1: nnode + ninode;
+                        coor(nnode+1:nnode+ninode,4) = 1;  %weight
+                        coor(nnode+1:nnode+ninode,5) = 3;  %typ(inserted nodes)
+                        coor(nnode+1:nnode+ninode,6) = 0;  %which-region
+                        coor(nnode+1:nnode+ninode,7) = -1; %inside-region  
+                        coor(nnode+1:nnode+ninode,2:3) =[coor_inodes_q];
+                        nodeSec0 =[inode,nnode+1:nnode + ninode];
+                        nodeSec = [nodeSec;nodeSec0];
+                        nnode = nnode + ninode; 
+                    end
+                end 
+            end
+            
+         
+            
+            %divide inserted nodes
+            sc = sections(idxse,6+nsec); %number of scaling center                
+            for indsec =1: nsec-1
+                inode = sections(idxse,6+indsec);
+                for eta = 1:ninode                   
+                    if ismember(inode,nodeElmt(:,1)) == 1
+                        idx = find(inode == nodeElmt(:,1));
+                        idxnode = nodeElmt(idx,eta+1);
+                        sections(idxse,6+indsec+(pgrad+1)*eta) = idxnode;
+                    else 
+                        idx = find(inode == nodeSec(:,1));
+                        idxnode = nodeSec(idx,eta+1);
+                        sections(idxse,6+indsec+(pgrad+1)*eta) = idxnode;
+                    end
+                end
+            end
+            
+            sections(idxse,6) = (pgrad+1)*eq + 1; %nsec
+            sections(idxse,6+(pgrad+1)*eq + 1) = sc; %scaling center
+            
+            ord(idxse,3) = eq;
+        end
+    end
+end 
+    
+%% adjust the size of sections matrix
+maxnsec = max(sections(:,6));
+sections(:,6+maxnsec+1:end) = [];            
 
 end
                                 
