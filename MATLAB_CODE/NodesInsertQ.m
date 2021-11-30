@@ -296,7 +296,7 @@ ElmtQsec = [];    %element which contain qualified sections
 for isp = 1: numSeedingPoints_merge
     isec0 = seedingPoints_merge(isp,2);
     qgrad = seedingPoints_merge(isp,7);
-    iel_merge = sections(isec0,4);
+    iel_merge = sections(isec0,2);
     if ismember(iel_merge,ElmtUQsec(:,1)) == 0
         ElmtQsec = [ElmtQsec;iel_merge,qgrad];
     end
