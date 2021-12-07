@@ -72,11 +72,11 @@ function [coor,nnode,sections,ord] = NodesInsertQ(nnode,coor,sections,ord,polyEl
 
 %% extend sections matrix
 % max.qgrad of unqualified sections from last calculation
-qgrad_splitt = max(seedingPoints_splitt(:,7));
+qgrad_splitt = max(seedingPoints_splitt(:,8));
 
 if isempty(seedingPoints_merge) == 0
     % max.qgrad of unqualified sections from last calculation
-    qgrad_merge = max(seedingPoints_merge(:,7));
+    qgrad_merge = max(seedingPoints_merge(:,8));
 else
     qgrad_merge = 1;
 end
@@ -102,7 +102,7 @@ numSeedingPoints_splitt = length(seedingPoints_splitt(:,1));
 ElmtUQsec = [];    %element which contain unqualified sections
 for isp = 1: numSeedingPoints_splitt
     isec0 = seedingPoints_splitt(isp,2);
-    qgrad = seedingPoints_splitt(isp,7);
+    qgrad = seedingPoints_splitt(isp,8);
     iel_splitt = sections(isec0,2);
     ElmtUQsec = [ElmtUQsec;iel_splitt,qgrad];
 end
@@ -296,7 +296,7 @@ numSeedingPoints_merge = length(seedingPoints_merge(:,1));
 ElmtQsec = [];    %element which contain qualified sections
 for isp = 1: numSeedingPoints_merge
     isec0 = seedingPoints_merge(isp,2);
-    qgrad = seedingPoints_merge(isp,7);
+    qgrad = seedingPoints_merge(isp,8);
     iel_merge = sections(isec0,2);
     if ismember(iel_merge,ElmtUQsec(:,1)) == 0
         ElmtQsec = [ElmtQsec;iel_merge,qgrad];

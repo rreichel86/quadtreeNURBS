@@ -30,6 +30,7 @@ function [coor,nnode,sections,ord] = NodesInsertP(nnode,coor,sections,ord,seedin
 %                              isec  - new section number of the (un)qualified section
 %                              isec0 - old section number lof the (un)qualified section 
 %                              idxLeaf - number of Leaf
+%                              knov  - knot vector
 %                              x/y_coor - x/y coordinate of the scaling center
 %                                         of the unqualified sections
 %                              p-/qgrad  - p-/qgrad from last calculation
@@ -55,12 +56,12 @@ function [coor,nnode,sections,ord] = NodesInsertP(nnode,coor,sections,ord,seedin
 %% extend sections matrix
 
 % max. pgrad of all unqualified sections from last calculation
-pgrad_splitt = max(seedingPoints_splitt(:,6));
+pgrad_splitt = max(seedingPoints_splitt(:,7));
 
 if isempty(seedingPoints_merge) == 0
     
     % max. pgrad of all qualified sections from last calculation
-    pgrad_merge = max(seedingPoints_merge(:,6));
+    pgrad_merge = max(seedingPoints_merge(:,7));
 else
     pgrad_merge = 1;
 end 
@@ -80,7 +81,7 @@ numSeedingPoints_splitt = length(seedingPoints_splitt(:,1));
 
 for isp = 1: numSeedingPoints_splitt           
     isec0 = seedingPoints_splitt(isp,2); %(old)section number
-    pgrad = seedingPoints_splitt(isp,6); %pgrad from last calculation 
+    pgrad = seedingPoints_splitt(isp,7); %pgrad from last calculation 
     ep = pgrad + 1; %elevated pgrad
     ninode = ep - 1; %number of inserted nodes
     ikv = sections(isec0,4); %knot vector
@@ -140,7 +141,7 @@ numSeedingPoints_merge = length(seedingPoints_merge(:,1));
 
 for isp = 1: numSeedingPoints_merge           
     isec0 = seedingPoints_merge(isp,2); %(old)section number
-    pgrad = seedingPoints_merge(isp,6); %pgrad from last calculation
+    pgrad = seedingPoints_merge(isp,7); %pgrad from last calculation
     ninode = pgrad - 1; %number of inserted nodes
     ikv = sections(isec0,4); %knot vector
 
