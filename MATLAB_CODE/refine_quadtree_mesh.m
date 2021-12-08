@@ -44,12 +44,20 @@ function [Quadtree,nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] =
 figure 
 hold on 
 
+%%extract parameters from seedingPoints for different case
+if ~exist('ElevateOrderNumber')
+    refSeedingPoints_splitt = seedingPoints_splitt;
+    ElevateOrderNumber = 0;
+else
+    [QuadLeaf_splitt,QuadLeaf_merge,refSeedingPoints_splitt,refSeedingPoints_merge] = seedingPoints_settle(seedingPoints_splitt,seedingPoints_merge);
+end
+
 %% Quadtree decomposition
 % Get NURBS curve
 data = Quadtree.Node{1,1};
 NURBS = data{3};
 
-[Quadtree] = QuadtreeSplit(Quadtree,NURBS,seedingPoints_splitt);
+[Quadtree] = QuadtreeSplit(Quadtree,NURBS,refSeedingPoints_splitt);
 
 [Quadtree] = QuadtreeBalance(Quadtree,NURBS);
 [Quadtree] = check_leaf(Quadtree);
@@ -62,5 +70,13 @@ NURBS = data{3};
 
 [nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] = splittIntoSections(nnode,coor,numel,connectivity,...
                                                                     numKnotVectors,knotVectors,maxnknots,idxControlPoints);
+
+%% Remain the order from last calculation
+
+if ElevateOrderNumber ~= 0
+
+    [coor,maxnsec,nnode,sections,ord]=elevtGrad(Quadtree,nnode,coor,sections,ord,polyElmts,connectivity,seedingPoints_splitt,seedingPoints_merge);
                                                   
+end
+
 end
