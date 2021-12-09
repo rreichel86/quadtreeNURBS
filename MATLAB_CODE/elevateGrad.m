@@ -1,4 +1,4 @@
-function [coor,maxnsec,nnode,sections,ord]=elevtGrad(Quadtree,nnode,coor,sections,ord,polyElmts,connectivity,seedingPoints_splitt,seedingPoints_merge)
+function [coor,maxnsec,nnode,sections,ord]=elevateGrad(Quadtree,nnode,coor,sections,ord,polyElmts,connectivity,seedingPoints_splitt,seedingPoints_merge)
 % elevate order in p-direction and/or q-direction
 %
 %INPUT:
