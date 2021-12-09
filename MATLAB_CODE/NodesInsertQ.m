@@ -119,7 +119,7 @@ for i = 1: numElmtUQsec
     numSecPoly = polyElmts(iel,3);
     secElmts = polyElmts(iel,4:3 + numSecPoly);
     eq = qgrad + 1; %elevated qgrad
-    ninode = eq -q; %number of inserted nodes
+    ninode = eq - 1; %number of inserted nodes
     
     if ninode == 0
         break
