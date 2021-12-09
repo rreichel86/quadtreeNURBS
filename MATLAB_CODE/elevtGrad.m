@@ -15,9 +15,10 @@ function [coor,maxnsec,nnode,sections,ord]=elevtGrad(Quadtree,nnode,coor,section
 %                                            -1 - outside 
 %
 % sections -------------------- sections connectivity matrix as nsec-tupel of 
-%                               nodes, where the first three entries
+%                               nodes, where the first six entries
 %                               isec - section number
 %                               ipoly - polygonal element number
+%                               idxLeaf - number of leaf
 %                               ikv - knot vector number
 %                               region - region number 
 %                               nsec - number of nodes per section
