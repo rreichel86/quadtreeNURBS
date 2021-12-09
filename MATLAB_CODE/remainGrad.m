@@ -82,9 +82,10 @@ for i = 1: nQuadLeaf_splitt
             for iii = 1:length(idxsecs)
                 isec = idxsecs(iii);
                 nsec = sections(isec,6);
+                ikv = sections(isec,4);
                 sc = sections(isec,6+nsec);
                 sc_coor = coor(sc,2:3);
-                newSeedingPoints_splitt = [newSeedingPoints_splitt;isec,isec,ichild,sc_coor,pgrad-1,qgrad-1];
+                newSeedingPoints_splitt = [newSeedingPoints_splitt;isec,isec,ichild,ikv,sc_coor,pgrad-1,qgrad-1];
             end
         end
         
@@ -93,9 +94,10 @@ for i = 1: nQuadLeaf_splitt
         for ii = 1:length(idxsecs)
             isec = idxsecs(ii);
             nsec = sections(isec,6);
+            ikc = sections(isec,4);
             sc = sections(isec,6+nsec);
             sc_coor = coor(sc,2:3);
-            newSeedingPoints_splitt = [newSeedingPoints_splitt;isec,isec,iQuadLeaf,sc_coor,pgrad-1,qgrad-1];
+            newSeedingPoints_splitt = [newSeedingPoints_splitt;isec,isec,iQuadLeaf,ikv,sc_coor,pgrad-1,qgrad-1];
         end       
     end
 end
@@ -119,9 +121,10 @@ if isempty(QuadLeaf_merge)~=0
                 for iii = 1:length(idxsecs)
                     isec = idxsecs(iii);
                     nsec = sections(isec,6);
+                    ikv = sections(isec,4);
                     sc = sections(isec,6+nsec);
                     sc_coor = coor(sc,2:3);
-                    newSeedingPoints_merge = [newSeedingPoints_merge;isec,isec,ichild,sc_coor,pgrad,qgrad];
+                    newSeedingPoints_merge = [newSeedingPoints_merge;isec,isec,ichild,ikv,sc_coor,pgrad,qgrad];
                 end
             end
 
@@ -130,9 +133,10 @@ if isempty(QuadLeaf_merge)~=0
             for ii = 1:length(idxsecs)
                 isec = idxsecs(ii);
                 nsec = sections(isec,6);
+                ikv = sections(isec,4);
                 sc = sections(isec,6+nsec);
                 sc_coor = coor(sc,2:3);
-                newSeedingPoints_merge = [newSeedingPoints_merge;isec,isec,iQuadLeaf,sc_coor,pgrad,qgrad];
+                newSeedingPoints_merge = [newSeedingPoints_merge;isec,isec,iQuadLeaf,ikv,sc_coor,pgrad,qgrad];
             end       
         end
     end
@@ -153,7 +157,7 @@ for isp = 1: numSeedingPoints_splitt
     idx_sec = newSeedingPoints_splitt(isp,2); %(old) number of unqualified sections 
     ikvo = sections(idx_sec,4);
     
-    idxLeaf_sec = newsSeedingPoints_splitt(isp, 3); %idxLeaf of unqualified sections
+    idxLeaf_sec = newSeedingPoints_splitt(isp, 3); %idxLeaf of unqualified sections
       
     refLeaf_sec = Quadtree.Node{idxLeaf_sec,1}{2,1}(1:end);
     secNQ_splitt{isp}(1,1) = isp;
