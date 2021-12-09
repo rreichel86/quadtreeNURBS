@@ -119,6 +119,11 @@ for i = 1: numElmtUQsec
     numSecPoly = polyElmts(iel,3);
     secElmts = polyElmts(iel,4:3 + numSecPoly);
     eq = qgrad + 1; %elevated qgrad
+    ninode = eq -q; %number of inserted nodes
+    
+    if ninode == 0
+        break
+    end
        
     
     if kvno == 0 
@@ -127,7 +132,6 @@ for i = 1: numElmtUQsec
         %insert nodes in shared edges between sections per element
         xcoor2 = coor(elmt(end),2); %x_coordinate of sc
         ycoor2 = coor(elmt(end),3); %y_coordinate of sc  
-        ninode = eq - 1;
         nodeElmt = []; %vertices of this element
         for inelmt = 1:length(elmt)-1
             inode = elmt(inelmt);
@@ -207,7 +211,6 @@ for i = 1: numElmtUQsec
         %insert nodes in shared edges between sections per element
         xcoor2 = coor(elmt(end),2); %x_coordinate of sc
         ycoor2 = coor(elmt(end),3); %y_coordinate of sc  
-        ninode = eq - 1;
         nodeElmt = [];
         for inelmt = 1:length(elmt)-1
             inode = elmt(inelmt);
@@ -320,7 +323,12 @@ for i = 1: numElmtQsec
     kvno = connectivity{iel}(2); %knot vector for element
     numSecPoly = polyElmts(iel,3);
     secElmts = polyElmts(iel,4:3 + numSecPoly);
-    eq = qgrad; %elevated qgrad   
+    eq = qgrad; %elevated qgrad 
+    ninode = eq - 1; %number of inserted nodes
+    
+    if ninode == 0
+        break
+    end
     
     if kvno == 0 
        
@@ -328,7 +336,6 @@ for i = 1: numElmtQsec
         %insert nodes in shared edges between sections per element
         xcoor2 = coor(elmt(end),2); %x_coordinate of sc
         ycoor2 = coor(elmt(end),3); %y_coordinate of sc  
-        ninode = eq - 1;
         nodeElmt = []; %vertices of this element
         for inelmt = 1:length(elmt)-1
             inode = elmt(inelmt);
@@ -408,7 +415,6 @@ for i = 1: numElmtQsec
         %insert nodes in shared edges between sections per element
         xcoor2 = coor(elmt(end),2); %x_coordinate of sc
         ycoor2 = coor(elmt(end),3); %y_coordinate of sc  
-        ninode = eq - 1;
         nodeElmt = [];
         for inelmt = 1:length(elmt)-1
             inode = elmt(inelmt);
