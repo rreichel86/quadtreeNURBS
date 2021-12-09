@@ -13,7 +13,7 @@ function [coor,nnode,sections,ord] = NodesInsertQ(nnode,coor,sections,ord,polyEl
 %                                            -1 - outside 
 %
 % sections -------------------- sections connectivity matrix as nsec-tupel of 
-%                               nodes, where the first three entries
+%                               nodes, where the first six entries
 %                               isec - section number
 %                               ipoly - polygonal element number
 %                               ikv - knot vector number
@@ -29,7 +29,7 @@ function [coor,nnode,sections,ord] = NodesInsertQ(nnode,coor,sections,ord,polyEl
 %
 %
 % connectivity --------------- elements connectivity matrix as nel-tupel of 
-%                              nodes, where the first three entries
+%                              nodes, where the first five entries
 %                              iel - element number
 %                              ikv - knot vector number
 %                              idxLeaf - index of Leaf

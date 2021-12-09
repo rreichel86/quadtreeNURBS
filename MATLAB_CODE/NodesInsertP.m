@@ -13,7 +13,7 @@ function [coor,nnode,sections,ord] = NodesInsertP(nnode,coor,sections,ord,seedin
 %                                            -1 - outside 
 %
 % sections -------------------- sections connectivity matrix as nsec-tupel of 
-%                               nodes, where the first three entries
+%                               nodes, where the first six entries
 %                               isec - section number
 %                               ipoly - polygonal element number 
 %                               idxLeaf - index of leaf 
