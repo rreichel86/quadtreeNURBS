@@ -75,7 +75,7 @@ NURBS = data{3};
 
 if ElevateOrderNumber ~= 0
 
-    [coor,maxnsec,nnode,sections,ord]=elevtGrad(Quadtree,nnode,coor,sections,ord,polyElmts,connectivity,seedingPoints_splitt,seedingPoints_merge);
+    [coor,maxnsec,nnode,sections,ord] = remainGrad(Quadtree,nnode,coor,sections,ord,polyElmts,connectivity,QuadLeaf_splitt,QuadLeaf_merge);
                                                   
 end
 
