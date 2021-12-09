@@ -86,6 +86,10 @@ for isp = 1: numSeedingPoints_splitt
     ninode = ep - 1; %number of inserted nodes
     ikv = sections(isec0,4); %knot vector
     
+    if ninode == 0
+        break
+    end
+    
     coor_StrucNodes = []; %coor_matrix contains the information of all nodes including scalling center for each chosed section
     % sections = [isec, ipoly, idxLeaf, ikv, region, nsec, node_1,...,node_nsec]
     if ikv == 0
@@ -144,6 +148,10 @@ for isp = 1: numSeedingPoints_merge
     pgrad = seedingPoints_merge(isp,7); %pgrad from last calculation
     ninode = pgrad - 1; %number of inserted nodes
     ikv = sections(isec0,4); %knot vector
+    
+    if ninode == 0
+        break
+    end
 
     coor_StrucNodes = []; %coordinate of structural nodes including scalling center for each chosed section
     % sections = [isec, ipoly, idxLeaf, ikv, region, nsec, node_1,...,node_nsec]
