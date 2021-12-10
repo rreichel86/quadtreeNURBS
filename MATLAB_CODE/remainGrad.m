@@ -94,7 +94,7 @@ for i = 1: nQuadLeaf_splitt
         for ii = 1:length(idxsecs)
             isec = idxsecs(ii);
             nsec = sections(isec,6);
-            ikc = sections(isec,4);
+            ikv = sections(isec,4);
             sc = sections(isec,6+nsec);
             sc_coor = coor(sc,2:3);
             newSeedingPoints_splitt = [newSeedingPoints_splitt;isec,isec,iQuadLeaf,ikv,sc_coor,pgrad-1,qgrad-1];
@@ -107,7 +107,6 @@ if isempty(QuadLeaf_merge)~=0
     nQuadLeaf_merge = size(QuadLeaf_merge,1);
     for i = 1: nQuadLeaf_merge
         iQuadLeaf = QuadLeaf_merge(i,1);
-        quadkv = QuadLeaf_merge(i,2);
         pgrad = QuadLeaf_merge(i,3);
         qgrad = QuadLeaf_merge(i,4);
 
