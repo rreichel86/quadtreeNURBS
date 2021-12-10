@@ -122,7 +122,7 @@ for i = 1: numElmtUQsec
     ninode = eq - 1; %number of inserted nodes
     
     if ninode == 0
-        break
+        continue
     end
        
     
@@ -327,7 +327,7 @@ for i = 1: numElmtQsec
     ninode = eq - 1; %number of inserted nodes
     
     if ninode == 0
-        break
+        continue
     end
     
     if kvno == 0 

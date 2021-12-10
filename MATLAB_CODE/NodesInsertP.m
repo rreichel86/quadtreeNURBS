@@ -87,7 +87,7 @@ for isp = 1: numSeedingPoints_splitt
     ikv = sections(isec0,4); %knot vector
     
     if ninode == 0
-        break
+        continue
     end
     
     coor_StrucNodes = []; %coor_matrix contains the information of all nodes including scalling center for each chosed section
@@ -150,7 +150,7 @@ for isp = 1: numSeedingPoints_merge
     ikv = sections(isec0,4); %knot vector
     
     if ninode == 0
-        break
+        continue
     end
 
     coor_StrucNodes = []; %coordinate of structural nodes including scalling center for each chosed section
