@@ -156,7 +156,7 @@ for isp = 1: numSeedingPoints_merge
     % sections = [isec, ipoly, idxLeaf, ikv, region, nsec, node_1,...,node_nsec]
     
     %check if current section is the neighbor section of one unqualified section
-    if ismember(isec0,secN_splitt(:,2)) ~= 1 %no        
+    if ismember(isec0,secN_splitt) ~= 1 %no        
         if ikv == 0
             if sections(isec0,6) == 3 %check if this section has been treated in secN_merge
 
