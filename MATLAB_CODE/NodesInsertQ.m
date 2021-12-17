@@ -301,7 +301,7 @@ for isp = 1: numSeedingPoints_merge
     isec0 = seedingPoints_merge(isp,2);
     qgrad = seedingPoints_merge(isp,8);
     iel_merge = sections(isec0,2);
-    if ismember(iel_merge,ElmtUQsec(:,1)) == 0
+    if isempty(ElmtUQsec) == 1 || ismember(iel_merge,ElmtUQsec(:,1)) == 0
         ElmtQsec = [ElmtQsec;iel_merge,qgrad];
     end
 end
