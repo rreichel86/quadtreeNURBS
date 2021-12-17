@@ -110,7 +110,7 @@ for isp = 1: numSeedingPoints_splitt
     iel_splitt = sections(isec0,2);
     ElmtUQsec = [ElmtUQsec;iel_splitt,qgrad];
 end
-[~,ia] = unique(ElmtUQsec(:,1));
+[~,ia] = unique(ElmtUQsec,'rows');
 ElmtUQsec = ElmtUQsec(ia,:);
     
 % connectivity = [iel, ikv, idxLeaf, which_region, nel, node_1,...,node_nel, scaling_center]
@@ -306,7 +306,7 @@ for isp = 1: numSeedingPoints_merge
     end
 end
 
-[~,ia] = unique(ElmtQsec(:,1));
+[~,ia] = unique(ElmtQsec,'rows');
 ElmtQsec = ElmtQsec(ia,:);
 
     
