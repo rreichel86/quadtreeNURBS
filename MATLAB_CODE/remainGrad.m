@@ -111,7 +111,7 @@ for i = 1: nQuadLeaf_merge
     qgrad = QuadLeaf_merge(i,4);
     
    %check if current quad has already be treated in QuadLeaf_splitt
-   if ismember(iQuadLeaf,QuadLeaf_splitt(:,1)) == 1 %yes
+   if isempty(QuadLeaf_splitt) == 0 && ismember(iQuadLeaf,QuadLeaf_splitt(:,1)) == 1 %yes
        continue
    end
 
