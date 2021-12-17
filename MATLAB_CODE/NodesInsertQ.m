@@ -72,10 +72,14 @@ function [coor,nnode,sections,ord] = NodesInsertQ(nnode,coor,sections,ord,polyEl
 
 %% extend sections matrix
 % max.qgrad of unqualified sections from last calculation
-qgrad_splitt = max(seedingPoints_splitt(:,8));
+if isempty(seedingPoints_splitt) == 0
+    qgrad_splitt = max(seedingPoints_splitt(:,8));
+else
+    qgrad_splitt = 1;
+end
 
-if isempty(seedingPoints_merge) == 0
-    % max.qgrad of unqualified sections from last calculation
+% max.qgrad of unqualified sections from last calculation
+if isempty(seedingPoints_merge) == 0    
     qgrad_merge = max(seedingPoints_merge(:,8));
 else
     qgrad_merge = 1;
@@ -97,7 +101,7 @@ end
 
 % sections = [isec, ipoly, idxLeaf, ikv, region, nsec, node_1,...,node_nsec]
 
-numSeedingPoints_splitt = length(seedingPoints_splitt(:,1));
+numSeedingPoints_splitt = size(seedingPoints_splitt,1);
 
 ElmtUQsec = [];    %element which contain unqualified sections
 for isp = 1: numSeedingPoints_splitt
@@ -110,7 +114,7 @@ end
 ElmtUQsec = ElmtUQsec(ia,:);
     
 % connectivity = [iel, ikv, idxLeaf, which_region, nel, node_1,...,node_nel, scaling_center]
-[numElmtUQsec,~] = size(ElmtUQsec); %number of poly element
+numElmtUQsec = size(ElmtUQsec,1); %number of poly element
 for i = 1: numElmtUQsec
     iel = ElmtUQsec(i); %element number
     qgrad = ElmtUQsec(i,2); %qgrad from last calculation
@@ -290,11 +294,7 @@ end
 
 %% insert nodes in Q-direction for qualified sections
 
-if isempty(seedingPoints_merge) == 1
-    return
-end
-
-numSeedingPoints_merge = length(seedingPoints_merge(:,1));
+numSeedingPoints_merge = size(seedingPoints_merge,1);
 
 ElmtQsec = [];    %element which contain qualified sections
 for isp = 1: numSeedingPoints_merge
@@ -309,13 +309,9 @@ end
 [~,ia] = unique(ElmtQsec(:,1));
 ElmtQsec = ElmtQsec(ia,:);
 
-if isempty(ElmtQsec) == 1
-    return
-end
-
     
 % connectivity = [iel, ikv, idxLeaf, which_region, nel, node_1,...,node_nel, scaling_center]
-[numElmtQsec,~] = size(ElmtQsec); %number of poly element
+numElmtQsec = size(ElmtQsec,1); %number of poly element
 for i = 1: numElmtQsec
     iel = ElmtQsec(i,1); %element number
     qgrad = ElmtQsec(i,2); % qgrad from last calculation

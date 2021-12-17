@@ -56,11 +56,14 @@ function [coor,nnode,sections,ord] = NodesInsertP(nnode,coor,sections,ord,seedin
 %% extend sections matrix
 
 % max. pgrad of all unqualified sections from last calculation
-pgrad_splitt = max(seedingPoints_splitt(:,7));
+if isempty(seedingPoints_splitt) == 0
+    pgrad_splitt = max(seedingPoints_splitt(:,7));
+else
+    pgrad_splitt = 1;
+end
 
-if isempty(seedingPoints_merge) == 0
-    
-    % max. pgrad of all qualified sections from last calculation
+% max. pgrad of all qualified sections from last calculation    
+if isempty(seedingPoints_merge) == 0        
     pgrad_merge = max(seedingPoints_merge(:,7));
 else
     pgrad_merge = 1;
@@ -77,7 +80,7 @@ end
 
 %% insert nodes in P-direction for unqualified sections
 
-numSeedingPoints_splitt = length(seedingPoints_splitt(:,1));
+numSeedingPoints_splitt = size(seedingPoints_splitt,1);
 
 for isp = 1: numSeedingPoints_splitt           
     isec0 = seedingPoints_splitt(isp,2); %(old)section number
@@ -137,11 +140,7 @@ end
 
 %% insert nodes in P-direction for qualified sections
 
-if isempty(seedingPoints_merge) == 1
-    return
-end
-
-numSeedingPoints_merge = length(seedingPoints_merge(:,1));
+numSeedingPoints_merge = size(seedingPoints_merge,1);
 
 for isp = 1: numSeedingPoints_merge           
     isec0 = seedingPoints_merge(isp,2); %(old)section number
