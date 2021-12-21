@@ -1,4 +1,4 @@
-function [coor,nnode,sections,ord] = NodesInsertP(nnode,coor,sections,ord,seedingPoints_splitt,secN_splitt,seedingPoints_merge,secN_merge) 
+function [coor,nnode,sections,ord] = NodesInsertP(nnode,coor,sections,ord,NURBS_pts,seedingPoints_splitt,secN_splitt,seedingPoints_merge,secN_merge) 
 % Insert nodes in p_direction
 
 %INPUT:
@@ -110,7 +110,13 @@ for isp = 1: numSeedingPoints_splitt
             coor(nnode+1:nnode+ninode,4) = 1;  %weight
             coor(nnode+1:nnode+ninode,5) = 3;  %typ(inserted nodes)
             coor(nnode+1:nnode+ninode,6) = 0;  %which-region
-            coor(nnode+1:nnode+ninode,7) = -1; %inside-region  
+            
+            % Check if current node is inside the region enclosed by the NURBS curve            
+            for j = 1: ninode
+                pointInPoly = isPointInPolygon(NURBS_pts(1:end-1,1:2), coor_node_p(j,1:2));
+                coor(nnode+j,7) = pointInPoly;
+            end
+                 
             coor(nnode+1:nnode+ninode,2:3) =[coor_nodes_p];
             % update the section matrix 
             nsec_new = 3 + ninode;
@@ -172,7 +178,13 @@ for isp = 1: numSeedingPoints_merge
                 coor(nnode+1:nnode+ninode,4) = 1;  %weight
                 coor(nnode+1:nnode+ninode,5) = 3;  %typ(inserted nodes)
                 coor(nnode+1:nnode+ninode,6) = 0;  %which-region
-                coor(nnode+1:nnode+ninode,7) = -1; %inside-region  
+                
+                % Check if current node is inside the region enclosed by the NURBS curve            
+                for j = 1: ninode
+                    pointInPoly = isPointInPolygon(NURBS_pts(1:end-1,1:2), coor_node_p(j,1:2));
+                    coor(nnode+j,7) = pointInPoly;
+                end                
+               
                 coor(nnode+1:nnode+ninode,2:3) =[coor_nodes_p];
                 % update the section matrix
                 nsec_new = 3 + ninode;
