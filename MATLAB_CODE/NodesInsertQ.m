@@ -1,4 +1,4 @@
-function [coor,nnode,sections,ord] = NodesInsertQ(nnode,coor,sections,ord,polyElmts,connectivity,seedingPoints_splitt,seedingPoints_merge) 
+function [coor,nnode,sections,ord] = NodesInsertQ(nnode,coor,sections,ord,polyElmts,connectivity,NURBS_pts,seedingPoints_splitt,seedingPoints_merge) 
 
 
 %INPUT:
@@ -147,7 +147,13 @@ for i = 1: numElmtUQsec
             coor(nnode+1:nnode+ninode,4) = 1;  %weight
             coor(nnode+1:nnode+ninode,5) = 3;  %typ(inserted nodes)
             coor(nnode+1:nnode+ninode,6) = 0;  %which-region
-            coor(nnode+1:nnode+ninode,7) = -1; %inside-region  
+            
+            % Check if current inserted node is inside the region enclosed by the NURBS curve            
+            for j = 1: ninode
+                pointInPoly = isPointInPolygon(NURBS_pts(1:end-1,1:2), coor_inodes_q(j,1:2));
+                coor(nnode+j,7) = pointInPoly;
+            end 
+            
             coor(nnode+1:nnode+ninode,2:3) =[coor_inodes_q];
             nodeElmt0 =[inode,nnode+1:nnode + ninode];
             nodeElmt = [nodeElmt;nodeElmt0];
@@ -176,7 +182,13 @@ for i = 1: numElmtUQsec
                     coor(nnode+1:nnode+ninode,4) = 1;  %weight
                     coor(nnode+1:nnode+ninode,5) = 3;  %typ(inserted nodes)
                     coor(nnode+1:nnode+ninode,6) = 0;  %which-region
-                    coor(nnode+1:nnode+ninode,7) = -1; %inside-region  
+                    
+                    % Check if current inserted node is inside the region enclosed by the NURBS curve            
+                    for j = 1: ninode
+                        pointInPoly = isPointInPolygon(NURBS_pts(1:end-1,1:2), coor_inodes_q(j,1:2));
+                        coor(nnode+j,7) = pointInPoly;
+                    end 
+ 
                     coor(nnode+1:nnode+ninode,2:3) =[coor_inodes_q];
                     nodeSec0 =[inode,nnode+1:nnode + ninode];
                     nodeSec = [nodeSec;nodeSec0];
@@ -226,7 +238,13 @@ for i = 1: numElmtUQsec
             coor(nnode+1:nnode+ninode,4) = 1;  %weight
             coor(nnode+1:nnode+ninode,5) = 3;  %typ(inserted nodes)
             coor(nnode+1:nnode+ninode,6) = 0;  %which-region
-            coor(nnode+1:nnode+ninode,7) = -1; %inside-region  
+            
+            % Check if current inserted node is inside the region enclosed by the NURBS curve            
+            for j = 1: ninode
+                pointInPoly = isPointInPolygon(NURBS_pts(1:end-1,1:2), coor_inodes_q(j,1:2));
+                coor(nnode+j,7) = pointInPoly;
+            end 
+             
             coor(nnode+1:nnode+ninode,2:3) =[coor_inodes_q];
             nodeElmt0 =[inode,nnode+1:nnode + ninode];
             nodeElmt = [nodeElmt;nodeElmt0];
@@ -256,7 +274,13 @@ for i = 1: numElmtUQsec
                         coor(nnode+1:nnode+ninode,4) = 1;  %weight
                         coor(nnode+1:nnode+ninode,5) = 3;  %typ(inserted nodes)
                         coor(nnode+1:nnode+ninode,6) = 0;  %which-region
-                        coor(nnode+1:nnode+ninode,7) = -1; %inside-region  
+                        
+                        % Check if current inserted node is inside the region enclosed by the NURBS curve            
+                        for j = 1: ninode
+                            pointInPoly = isPointInPolygon(NURBS_pts(1:end-1,1:2), coor_inodes_q(j,1:2));
+                            coor(nnode+j,7) = pointInPoly;
+                        end 
+ 
                         coor(nnode+1:nnode+ninode,2:3) =[coor_inodes_q];
                         nodeSec0 =[inode,nnode+1:nnode + ninode];
                         nodeSec = [nodeSec;nodeSec0];
@@ -343,7 +367,13 @@ for i = 1: numElmtQsec
             coor(nnode+1:nnode+ninode,4) = 1;  %weight
             coor(nnode+1:nnode+ninode,5) = 3;  %typ(inserted nodes)
             coor(nnode+1:nnode+ninode,6) = 0;  %which-region
-            coor(nnode+1:nnode+ninode,7) = -1; %inside-region  
+
+            % Check if current inserted node is inside the region enclosed by the NURBS curve            
+            for j = 1: ninode
+                pointInPoly = isPointInPolygon(NURBS_pts(1:end-1,1:2), coor_inodes_q(j,1:2));
+                coor(nnode+j,7) = pointInPoly;
+            end 
+
             coor(nnode+1:nnode+ninode,2:3) =[coor_inodes_q];
             nodeElmt0 =[inode,nnode+1:nnode + ninode];
             nodeElmt = [nodeElmt;nodeElmt0];
@@ -372,7 +402,13 @@ for i = 1: numElmtQsec
                     coor(nnode+1:nnode+ninode,4) = 1;  %weight
                     coor(nnode+1:nnode+ninode,5) = 3;  %typ(inserted nodes)
                     coor(nnode+1:nnode+ninode,6) = 0;  %which-region
-                    coor(nnode+1:nnode+ninode,7) = -1; %inside-region  
+                    
+                    % Check if current inserted node is inside the region enclosed by the NURBS curve            
+                    for j = 1: ninode
+                        pointInPoly = isPointInPolygon(NURBS_pts(1:end-1,1:2), coor_inodes_q(j,1:2));
+                        coor(nnode+j,7) = pointInPoly;
+                    end 
+ 
                     coor(nnode+1:nnode+ninode,2:3) =[coor_inodes_q];
                     nodeSec0 =[inode,nnode+1:nnode + ninode];
                     nodeSec = [nodeSec;nodeSec0];
@@ -422,7 +458,13 @@ for i = 1: numElmtQsec
             coor(nnode+1:nnode+ninode,4) = 1;  %weight
             coor(nnode+1:nnode+ninode,5) = 3;  %typ(inserted nodes)
             coor(nnode+1:nnode+ninode,6) = 0;  %which-region
-            coor(nnode+1:nnode+ninode,7) = -1; %inside-region  
+            
+            % Check if current inserted node is inside the region enclosed by the NURBS curve            
+            for j = 1: ninode
+                pointInPoly = isPointInPolygon(NURBS_pts(1:end-1,1:2), coor_inodes_q(j,1:2));
+                coor(nnode+j,7) = pointInPoly;
+            end 
+
             coor(nnode+1:nnode+ninode,2:3) =[coor_inodes_q];
             nodeElmt0 =[inode,nnode+1:nnode + ninode];
             nodeElmt = [nodeElmt;nodeElmt0];
@@ -452,7 +494,13 @@ for i = 1: numElmtQsec
                         coor(nnode+1:nnode+ninode,4) = 1;  %weight
                         coor(nnode+1:nnode+ninode,5) = 3;  %typ(inserted nodes)
                         coor(nnode+1:nnode+ninode,6) = 0;  %which-region
-                        coor(nnode+1:nnode+ninode,7) = -1; %inside-region  
+                        
+                        % Check if current inserted node is inside the region enclosed by the NURBS curve            
+                        for j = 1: ninode
+                            pointInPoly = isPointInPolygon(NURBS_pts(1:end-1,1:2), coor_inodes_q(j,1:2));
+                            coor(nnode+j,7) = pointInPoly;
+                        end 
+
                         coor(nnode+1:nnode+ninode,2:3) =[coor_inodes_q];
                         nodeSec0 =[inode,nnode+1:nnode + ninode];
                         nodeSec = [nodeSec;nodeSec0];
