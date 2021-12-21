@@ -111,7 +111,7 @@ for isp = 1: numSeedingPoints_splitt
             coor(nnode+1:nnode+ninode,5) = 3;  %typ(inserted nodes)
             coor(nnode+1:nnode+ninode,6) = 0;  %which-region
             
-            % Check if current node is inside the region enclosed by the NURBS curve            
+            % Check if current inserted node is inside the region enclosed by the NURBS curve            
             for j = 1: ninode
                 pointInPoly = isPointInPolygon(NURBS_pts(1:end-1,1:2), coor_node_p(j,1:2));
                 coor(nnode+j,7) = pointInPoly;
@@ -179,7 +179,7 @@ for isp = 1: numSeedingPoints_merge
                 coor(nnode+1:nnode+ninode,5) = 3;  %typ(inserted nodes)
                 coor(nnode+1:nnode+ninode,6) = 0;  %which-region
                 
-                % Check if current node is inside the region enclosed by the NURBS curve            
+                % Check if current inserted node is inside the region enclosed by the NURBS curve            
                 for j = 1: ninode
                     pointInPoly = isPointInPolygon(NURBS_pts(1:end-1,1:2), coor_node_p(j,1:2));
                     coor(nnode+j,7) = pointInPoly;
