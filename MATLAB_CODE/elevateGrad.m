@@ -291,10 +291,15 @@ end
 
 %% elevate the p-/q-Grad
 
+% Get NURBS curve
+data = Quadtree.Node{1,1};
+NURBS = data{3};
+% compute point of the NURBS curve
+NURBS_pts = CalculateNURBS(NURBS);
 
-[coor,nnode,sections,ord] = NodesInsertP(nnode,coor,sections,ord,seedingPoints_splitt,secN_splitt,seedingPoints_merge,secN_merge);
+[coor,nnode,sections,ord] = NodesInsertP(nnode,coor,sections,ord,NURBS_pts,seedingPoints_splitt,secN_splitt,seedingPoints_merge,secN_merge);
 
-[coor,nnode,sections,ord] = NodesInsertQ(nnode,coor,sections,ord,polyElmts,connectivity,seedingPoints_splitt,seedingPoints_merge);
+[coor,nnode,sections,ord] = NodesInsertQ(nnode,coor,sections,ord,polyElmts,connectivity,NURBS_pts,seedingPoints_splitt,seedingPoints_merge);
 
 maxnsec = max(sections(:,6));
 
