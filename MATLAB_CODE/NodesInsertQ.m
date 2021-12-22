@@ -144,7 +144,7 @@ for i = 1: numElmtUQsec
             coor_inodes_q = getLocation(xcoor1,xcoor2,ycoor1,ycoor2,eq);
             %update coor matrix
             coor(nnode+1:nnode+ninode,1) = nnode+1: nnode + ninode;
-            coor(nnode+1:nnode+ninode,4) = 1;  %weight
+            coor(nnode+1:nnode+ninode,4) = 0;  %weight
             coor(nnode+1:nnode+ninode,5) = 3;  %typ(inserted nodes)
             coor(nnode+1:nnode+ninode,6) = 0;  %which-region
             
@@ -179,7 +179,7 @@ for i = 1: numElmtUQsec
                     coor_inodes_q = getLocation(xcoor1,xcoor2,ycoor1,ycoor2,eq);
                     %update coor matrix
                     coor(nnode+1:nnode+ninode,1) = nnode+1: nnode + ninode;
-                    coor(nnode+1:nnode+ninode,4) = 1;  %weight
+                    coor(nnode+1:nnode+ninode,4) = 0;  %weight
                     coor(nnode+1:nnode+ninode,5) = 3;  %typ(inserted nodes)
                     coor(nnode+1:nnode+ninode,6) = 0;  %which-region
                     
@@ -235,7 +235,7 @@ for i = 1: numElmtUQsec
             coor_inodes_q = getLocation(xcoor1,xcoor2,ycoor1,ycoor2,eq);
             %update coor matrix
             coor(nnode+1:nnode+ninode,1) = nnode+1: nnode + ninode;
-            coor(nnode+1:nnode+ninode,4) = 1;  %weight
+            coor(nnode+1:nnode+ninode,4) = 0;  %weight
             coor(nnode+1:nnode+ninode,5) = 3;  %typ(inserted nodes)
             coor(nnode+1:nnode+ninode,6) = 0;  %which-region
             
@@ -271,7 +271,7 @@ for i = 1: numElmtUQsec
                         coor_inodes_q = getLocation(xcoor1,xcoor2,ycoor1,ycoor2,eq);
                         %update coor matrix
                         coor(nnode+1:nnode+ninode,1) = nnode+1: nnode + ninode;
-                        coor(nnode+1:nnode+ninode,4) = 1;  %weight
+                        coor(nnode+1:nnode+ninode,4) = 0;  %weight
                         coor(nnode+1:nnode+ninode,5) = 3;  %typ(inserted nodes)
                         coor(nnode+1:nnode+ninode,6) = 0;  %which-region
                         
@@ -364,7 +364,7 @@ for i = 1: numElmtQsec
             coor_inodes_q = getLocation(xcoor1,xcoor2,ycoor1,ycoor2,eq);
             %update coor matrix
             coor(nnode+1:nnode+ninode,1) = nnode+1: nnode + ninode;
-            coor(nnode+1:nnode+ninode,4) = 1;  %weight
+            coor(nnode+1:nnode+ninode,4) = 0;  %weight
             coor(nnode+1:nnode+ninode,5) = 3;  %typ(inserted nodes)
             coor(nnode+1:nnode+ninode,6) = 0;  %which-region
 
@@ -399,7 +399,7 @@ for i = 1: numElmtQsec
                     coor_inodes_q = getLocation(xcoor1,xcoor2,ycoor1,ycoor2,eq);
                     %update coor matrix
                     coor(nnode+1:nnode+ninode,1) = nnode+1: nnode + ninode;
-                    coor(nnode+1:nnode+ninode,4) = 1;  %weight
+                    coor(nnode+1:nnode+ninode,4) = 0;  %weight
                     coor(nnode+1:nnode+ninode,5) = 3;  %typ(inserted nodes)
                     coor(nnode+1:nnode+ninode,6) = 0;  %which-region
                     
@@ -455,7 +455,7 @@ for i = 1: numElmtQsec
             coor_inodes_q = getLocation(xcoor1,xcoor2,ycoor1,ycoor2,eq);
             %update coor matrix
             coor(nnode+1:nnode+ninode,1) = nnode+1: nnode + ninode;
-            coor(nnode+1:nnode+ninode,4) = 1;  %weight
+            coor(nnode+1:nnode+ninode,4) = 0;  %weight
             coor(nnode+1:nnode+ninode,5) = 3;  %typ(inserted nodes)
             coor(nnode+1:nnode+ninode,6) = 0;  %which-region
             
@@ -491,7 +491,7 @@ for i = 1: numElmtQsec
                         coor_inodes_q = getLocation(xcoor1,xcoor2,ycoor1,ycoor2,eq);
                         %update coor matrix
                         coor(nnode+1:nnode+ninode,1) = nnode+1: nnode + ninode;
-                        coor(nnode+1:nnode+ninode,4) = 1;  %weight
+                        coor(nnode+1:nnode+ninode,4) = 0;  %weight
                         coor(nnode+1:nnode+ninode,5) = 3;  %typ(inserted nodes)
                         coor(nnode+1:nnode+ninode,6) = 0;  %which-region
                         
