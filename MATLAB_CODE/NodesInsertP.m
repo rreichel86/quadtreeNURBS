@@ -107,7 +107,7 @@ for isp = 1: numSeedingPoints_splitt
             %the coordinate of the inserted node in p-direction           
             coor_nodes_p = getLocation(coor_StrucNodes(1,2),coor_StrucNodes(2,2),coor_StrucNodes(1,3),coor_StrucNodes(2,3),ep);
             coor(nnode+1:nnode+ninode,1) = nnode+1: nnode + ninode;
-            coor(nnode+1:nnode+ninode,4) = 1;  %weight
+            coor(nnode+1:nnode+ninode,4) = 0;  %weight
             coor(nnode+1:nnode+ninode,5) = 3;  %typ(inserted nodes)
             coor(nnode+1:nnode+ninode,6) = 0;  %which-region
             
@@ -175,7 +175,7 @@ for isp = 1: numSeedingPoints_merge
                 %the coordinate of the inserted node in p-direction           
                 coor_nodes_p = getLocation(coor_StrucNodes(1,2),coor_StrucNodes(2,2),coor_StrucNodes(1,3),coor_StrucNodes(2,3),pgrad);
                 coor(nnode+1:nnode+ninode,1) = nnode+1: nnode + ninode;
-                coor(nnode+1:nnode+ninode,4) = 1;  %weight
+                coor(nnode+1:nnode+ninode,4) = 0;  %weight
                 coor(nnode+1:nnode+ninode,5) = 3;  %typ(inserted nodes)
                 coor(nnode+1:nnode+ninode,6) = 0;  %which-region
                 
