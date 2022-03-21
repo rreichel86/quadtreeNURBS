@@ -41,10 +41,10 @@ function [coor,maxnsec,nnode,sections,ord]=remainGrad(Quadtree,nnode,coor,sectio
 % connectivity = [iel, ikv, idxLeaf, which_region, nel, node_1,...,node_nel, scaling_center]
 
 % QuadLeaf = [iQuad,quadkv,maxpgrad,maxqgrad]
-%             iQuad: Leaf number of (un)qualified quad;
-%             quadkv: 0(no knot vector),1(knot vector);
-%             maxpgrad: max. pgrad from all sections of current quad
-%             maxqgrad: max. qgrad from all sections of current quad
+%             iQuad - Leaf number of (un)qualified quad;
+%             quadkv - 0(no knot vector),1(knot vector);
+%             maxpgrad -  max. pgrad from all sections of current quad
+%             maxqgrad - max. qgrad from all sections of current quad
 %
 %
 %
@@ -68,81 +68,66 @@ function [coor,maxnsec,nnode,sections,ord]=remainGrad(Quadtree,nnode,coor,sectio
 nQuadLeaf_splitt = size(QuadLeaf_splitt,1);
 newSeedingPoints_splitt = [];
 for i = 1: nQuadLeaf_splitt
-    iQuadLeaf = QuadLeaf_splitt(i,1);
+    iQuadLeaf_splitt = QuadLeaf_splitt(i,1);
     pgrad = QuadLeaf_splitt(i,3);
     qgrad = QuadLeaf_splitt(i,4);
     
-    %check if current quad has children
-    idxChildren = Quadtree.getchildren(iQuadLeaf);
-    numChildren = length(idxChildren);
-    if numChildren ~= 0 %yes
-        for ii = 1: numChildren
-            ichild = idxChildren(ii);
-            idxsecs = find(sections(:,3)==ichild);
-            for iii = 1:length(idxsecs)
-                isec = idxsecs(iii);
-                nsec = sections(isec,6);
-                ikv = sections(isec,4);
-                sc = sections(isec,6+nsec);
-                sc_coor = coor(sc,2:3);
-                newSeedingPoints_splitt = [newSeedingPoints_splitt;isec,isec,ichild,ikv,sc_coor,pgrad-1,qgrad-1];
-            end
-        end
-        
-    else %numChildren == 0, no     %p/q-grad of all sections in current quad will be unified into one ???
-        idxsecs = find(sections(:,3)==iQuadLeaf);        
-        for ii = 1:length(idxsecs)
-            isec = idxsecs(ii);
+
+    idxChildren = Quadtree.getchildren(iQuadLeaf_splitt);   
+    % array for new Quadleaves to be splitted
+    if isempty(idxChildren) == 0
+        newQuad_splitt = [iQuadLeaf_splitt];
+    else
+        newQuad_splitt = idxChildren;
+    end
+
+    for ii = 1: length(newQuad_splitt)
+        iQuad = newQuad_splitt(ii);
+        idxsecs = find(sections(:,3)==iQuad);
+        for iii = 1:length(idxsecs)
+            isec = idxsecs(iii);
             nsec = sections(isec,6);
             ikv = sections(isec,4);
             sc = sections(isec,6+nsec);
             sc_coor = coor(sc,2:3);
-            newSeedingPoints_splitt = [newSeedingPoints_splitt;isec,isec,iQuadLeaf,ikv,sc_coor,pgrad-1,qgrad-1];
-        end       
-    end
+            newSeedingPoints_splitt = [newSeedingPoints_splitt;isec,isec,iQuad,ikv,sc_coor,pgrad-1,qgrad-1];
+        end
+    end       
 end
 
 newSeedingPoints_merge = [];
 
 nQuadLeaf_merge = size(QuadLeaf_merge,1);
 for i = 1: nQuadLeaf_merge
-    iQuadLeaf = QuadLeaf_merge(i,1);
+    iQuadLeaf_merge = QuadLeaf_merge(i,1);
     pgrad = QuadLeaf_merge(i,3);
     qgrad = QuadLeaf_merge(i,4);
     
    %check if current quad has already be treated in QuadLeaf_splitt
-   if isempty(QuadLeaf_splitt) == 0 && ismember(iQuadLeaf,QuadLeaf_splitt(:,1)) == 1 %yes
+   if isempty(QuadLeaf_splitt) == 0 && ismember(iQuadLeaf_merge,QuadLeaf_splitt(:,1)) == 1 %yes
        continue
    end
 
-    %check if current quad has children
-    idxChildren = Quadtree.getchildren(iQuadLeaf);
-    numChildren = length(idxChildren);
-    if numChildren ~= 0 %yes
-        for ii = 1: numChildren
-            ichild = idxChildren(ii);
-            idxsecs = find(sections(:,3)==ichild);
-            for iii = 1:length(idxsecs)
-                isec = idxsecs(iii);
-                nsec = sections(isec,6);
-                ikv = sections(isec,4);
-                sc = sections(isec,6+nsec);
-                sc_coor = coor(sc,2:3);
-                newSeedingPoints_merge = [newSeedingPoints_merge;isec,isec,ichild,ikv,sc_coor,pgrad,qgrad];
-            end
-        end
+    idxChildren = Quadtree.getchildren(iQuadLeaf_merge);
+    % array for new Quadleaves to be splitted
+    if isempty(idxChildren) == 0
+        newQuad_merge = [iQuadLeaf_merge];
+    else
+        newQuad_merge = idxChildren;
+    end
 
-    else %numChildren == 0, no    %p/q-grad of all sections in current quad will be unified into one ???      
-        idxsecs = find(sections(:,3)==iQuadLeaf);        
-        for ii = 1:length(idxsecs)
-            isec = idxsecs(ii);
+    for ii = 1: length(newQuad_merge)
+        iQuad = newQuad_merge(ii);
+        idxsecs = find(sections(:,3)==iQuad);
+        for iii = 1:length(idxsecs)
+            isec = idxsecs(iii);
             nsec = sections(isec,6);
             ikv = sections(isec,4);
             sc = sections(isec,6+nsec);
             sc_coor = coor(sc,2:3);
-            newSeedingPoints_merge = [newSeedingPoints_merge;isec,isec,iQuadLeaf,ikv,sc_coor,pgrad,qgrad];
-        end       
-    end
+            newSeedingPoints_splitt = [newSeedingPoints_splitt;isec,isec,iQuad,ikv,sc_coor,pgrad,qgrad];
+        end
+    end   
 end
 
 
