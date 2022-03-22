@@ -67,6 +67,7 @@ function [coor,maxnsec,nnode,sections,ord]=remainGrad(Quadtree,nnode,coor,sectio
 %number of unqualified quad
 nQuadLeaf_splitt = size(QuadLeaf_splitt,1);
 newSeedingPoints_splitt = [];
+newQuad_splitt = [];
 for i = 1: nQuadLeaf_splitt
     iQuadLeaf_splitt = QuadLeaf_splitt(i,1);
     pgrad = QuadLeaf_splitt(i,2);
@@ -76,9 +77,9 @@ for i = 1: nQuadLeaf_splitt
     idxChildren = Quadtree.getchildren(iQuadLeaf_splitt);   
     % array for new Quadleaves to be splitted
     if isempty(idxChildren) == 1
-        newQuad_splitt = [iQuadLeaf_splitt];
+        newQuad_splitt = [newQuad_splitt;iQuadLeaf_splitt];
     else
-        newQuad_splitt = [idxChildren];
+        newQuad_splitt = [newQuad_splitt;idxChildren'];
     end
 
     for ii = 1: length(newQuad_splitt)
@@ -100,6 +101,7 @@ for i = 1: nQuadLeaf_splitt
 end
 
 newSeedingPoints_merge = [];
+newQuad_merge = [];
 
 nQuadLeaf_merge = size(QuadLeaf_merge,1);
 for i = 1: nQuadLeaf_merge
@@ -115,9 +117,9 @@ for i = 1: nQuadLeaf_merge
     idxChildren = Quadtree.getchildren(iQuadLeaf_merge);
     % array for new Quadleaves to be splitted
     if isempty(idxChildren) == 1
-        newQuad_merge = [iQuadLeaf_merge];
+        newQuad_merge = [newQuad_merge;iQuadLeaf_merge];
     else
-        newQuad_merge = [idxChildren];
+        newQuad_merge = [newQuad_merge;idxChildren'];
     end
 
     for ii = 1: length(newQuad_merge)
@@ -130,9 +132,9 @@ for i = 1: nQuadLeaf_merge
             sc_coor = coor(sc,2:3);
             ikv = sections(isec,4);
             if ikv == 0
-                newSeedingPoints_splitt = [newSeedingPoints_splitt;isec,isec,iQuad,ikv,sc_coor,pgrad,qgrad];
+                newSeedingPoints_merge = [newSeedingPoints_merge;isec,isec,iQuad,ikv,sc_coor,pgrad,qgrad];
             else
-                newSeedingPoints_splitt = [newSeedingPoints_splitt;isec,isec,iQuad,ikv,sc_coor,2,qgrad];
+                newSeedingPoints_merge = [newSeedingPoints_merge;isec,isec,iQuad,ikv,sc_coor,2,qgrad];
             end            
         end
     end   
