@@ -69,16 +69,16 @@ nQuadLeaf_splitt = size(QuadLeaf_splitt,1);
 newSeedingPoints_splitt = [];
 for i = 1: nQuadLeaf_splitt
     iQuadLeaf_splitt = QuadLeaf_splitt(i,1);
-    pgrad = QuadLeaf_splitt(i,3);
-    qgrad = QuadLeaf_splitt(i,4);
+    pgrad = QuadLeaf_splitt(i,2);
+    qgrad = QuadLeaf_splitt(i,3);
     
 
     idxChildren = Quadtree.getchildren(iQuadLeaf_splitt);   
     % array for new Quadleaves to be splitted
-    if isempty(idxChildren) == 0
+    if isempty(idxChildren) == 1
         newQuad_splitt = [iQuadLeaf_splitt];
     else
-        newQuad_splitt = idxChildren;
+        newQuad_splitt = [idxChildren];
     end
 
     for ii = 1: length(newQuad_splitt)
@@ -87,10 +87,14 @@ for i = 1: nQuadLeaf_splitt
         for iii = 1:length(idxsecs)
             isec = idxsecs(iii);
             nsec = sections(isec,6);
-            ikv = sections(isec,4);
             sc = sections(isec,6+nsec);
             sc_coor = coor(sc,2:3);
-            newSeedingPoints_splitt = [newSeedingPoints_splitt;isec,isec,iQuad,ikv,sc_coor,pgrad-1,qgrad-1];
+            ikv = sections(isec,4);
+            if ikv == 0
+                newSeedingPoints_splitt = [newSeedingPoints_splitt;isec,isec,iQuad,ikv,sc_coor,pgrad-1,qgrad-1];
+            else
+                newSeedingPoints_splitt = [newSeedingPoints_splitt;isec,isec,iQuad,ikv,sc_coor,2,qgrad-1];
+            end
         end
     end       
 end
@@ -100,8 +104,8 @@ newSeedingPoints_merge = [];
 nQuadLeaf_merge = size(QuadLeaf_merge,1);
 for i = 1: nQuadLeaf_merge
     iQuadLeaf_merge = QuadLeaf_merge(i,1);
-    pgrad = QuadLeaf_merge(i,3);
-    qgrad = QuadLeaf_merge(i,4);
+    pgrad = QuadLeaf_merge(i,2);
+    qgrad = QuadLeaf_merge(i,3);
     
    %check if current quad has already be treated in QuadLeaf_splitt
    if isempty(QuadLeaf_splitt) == 0 && ismember(iQuadLeaf_merge,QuadLeaf_splitt(:,1)) == 1 %yes
@@ -110,10 +114,10 @@ for i = 1: nQuadLeaf_merge
 
     idxChildren = Quadtree.getchildren(iQuadLeaf_merge);
     % array for new Quadleaves to be splitted
-    if isempty(idxChildren) == 0
+    if isempty(idxChildren) == 1
         newQuad_merge = [iQuadLeaf_merge];
     else
-        newQuad_merge = idxChildren;
+        newQuad_merge = [idxChildren];
     end
 
     for ii = 1: length(newQuad_merge)
@@ -122,10 +126,14 @@ for i = 1: nQuadLeaf_merge
         for iii = 1:length(idxsecs)
             isec = idxsecs(iii);
             nsec = sections(isec,6);
-            ikv = sections(isec,4);
             sc = sections(isec,6+nsec);
             sc_coor = coor(sc,2:3);
-            newSeedingPoints_splitt = [newSeedingPoints_splitt;isec,isec,iQuad,ikv,sc_coor,pgrad,qgrad];
+            ikv = sections(isec,4);
+            if ikv == 0
+                newSeedingPoints_splitt = [newSeedingPoints_splitt;isec,isec,iQuad,ikv,sc_coor,pgrad,qgrad];
+            else
+                newSeedingPoints_splitt = [newSeedingPoints_splitt;isec,isec,iQuad,ikv,sc_coor,2,qgrad];
+            end            
         end
     end   
 end
