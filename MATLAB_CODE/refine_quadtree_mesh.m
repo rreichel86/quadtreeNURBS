@@ -49,7 +49,7 @@ if ~exist('ElevateOrderNumber')
     refSeedingPoints_splitt = seedingPoints_splitt;
     ElevateOrderNumber = 0;
 else
-    [QuadLeaf_splitt,QuadLeaf_merge,refSeedingPoints_splitt,refSeedingPoints_merge] = seedingPoints_settle(seedingPoints_splitt,seedingPoints_merge);
+    [QuadLeaf_splitt,QuadLeaf_merge,refSeedingPoints_splitt,refSeedingPoints_merge] = seedingPoints_settle(seedingPoints_splitt,seedingPoints_merge, ElevateOrderNumber);
 end
 
 %% Quadtree decomposition
