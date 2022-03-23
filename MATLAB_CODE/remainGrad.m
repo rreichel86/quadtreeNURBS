@@ -63,28 +63,22 @@ function [coor,maxnsec,nnode,sections,ord]=remainGrad(Quadtree,nnode,coor,sectio
 
 
 %% new seedingPoints based on original type
-
-%number of unqualified quad
-nQuadLeaf_splitt = size(QuadLeaf_splitt,1);
+nQuadLeaf_splitt = size(QuadLeaf_splitt,1);%number of unqualified quads
 newSeedingPoints_splitt = [];
-newQuad_splitt = [];
 
-%get the new quadleaves 
+%get the new seedingPoints_splitt with respect to new quadleaves
 for i = 1: nQuadLeaf_splitt
     iQuadLeaf_splitt = QuadLeaf_splitt(i,1);
-    idxChildren = Quadtree.getchildren(iQuadLeaf_splitt);   
-    % array for new Quadleaves to be splitted
-    if isempty(idxChildren) == 1
-        newQuad_splitt = [newQuad_splitt;iQuadLeaf_splitt];
-    else
-        newQuad_splitt = [newQuad_splitt;idxChildren'];
-    end      
-end
-
-%get the new seedingPoints with respect to new quadleaves
-for i = 1: nQuadLeaf_splitt
     pgrad = QuadLeaf_splitt(i,2);
     qgrad = QuadLeaf_splitt(i,3);
+    idxChildren = Quadtree.getchildren(iQuadLeaf_splitt);
+    % array for new Quadleaves to be splitted
+    if isempty(idxChildren) == 1
+        newQuad_splitt = iQuadLeaf_splitt;
+    else
+        newQuad_splitt = idxChildren;
+    end  
+        
     for ii = 1: length(newQuad_splitt)
         iQuad = newQuad_splitt(ii);
         idxsecs = find(sections(:,3)==iQuad);
@@ -103,31 +97,27 @@ for i = 1: nQuadLeaf_splitt
     end 
 end
 
+nQuadLeaf_merge = size(QuadLeaf_merge,1);%number of unqualified quads
 newSeedingPoints_merge = [];
-newQuad_merge = [];
-nQuadLeaf_merge = size(QuadLeaf_merge,1);
 
-%get the new quadleaves
-for i = 1: nQuadLeaf_merge
-    iQuadLeaf_merge = QuadLeaf_merge(i,1);    
+%get the new seedingPoints_merge with respect to new quadleaves
+for i = 1: nQuadLeaf_merge    
+    iQuadLeaf_merge = QuadLeaf_merge(i,1);
+    
     %check if current quad has already be treated in QuadLeaf_splitt
     if isempty(QuadLeaf_splitt) == 0 && ismember(iQuadLeaf_merge,QuadLeaf_splitt(:,1)) == 1 %yes
         continue
     end
-
+    pgrad = QuadLeaf_merge(i,2);
+    qgrad = QuadLeaf_merge(i,3);    
     idxChildren = Quadtree.getchildren(iQuadLeaf_merge);
     % array for new Quadleaves to be splitted
     if isempty(idxChildren) == 1
-        newQuad_merge = [newQuad_merge;iQuadLeaf_merge];
+        newQuad_merge = iQuadLeaf_merge;
     else
-        newQuad_merge = [newQuad_merge;idxChildren'];
+        newQuad_merge = idxChildren;
     end 
-end
-
-%get the new seedingPoints with respect to new quadleaves
-for i = 1: nQuadLeaf_merge
-    pgrad = QuadLeaf_merge(i,2);
-    qgrad = QuadLeaf_merge(i,3);
+    
     for ii = 1: length(newQuad_merge)
         iQuad = newQuad_merge(ii);
         idxsecs = find(sections(:,3)==iQuad);
