@@ -120,7 +120,9 @@ for i = 1:numLeaves
             % plot newVertex and quad (current leaf)
             if dbg == 1
                 plot(quadVertices(1,vertexNum),quadVertices(2,vertexNum), 'o','Color','k','MarkerFaceColor','k','MarkerSize',8);
-                patch(quadVertices(1,:),quadVertices(2,:),'r','FaceAlpha',0.1,'LineStyle','-','LineWidth',1);
+                hold on
+                patch(quadVertices(1,:),quadVertices(2,:),'r','FaceAlpha',0.3,'LineStyle','-','LineWidth',1);
+                hold on
             end
             
             % update intersection points 
@@ -187,7 +189,7 @@ for i = 1:numLeaves
                     
                     if Quadtree.isleaf(idxNQ) && levelLeaf > levelNQ
                         
-%                         [Quadtree] = Decompose_helper(Quadtree,NURBS,idxNQ);
+                         [Quadtree] = Decompose_helper(Quadtree,NURBS,idxNQ);
                     
                     end
                     
