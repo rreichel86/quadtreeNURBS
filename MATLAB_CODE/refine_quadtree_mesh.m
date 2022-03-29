@@ -41,9 +41,6 @@ function [Quadtree,nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] =
 %
 % -------------------------------------------------------------------------
 
-figure 
-hold on 
-
 %% Quadtree decomposition
 % Get NURBS curve
 data = Quadtree.Node{1,1};
