@@ -13,6 +13,7 @@ function [numcoor,coor,numel,connectivity,maxnel,...
 %
 %                              type: 1 -  node
 %                                    2 - control point or intersection point
+%                                    3 - scaling center
 %                              which_region: region number
 %                              inside_region: 0 - at the boundary
 %                                             1 - inside
@@ -361,7 +362,7 @@ for iel = 1:numel
     % compute scaling center
     % compute centroid of the kernel
     [scx,scy] = centroid(polyshape(kernel,'Simplify',false));
-    coor(numcoor0+iel,2:7) = [scx,scy,1,1,0,-1];
+    coor(numcoor0+iel,2:7) = [scx,scy,1,3,0,-1];
 end
 
 % coor numbers
@@ -388,7 +389,7 @@ end
 coor(coor(:,5) == 1,7) = -1;
 
 % loop over nodes, excluding control points
-for ii = find(coor(:,5) == 1)'
+for ii = find(coor(:,5) ~= 2)'
     % Check if current node is inside the bounding box
     if ( isPointInQuad([x_min,y_min], [x_max,y_max], coor(ii,2:3)) == 1 )
         % Check if current node is also inside
