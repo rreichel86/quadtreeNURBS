@@ -61,7 +61,6 @@ for i = 1:numLeaves
         plot(NURBS.controlPoints(1,:),NURBS.controlPoints(2,:),'b-.','LineWidth',1)
         plot(NURBS.controlPoints(1,1),NURBS.controlPoints(2,1),'bo','LineWidth',1.5)
         plot(NURBS.controlPoints(1,2:ncp-1),NURBS.controlPoints(2,2:ncp-1),'o','Color','red','MarkerFaceColor','r','MarkerSize',6)
-        plot(NURBS.controlPoints(1,ncp),NURBS.controlPoints(2,ncp),'bo','LineWidth',1.5)
         
     end
 end
