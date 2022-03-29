@@ -6,8 +6,8 @@ leaves = Quadtree.findleaves();
 numLeaves = length(leaves);
 
 figure(2)
-xticks([])
-yticks([])
+% xticks([])
+% yticks([])
 daspect([1 1 1])
 box on
 set(gca,'TickLabelInterpreter','latex','FontSize',18,'FontName','Times');
