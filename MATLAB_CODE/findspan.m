@@ -3,6 +3,7 @@ function s = findspan(n,p,u,U)
 
 
 if abs(u-U(n+2))<1e-10, s=n; return,  end
+if abs(u-U(p+1))<1e-10, s=p; return,  end
 % if abs(u-U(1))<1e-10;idx = find((U-u)>1e-10,1);s=idx-1;return;end 
 % if abs(u-U(end))<1e-10;idx = find((U-u)>-1e-10,1);s=idx-1;return;end 
 % idx = find((U-u)>1e-10,1);s=idx-1;
