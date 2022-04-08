@@ -1,4 +1,4 @@
-function [Quadtree,nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] = refine_quadtree_mesh(Quadtree,seedingPoints_splitt,seedingPoints_merge,ep,eq)
+function [Quadtree,nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] = refine_quadtree_mesh_epeq(Quadtree,seedingPoints_splitt,seedingPoints_merge,ep,eq)
 % refine_quadtree_mesh: refine given quadtree based mesh
 %
 % INPUT: 
@@ -67,10 +67,6 @@ NURBS = data{3};
 
 %% Elevate Order in P-/Q-Direction
 
-if exist('eq') || exist('ep')
-
-    [coor,maxnsec,nnode,sections,ord]=elevateOrder_hRef_epeq(Quadtree,nnode,coor,sections,ord,polyElmts,connectivity,ep,eq);
-    
-end
-                                                  
+[coor,maxnsec,nnode,sections,ord]=elevateOrder_hRef_epeq(Quadtree,nnode,coor,sections,ord,polyElmts,connectivity,ep,eq);
+                                                      
 end
