@@ -1,7 +1,7 @@
 function [coor,maxnsec,nnode,sections,ord]=elevateGrad(Quadtree,nnode,coor,sections,ord,polyElmts,connectivity,seedingPoints_splitt,seedingPoints_merge)
 % elevate order in p-direction and/or q-direction
 %
-%INPUT:
+% INPUT:
 
 % Quadtree
 % nnode = number of nodes 
@@ -48,9 +48,10 @@ function [coor,maxnsec,nnode,sections,ord]=elevateGrad(Quadtree,nnode,coor,secti
 %                       x/y_coor - x/y coordinate of the scaling center
 %                       p-/qgrad  -- p-/qgrad from last calculation
 %
-%
-%
-%OUTPUT: coor, maxnsec, nnode, sections, ord 
+
+
+
+% OUTPUT: coor, maxnsec, nnode, sections, ord 
 % coor = [number, x-coor, y-coor, weight, type, which_region, inside_region]
 %
 %                              type: 1 -  node
@@ -235,10 +236,6 @@ for isp = 1: numSeedingPoints_merge
     end
 
 
-
-    % sections = [isec, ipoly, idxLeaf, ikv,region, nsec, node_1,...,node_nsec]    
-    % polyElmts = [ipoly, region, numSecPoly, sec_1,...,sec_numSecPoly,idxLeaf]
-
       %get all section numbers of neighbour quad
       sum_secNQ = 0;
       isecNQ = [];
@@ -253,7 +250,7 @@ for isp = 1: numSeedingPoints_merge
 
 
 
-     % sections = [isec, ipoly, idxLeaf, ikv, region, nsec, node_1,...,node_nsec]
+
       %get the neighbour section 
       isecN = 0;
       if ikvo ~= 0 

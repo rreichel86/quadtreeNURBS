@@ -1,7 +1,7 @@
 function [coor,nnode,sections,ord] = NodesInsertP(nnode,coor,sections,ord,NURBS_pts,seedingPoints_splitt,secN_splitt,seedingPoints_merge,secN_merge) 
 % Insert nodes in p_direction
 
-%INPUT:
+% INPUT:
 %
 % coor = [number, x-coor, y-coor, weight, type, which_region, inside_region]
 %
@@ -40,7 +40,7 @@ function [coor,nnode,sections,ord] = NodesInsertP(nnode,coor,sections,ord,NURBS_
 %
 %
 %
-%OUTPUT: coor, nnode, sections, ord       
+% OUTPUT: coor, nnode, sections, ord       
 
 % coor = [number, x-coor, y-coor, weight, type, which_region, inside_region]
 %
@@ -94,7 +94,6 @@ for isp = 1: numSeedingPoints_splitt
     end
     
     coor_StrucNodes = []; %coor_matrix contains the information of all nodes including scalling center for each chosed section
-    % sections = [isec, ipoly, idxLeaf, ikv, region, nsec, node_1,...,node_nsec]
     if ikv == 0
         if sections(isec0,6) == 3 %check if this section has been treated in secN
 
@@ -159,7 +158,6 @@ for isp = 1: numSeedingPoints_merge
     end
 
     coor_StrucNodes = []; %coordinate of structural nodes including scalling center for each chosed section
-    % sections = [isec, ipoly, idxLeaf, ikv, region, nsec, node_1,...,node_nsec]
     
     %check if current section is the neighbor section of one unqualified section
     if ismember(isec0,secN_splitt) ~= 1 %no        

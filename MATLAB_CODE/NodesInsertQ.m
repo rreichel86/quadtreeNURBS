@@ -1,7 +1,7 @@
 function [coor,nnode,sections,ord] = NodesInsertQ(nnode,coor,sections,ord,polyElmts,connectivity,NURBS_pts,seedingPoints_splitt,seedingPoints_merge) 
 
 
-%INPUT:
+% INPUT:
 %
 % coor = [number, x-coor, y-coor, weight, type, which_region, inside_region]
 %
@@ -56,7 +56,7 @@ function [coor,nnode,sections,ord] = NodesInsertQ(nnode,coor,sections,ord,polyEl
 %
 %
 %
-%OUTPUT: coor, nnode, sections, ord   
+% OUTPUT: coor, nnode, sections, ord   
 
 % coor = [number, x-coor, y-coor, weight, type, which_region, inside_region]
 %
@@ -99,8 +99,6 @@ end
           
 %% insert nodes in Q-direction for unqualified sections
 
-% sections = [isec, ipoly, idxLeaf, ikv, region, nsec, node_1,...,node_nsec]
-
 numSeedingPoints_splitt = size(seedingPoints_splitt,1);
 
 ElmtUQsec = [];    %element which contain unqualified sections
@@ -120,7 +118,7 @@ for i = 1: numElmtUQsec
     qgrad = ElmtUQsec(i,2); %qgrad from last calculation
     elmt = connectivity{iel}(1,6:end); % element connectivity matrix
     kvno = connectivity{iel}(2); %knot vector for element
-    numSecPoly = polyElmts(iel,3);
+    numSecPoly = polyElmts(iel,3); %number of the sections within current polygon
     secElmts = polyElmts(iel,4:3 + numSecPoly);
     eq = qgrad + 1; %elevated qgrad
     ninode = eq - 1; %number of inserted nodes
@@ -341,7 +339,7 @@ for i = 1: numElmtQsec
     qgrad = ElmtQsec(i,2); % qgrad from last calculation
     elmt = connectivity{iel}(1,6:end); % vertices of element and scaling_center 
     kvno = connectivity{iel}(2); %knot vector for element
-    numSecPoly = polyElmts(iel,3);
+    numSecPoly = polyElmts(iel,3); %number of the sections within current polygon
     secElmts = polyElmts(iel,4:3 + numSecPoly);
     eq = qgrad; %elevated qgrad 
     ninode = eq - 1; %number of inserted nodes

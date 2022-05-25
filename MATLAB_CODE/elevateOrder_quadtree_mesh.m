@@ -4,6 +4,8 @@ function [Quadtree,nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] =
 % INPUT: 
 % Quadtree ------------------- Quadtree data structure 
 % seedingPoints -------------- list of seeding points
+% ep ------------------------- preset pgrad
+% eq ------------------------- preset qgrad
 
 %
 % OUTPUT:
@@ -65,9 +67,9 @@ hold on
 [nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] = splittIntoSections(nnode,coor,numel,connectivity,...
                                                                     numKnotVectors,knotVectors,maxnknots,idxControlPoints);
 %% Elevate Order in P-/Q-Direction
-if ~exist('ep')
+if ~exist('ep') %elevate the order gradually
     [coor,maxnsec,nnode,sections,ord]=elevateGrad(Quadtree,nnode,coor,sections,ord,polyElmts,connectivity,seedingPoints_splitt,seedingPoints_merge);
-else
+else %elevate order with ep and eq
     [coor,maxnsec,nnode,sections,ord]=elevateOrder_hRef_epeq(Quadtree,nnode,coor,sections,ord,polyElmts,connectivity,ep,eq);
 end
                                                   
