@@ -2,7 +2,7 @@ function [coor,nnode,sections,ord] = NodesInsertQ(nnode,coor,sections,ord,polyEl
 
 
 % INPUT:
-%
+%%%%
 % coor = [number, x-coor, y-coor, weight, type, which_region, inside_region]
 %
 %                              type: 1 -  node
@@ -101,11 +101,11 @@ end
 
 numSeedingPoints_splitt = size(seedingPoints_splitt,1);
 
-ElmtUQsec = [];    %element which contain unqualified sections
+ElmtUQsec = [];    %poly element which contains unqualified sections
 for isp = 1: numSeedingPoints_splitt
     isec0 = seedingPoints_splitt(isp,2);
     qgrad = seedingPoints_splitt(isp,8);
-    iel_splitt = sections(isec0,2);
+    iel_splitt = sections(isec0,2); %ipoly
     ElmtUQsec = [ElmtUQsec;iel_splitt,qgrad];
 end
 [~,ia] = unique(ElmtUQsec,'rows');
@@ -114,14 +114,14 @@ ElmtUQsec = ElmtUQsec(ia,:);
 % connectivity = [iel, ikv, idxLeaf, which_region, nel, node_1,...,node_nel, scaling_center]
 numElmtUQsec = size(ElmtUQsec,1); %number of poly element
 for i = 1: numElmtUQsec
-    iel = ElmtUQsec(i); %element number
-    qgrad = ElmtUQsec(i,2); %qgrad from last calculation
-    elmt = connectivity{iel}(1,6:end); % element connectivity matrix
-    kvno = connectivity{iel}(2); %knot vector for element
-    numSecPoly = polyElmts(iel,3); %number of the sections within current polygon
-    secElmts = polyElmts(iel,4:3 + numSecPoly);
-    eq = qgrad + 1; %elevated qgrad
-    ninode = eq - 1; %number of inserted nodes
+    iel = ElmtUQsec(i); % poly element number
+    qgrad = ElmtUQsec(i,2); % qgrad from last calculation
+    elmt = connectivity{iel}(1,6:end); % vertices and sc of poly element
+    kvno = connectivity{iel}(2); % knot vector for element
+    numSecPoly = polyElmts(iel,3); % number of the sections within current poly
+    secElmts = polyElmts(iel,4:3 + numSecPoly); % sections number of current poly
+    eq = qgrad + 1; % elevated qgrad
+    ninode = eq - 1; % number of inserted nodes
     
     if ninode == 0
         continue
@@ -131,20 +131,20 @@ for i = 1: numElmtUQsec
     if kvno == 0 
        
         
-        %insert nodes in shared edges between sections per element
-        xcoor2 = coor(elmt(end),2); %x_coordinate of sc
-        ycoor2 = coor(elmt(end),3); %y_coordinate of sc  
-        nodeElmt = []; %vertices of this element
+        % insert nodes in shared edges between sections per poly element
+        xcoor2 = coor(elmt(end),2); % x_coordinate of sc
+        ycoor2 = coor(elmt(end),3); % y_coordinate of sc 
+        nodeElmt = []; % vertices of this poly element and corresponding inserted nodes:[ivertex, insNode1,insNode2,...]
         for inelmt = 1:length(elmt)-1
             inode = elmt(inelmt);
             xcoor1 = coor(inode,2);
             ycoor1 = coor(inode,3);
             coor_inodes_q = getLocation(xcoor1,xcoor2,ycoor1,ycoor2,eq);
-            %update coor matrix
+            % update coor matrix
             coor(nnode+1:nnode+ninode,1) = nnode+1: nnode + ninode;
-            coor(nnode+1:nnode+ninode,4) = 0;  %weight
-            coor(nnode+1:nnode+ninode,5) = 3;  %typ(inserted nodes)
-            coor(nnode+1:nnode+ninode,6) = 0;  %which-region
+            coor(nnode+1:nnode+ninode,4) = 0;  % weight
+            coor(nnode+1:nnode+ninode,5) = 3;  % typ(inserted nodes)
+            coor(nnode+1:nnode+ninode,6) = 0;  % which-region
             
             % Check if current inserted node is inside the region enclosed by the NURBS curve            
             for j = 1: ninode
