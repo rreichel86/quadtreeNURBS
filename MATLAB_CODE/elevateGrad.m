@@ -65,23 +65,24 @@ function [coor,maxnsec,nnode,sections,ord]=elevateGrad(Quadtree,nnode,coor,secti
 
 %% get the neighbours of unqualified sections
 
-%seedingPoints_splitt = [isec, isec0, idxLeaf, xcoor, ycoor,pgrad,qgrad]
+% seedingPoints_splitt = [isec, isec0, idxLeaf, xcoor, ycoor,pgrad,qgrad]
 
 numSeedingPoints_splitt = size(seedingPoints_splitt,1);
 
 
-secNQ_splitt = cell(numSeedingPoints_splitt,1); %array for all section numbers of neighbour quad
-%secNQ = {idx_sec,sumSecNQ,sec_NQ1,sec_NQ2, ... ,sec_NQ_sumSecNQ]
+secNQ_splitt = cell(numSeedingPoints_splitt,1); % array for all section numbers of neighbour quad
+% secNQ = {idx_sec,sumSecNQ,sec_NQ1,sec_NQ2, ... ,sec_NQ_sumSecNQ]
 
-secN_splitt = []; %array for section numbers of the neighbour section
-%secN = [idx_sec,isecN]
+secN_splitt = []; % array for section numbers of the neighbour section
+% secN = [idx_sec,isecN]
 
 
 for isp = 1: numSeedingPoints_splitt
-    idx_sec = seedingPoints_splitt(isp,2); %(old) number of unqualified sections 
+    idx_sec = seedingPoints_splitt(isp,2); % (old) number of unqualified sections 
+    nsec = sections(idx_sec,6);
     ikvo = sections(idx_sec,4);
     
-    idxLeaf_sec = seedingPoints_splitt(isp, 3); %idxLeaf of unqualified sections
+    idxLeaf_sec = seedingPoints_splitt(isp, 3); % idxLeaf of unqualified sections
       
     refLeaf_sec = Quadtree.Node{idxLeaf_sec,1}{2,1}(1:end);
     secNQ_splitt{isp}(1,1) = isp;
@@ -129,7 +130,7 @@ for isp = 1: numSeedingPoints_splitt
     % sections = [isec, ipoly, idxLeaf, ikv,region, nsec, node_1,...,node_nsec]    
     % polyElmts = [ipoly, region, numSecPoly, sec_1,...,sec_numSecPoly,idxLeaf]
 
-      %get all section numbers of neighbour quad
+      % get all section numbers of neighbour quad
       sum_secNQ = 0;
       isecNQ = [];
       
@@ -143,17 +144,18 @@ for isp = 1: numSeedingPoints_splitt
       
    
       
-     % sections = [isec, ipoly, idxLeaf, ikv, region, nsec, node_1,...,node_nsec]
-      %get the neighbour section 
+    
+      % get the neighbour section 
       isecN = 0;
       if ikvo ~= 0 
-          sec_NURBS = find(sections(:,4) ~= 0); %get the number of all sections with NURBS curve
+          sec_NURBS = find(sections(:,4) ~= 0); % get the number of all sections with NURBS curve
           jj = 1;
           while jj <= length(sec_NURBS) && isecN == 0
-              idxsecN = sec_NURBS(jj,1);             
-              if idxsecN ~= idx_sec
-                  if sections(idxsecN,7:end-1) == rot90(sections(idx_sec,7:end-1),2)                 
-                      isecN = idxsecN; %section number of the neighbour section 
+              idxsecN = sec_NURBS(jj,1);
+              nsecNURBS = sections(idxsecN,6);
+              if idxsecN ~= idx_sec && nsec == nsecNURBS
+                  if sections(idxsecN,7:6+nsecNURBS-1) == rot90(sections(idx_sec,7:6+nsec-1),2)                 
+                      isecN = idxsecN; % section number of the neighbour section 
                   end 
               end
               jj = jj + 1;
@@ -165,8 +167,9 @@ for isp = 1: numSeedingPoints_splitt
           jj = 1;
           while jj <= length(secNQ_splitt{isp}(1,3:end)) && isecN == 0          
               idxsecNQ = secNQ_splitt{isp}(1,2+jj);
-              if length(sections(idxsecNQ,7:end-1)) == length(sections(idx_sec,7:end-1))                           
-                  if sections(idxsecNQ,7:end-2) == rot90(sections(idx_sec,7:end-2),2)            
+              nsecNQ = sections(idxsecNQ,6);
+              if nsecNQ == nsec                          
+                  if sections(idxsecNQ,7:6+nsecNQ-1) == rot90(sections(idx_sec,7:6+nsec-1),2)            
                       isecN = sections(idxsecNQ,1); %section number of the neighbour section 
                   end 
               end 
@@ -251,36 +254,38 @@ for isp = 1: numSeedingPoints_merge
 
 
 
-      %get the neighbour section 
+      % get the neighbour section 
       isecN = 0;
       if ikvo ~= 0 
-          sec_NURBS = find(sections(:,4) ~= 0); %get the number of all sections with NURBS curve
+          sec_NURBS = find(sections(:,4) ~= 0); % get the number of all sections with NURBS curve
           jj = 1;
           while jj <= length(sec_NURBS) && isecN == 0
-              idxsecN = sec_NURBS(jj,1);             
+              idxsecN = sec_NURBS(jj,1);
+              nsecNURBS = sections(idxsecN,6);
               if idxsecN ~= idx_sec
-                  if sections(idxsecN,7:end-1) == rot90(sections(idx_sec,7:end-1),2)                 
-                      isecN = idxsecN; %section number of the neighbour section 
+                  if sections(idxsecN,7:6+nsecNURBS-1) == rot90(sections(idx_sec,7:6+nsec-1),2)                 
+                      isecN = idxsecN; % section number of the neighbour section 
                   end 
               end
               jj = jj + 1;
           end
-
-
+          
+          
       else %(ikvo == 0)
-
+          
           jj = 1;
-          while jj <= length(secNQ_merge{isp}(1,3:end)) && isecN == 0          
-              idxsecNQ = secNQ_merge{isp}(1,2+jj);
-              if length(sections(idxsecNQ,7:end-1)) == length(sections(idx_sec,7:end-1))                           
-                  if sections(idxsecNQ,7:end-2) == rot90(sections(idx_sec,7:end-2),2)            
+          while jj <= length(secNQ_splitt{isp}(1,3:end)) && isecN == 0          
+              idxsecNQ = secNQ_splitt{isp}(1,2+jj);
+              nsecNQ = sections(idxsecNQ,6);
+              if nsecNQ == nsec                          
+                  if sections(idxsecNQ,7:6+nsecNQ-1) == rot90(sections(idx_sec,7:6+nsec-1),2)            
                       isecN = sections(idxsecNQ,1); %section number of the neighbour section 
                   end 
               end 
               jj = jj + 1;
           end
       end
-      secN_merge = [secN_merge;idx_sec,isecN];       
+      secN_splitt = [secN_splitt;idx_sec,isecN];          
 end
     
 
