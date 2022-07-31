@@ -1,5 +1,6 @@
-function [Quadtree] = QuadtreeSplit(Quadtree,NURBS,seedingPoints)
+function [Quadtree] = QuadtreeSplit(Quadtree,NURBS,seedingPoints, QuadLeaf_splitt)
 
+%% cell decomposition
 % number of seeding points
 nSeedingPoints = size(seedingPoints,1);
 splitted = [];
@@ -42,6 +43,51 @@ for i = 1:nSeedingPoints
     end
     
 end
+
+%% local h-refinement of NURBS segment
+
+numleaves = size(QuadLeaf_splitt,1);
+
+for i = 1:numleaves
+    idxLeaf = QuadLeaf_splitt(i,1);
+    
+    % get data stored in current leaf
+    
+    % 1. Quad name
+    % 2. Quad location
+    % 3. intersections points (physical space)
+    % 4.
+    % 5. intersection in parametric space of the curve
+    % 6. NURBS definition
+    %    NURBS degree
+    %    NURBS control points
+    %    NURBS Knot vector
+    %    NURBS weights
+    % 7. Quad definition
+    % 8. Pointer to the children
+    
+    data = Quadtree.Node{idxLeaf,1};
+
+%    % quad vertices
+%     quadVertices = data{7};
+%     % number of quad vertices
+%     numQuadVertices = size(quadVertices,2);
+%     % intersecion points
+%     intersectionPoints = data{3};
+%     % number of intersection points
+%     numIntersectionPoints = size(intersectionPoints,2);
+    
+    if isempty(data{6})
+        continue
+    end
+
+    % NURBS segment
+    Segment = data{6,1};
+    newSegment = hRefinement1d(Segment,1);
+    data{6,1} = newSegment;
+    Quadtree = Quadtree.set(idxLeaf,data);
+end
+
 
 
 end
