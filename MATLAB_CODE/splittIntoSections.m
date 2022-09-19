@@ -274,12 +274,18 @@ for ielno = 1:numel
                 knots(isec_w_NURBS,2) = isec_w_NURBS;
                 % number of knots (nknots)
                 knots(isec_w_NURBS,3) = nKnot;
+
                 % initial knot value (iknot)
-                knots(isec_w_NURBS,4) = knotVectors{kvno}(6);
+                iknot = knotVectors{kvno}(6);
                 % final knot value (jknot)
-                knots(isec_w_NURBS,5) = knotVectors{kvno}(end);
+                jknot = knotVectors{kvno}(end);
+
+                knots(isec_w_NURBS,4:5) = [iknot, jknot];
                 % knots
                 knots(isec_w_NURBS,6:5+nKnot) = knotVectors{kvno}(6:end);
+                if OP == -1
+                    knots(isec_w_NURBS,6:5+nKnot) = flip( (iknot + jknot) - knotVectors{kvno}(6:end) );
+                end
 
                 % weights number (iw)
                 wgt(isec_w_NURBS,1) = isec_w_NURBS;
@@ -359,12 +365,18 @@ for ielno = 1:numel
                 knots(isec_w_NURBS,2) = isec_w_NURBS;
                 % number of knots (nknots)
                 knots(isec_w_NURBS,3) = nKnot;
+
                 % initial knot value (iknot)
-                knots(isec_w_NURBS,4) = knotVectors{kvno}(6);
+                iknot = knotVectors{kvno}(6);
                 % final knot value (jknot)
-                knots(isec_w_NURBS,5) = knotVectors{kvno}(end);
+                jknot = knotVectors{kvno}(end);
+
+                knots(isec_w_NURBS,4:5) = [iknot, jknot];
                 % knots
                 knots(isec_w_NURBS,6:5+nKnot) = knotVectors{kvno}(6:end);
+                if OP == -1
+                    knots(isec_w_NURBS,6:5+nKnot) = flip( (iknot + jknot) - knotVectors{kvno}(6:end) );
+                end
 
                 % weights number (iw)
                 wgt(isec_w_NURBS,1) = isec_w_NURBS;
@@ -441,12 +453,18 @@ for ielno = 1:numel
                 knots(isec_w_NURBS,2) = isec_w_NURBS;
                 % number of knots (nknots)
                 knots(isec_w_NURBS,3) = nKnot;
+
                 % initial knot value (iknot)
-                knots(isec_w_NURBS,4) = knotVectors{kvno}(6);
+                iknot = knotVectors{kvno}(6);
                 % final knot value (jknot)
-                knots(isec_w_NURBS,5) = knotVectors{kvno}(end);
+                jknot = knotVectors{kvno}(end);
+
+                knots(isec_w_NURBS,4:5) = [iknot, jknot];
                 % knots
                 knots(isec_w_NURBS,6:5+nKnot) = knotVectors{kvno}(6:end);
+                if OP == -1
+                    knots(isec_w_NURBS,6:5+nKnot) = flip( (iknot + jknot) - knotVectors{kvno}(6:end) );
+                end
 
                 % weights number (iw)
                 wgt(isec_w_NURBS,1) = isec_w_NURBS;
@@ -523,12 +541,18 @@ for ielno = 1:numel
                 knots(isec_w_NURBS,2) = isec_w_NURBS;
                 % number of knots (nknots)
                 knots(isec_w_NURBS,3) = nKnot;
+
                 % initial knot value (iknot)
-                knots(isec_w_NURBS,4) = knotVectors{kvno}(6);
+                iknot = knotVectors{kvno}(6);
                 % final knot value (jknot)
-                knots(isec_w_NURBS,5) = knotVectors{kvno}(end);
+                jknot = knotVectors{kvno}(end);
+
+                knots(isec_w_NURBS,4:5) = [iknot, jknot];
                 % knots
                 knots(isec_w_NURBS,6:5+nKnot) = knotVectors{kvno}(6:end);
+                if OP == -1
+                    knots(isec_w_NURBS,6:5+nKnot) = flip( (iknot + jknot) - knotVectors{kvno}(6:end) );
+                end
 
                 % weights number (iw)
                 wgt(isec_w_NURBS,1) = isec_w_NURBS;
