@@ -1,4 +1,4 @@
-function [Quadtree,nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] = nurbs_quadtree_mesh(k_min,NURBS,Boundary)
+function [Quadtree,nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] = nurbs_quadtree_mesh(k_min,NURBS,Boundary,ep,eq)
 % nurbs_quadtree_mesh: generate a quadtree based mesh
 %
 % INPUT: 
@@ -57,5 +57,13 @@ function [Quadtree,nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] =
 
 [nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] = splittIntoSections(nnode,coor,numel,connectivity,...
                                                                     numKnotVectors,knotVectors,maxnknots,idxControlPoints);
+
+if exist('ep') && exist ('eq')
+    if ep == 1 && eq == 1
+        return
+    else
+        [coor,maxnsec,nnode,sections,ord]=elevateOrder_hRef_epeq(Quadtree,nnode,coor,sections,ord,polyElmts,connectivity,ep,eq);
+    end    
+end
 
 end

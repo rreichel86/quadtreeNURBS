@@ -1,9 +1,7 @@
-function [coor,nnode,sections,ord] = NodesInsertQ(eq,nnode,coor,sections,seedingPoints_splitt,ord,polyElmts,connectivity) 
+function [coor,nnode,sections,ord] = NodesInsertQ(nnode,coor,sections,ord,polyElmts,connectivity,NURBS_pts,seedingPoints_splitt,seedingPoints_merge) 
 
 
-%INPUT:
-%ep = elevated pgrad 
-%eq = elevated qgrad 
+% INPUT:
 %
 % coor = [number, x-coor, y-coor, weight, type, which_region, inside_region]
 %
@@ -15,7 +13,7 @@ function [coor,nnode,sections,ord] = NodesInsertQ(eq,nnode,coor,sections,seeding
 %                                            -1 - outside 
 %
 % sections -------------------- sections connectivity matrix as nsec-tupel of 
-%                               nodes, where the first three entries
+%                               nodes, where the first six entries
 %                               isec - section number
 %                               ipoly - polygonal element number
 %                               ikv - knot vector number
@@ -24,32 +22,47 @@ function [coor,nnode,sections,ord] = NodesInsertQ(eq,nnode,coor,sections,seeding
 %                               nsec - number of nodes per section
 % sections = [isec, ipoly, idxLeaf, ikv, region, nsec, node_1,...,node_nsec]
 %
-%
-% seedingPoints_splitt = [isec,isec0,idxLeaf,xcoor,ycoor]
-%                         
-%                       isec  - new section number of the unqualified section
-%                       isec0 - old section number lof the unqualified section 
-%                       idxLeaf - number of Leaf
-%                       x/ycoor - x/y coordinate of the scaling center
-%                                  of the unqualified sections
-%
 % ord = [isec,pgrad,qgrad]
-%
-% secN = [isec, isecN]
 %
 % polyElmts -------------------- relate sections and polygonal elements
 % polyElmts = [ipoly, region, numSecPoly, sec_1,...,sec_numSecPoly,idxLeaf]
 %
-% connectivity = [iel, ikv, idxLeaf, which_region, nel,node_1,...,node_nel, scaling_center]
+%
+% connectivity --------------- elements connectivity matrix as nel-tupel of 
+%                              nodes, where the first five entries
+%                              iel - element number
+%                              ikv - knot vector number
+%                              idxLeaf - index of Leaf
+%                              which_region - region number
+%                              nel - number of nodes per element
+%
+% connectivity = [iel, ikv, idxLeaf, which_region, nel, node_1,...,node_nel, scaling_center]
+%
+%
+% seedingPoints = [isec,isec0,idxLeaf,xcoor,ycoor,pgrad,qgrad]
+%                         
+%                       isec  --  new section number of the (un)qualified section
+%                       isec0 --  old section number lof the (un)qualified section 
+%                       idxLeaf -- number of Leaf
+%                       x/ycoor -- x/y coordinate of the scaling center
+%                                  of the unqualified sections
+%                       p-/qgrad -- p-/qgrad of section from last calculation
+
+
+%
+
+%
+
 %
 %
 %
-%OUTPUT: coor, nnode, sections, ord   
+% OUTPUT: coor, nnode, sections, ord   
 
 % coor = [number, x-coor, y-coor, weight, type, which_region, inside_region]
 %
 %                              type: 1 -  node
 %                                    2 - control point or intersection point
+%                                    3 - inserted node
 %                              which_region: region number
 %                              inside_region: 0 - at the boundary 
 %                                             1 - inside 
@@ -57,202 +70,283 @@ function [coor,nnode,sections,ord] = NodesInsertQ(eq,nnode,coor,sections,seeding
 
 
 
-          
-%% insert nodes in Q-direction
-num_seedingPoints = length(seedingPoints_splitt(:,1));
-maxpgrad = max(ord(:,2));
-sections = [sections,zeros( size(sections,1), (maxpgrad+1)*(eq-1) )];
-
-% polyElmts = [ipoly, region, numSecPoly, sec_1,...,sec_numSecPoly,idxLeaf]
-% sections = [isec, idxLeaf, ikv, iel,region, nsec, node_1,...,node_nsec]
-% sections = [isec, ipoly, idxLeaf, ikv, region, nsec, node_1,...,node_nsec]
-
-
-Elmtsec = [];    %element which contain unqualified sections
-for isp = 1: num_seedingPoints
-    isec0 = seedingPoints_splitt(isp,2);
-    iel = sections(isec0,2);
-    Elmtsec = [Elmtsec;iel];
+%% extend sections matrix
+% max.qgrad of unqualified sections from last calculation
+if isempty(seedingPoints_splitt) == 0
+    qgrad_splitt = max(seedingPoints_splitt(:,8));
+else
+    qgrad_splitt = 1;
 end
-Elmtsec = unique(Elmtsec);
+
+% max.qgrad of unqualified sections from last calculation
+if isempty(seedingPoints_merge) == 0    
+    qgrad_merge = max(seedingPoints_merge(:,8));
+else
+    qgrad_merge = 1;
+end
+
+% max. number of points in circumferential direction of all sections
+maxPoints = max(sections(:,6))-1;
+% number of sections
+numsec = length(sections(:,1));
+
+if qgrad_splitt + 1 <= qgrad_merge 
+    sections = [sections,zeros(numsec,(qgrad_merge-1)*(maxPoints+1))];
+else
+    sections = [sections,zeros(numsec,qgrad_splitt*(maxPoints+1))];
+end
+
+          
+%% insert nodes in Q-direction for unqualified sections
+
+numSeedingPoints_splitt = size(seedingPoints_splitt,1);
+
+ElmtUQsec = [];    %poly element which contains unqualified sections
+for isp = 1: numSeedingPoints_splitt
+    isec0 = seedingPoints_splitt(isp,2);
+    qgrad = seedingPoints_splitt(isp,8);
+    iel_splitt = sections(isec0,2); %ipoly
+    ElmtUQsec = [ElmtUQsec;iel_splitt,qgrad];
+end
+[~,ia] = unique(ElmtUQsec,'rows');
+ElmtUQsec = ElmtUQsec(ia,:);
     
 % connectivity = [iel, ikv, idxLeaf, which_region, nel, node_1,...,node_nel, scaling_center]
-for ielmt = 1: length(Elmtsec)
-    iel = Elmtsec(ielmt);
-    elmt = connectivity{iel}(1,6:end); % element connectivity matrix
-    kvno = connectivity{iel}(2); %knot vector for element
-    numSecPoly = polyElmts(iel,3);
-    secElmts = polyElmts(iel,4:3 + numSecPoly);
-    %secElmts(find(secElmts == isec0) = [];
-       
+numElmtUQsec = size(ElmtUQsec,1); %number of poly element
+for i = 1: numElmtUQsec
+    iel = ElmtUQsec(i); % poly element number
+    qgrad = ElmtUQsec(i,2); % qgrad from last calculation
+    elmt = connectivity{iel}(1,6:end); % vertices and sc of poly element
+    numSecPoly = polyElmts(iel,3); % number of the sections within current poly
+    secElmts = polyElmts(iel,4:3 + numSecPoly); % sections number of current poly
+    eq = qgrad + 1; % elevated qgrad
+    ninode = eq - 1; % number of inserted nodes
     
-    if kvno == 0 
+    if ninode == 0
+        continue
+    end
+
+    % insert nodes in shared edges between sections per element
+    xcoor2 = coor(elmt(end),2); % x_coordinate of sc
+    ycoor2 = coor(elmt(end),3); % y_coordinate of sc  
+    nodeElmt = []; % nodeElmt = [ivertex of poly, inserted nodes]
+    for inelmt = 1:length(elmt)-1
+        inode = elmt(inelmt);
+        xcoor1 = coor(inode,2);
+        ycoor1 = coor(inode,3);
+        coor_inodes_q = getLocation(xcoor1,xcoor2,ycoor1,ycoor2,eq);
        
+        % update coor matrix
+        coor(nnode+1:nnode+ninode,1) = nnode+1: nnode + ninode;
+        coor(nnode+1:nnode+ninode,4) = 0;  % weight
+        coor(nnode+1:nnode+ninode,5) = 3;  % typ(inserted nodes)
+        coor(nnode+1:nnode+ninode,6) = 0;  % which-region
         
-        %insert nodes in shared edges between sections per element
-        xcoor2 = coor(elmt(end),2); %x_coordinate of sc
-        ycoor2 = coor(elmt(end),3); %y_coordinate of sc  
-        ninode = eq - 1;
-        nodeElmt = []; %vertices of this element
-        for inelmt = 1:length(elmt)-1
-            inode = elmt(inelmt);
-            xcoor1 = coor(inode,2);
-            ycoor1 = coor(inode,3);
-            coor_inodes_q = getLocation(xcoor1,xcoor2,ycoor1,ycoor2,eq);
-            %update coor matrix
-            coor(nnode+1:nnode+ninode,1) = nnode+1: nnode + ninode;
-            coor(nnode+1:nnode+ninode,4) = 1;  %weight
-            coor(nnode+1:nnode+ninode,5) = 3;  %typ(inserted nodes)
-            coor(nnode+1:nnode+ninode,6) = 0;  %which-region
-            coor(nnode+1:nnode+ninode,7) = -1; %inside-region  
-            coor(nnode+1:nnode+ninode,2:3) =[coor_inodes_q];
-            nodeElmt0 =[inode,nnode+1:nnode + ninode];
-            nodeElmt = [nodeElmt;nodeElmt0];
-            nnode = nnode + ninode;
-        end
-        
-     
-               
-        %insert nodes per section within element  
-             
-        for ise = 1:numSecPoly
-            idxse = secElmts(ise);
-            nsec = sections(idxse,6);
-            pgrad = ord(idxse,2);
+        % Check if current inserted node is inside the region enclosed by the NURBS curve            
+        for j = 1: ninode
+            pointInPoly = isPointInPolygon(NURBS_pts(1:end-1,1:2), coor_inodes_q(j,1:2));
+            coor(nnode+j,7) = pointInPoly;
+        end 
+         
+        coor(nnode+1:nnode+ninode,2:3) =[coor_inodes_q];
+        nodeElmt0 =[inode,nnode+1:nnode + ninode];
+        nodeElmt = [nodeElmt;nodeElmt0];
+        nnode = nnode + ninode;
+    end    
             
-            nodeSec = []; %nodes of each section except vertices of element
-            %insert nodes 
+
+    % insert nodes per section within element       
+    for ise = 1:numSecPoly
+        idxse = secElmts(ise); %section number within element
+        ikv = sections(idxse,4);
+        nsec = sections(idxse,6);
+        
+        nodeSec = []; % nodeSec = [inode of current section except vertices, inserted nodes]
+
+
+        if ikv == 0
             for indsec = 1:nsec-1                        
                 inode = sections(idxse,6+indsec);
-                if ismember(inode,nodeElmt(:,1)) == 0 % vertices of element are not including
+                if ismember(inode,nodeElmt(:,1)) == 0
                     xcoor1 = coor(inode,2);
                     ycoor1 = coor(inode,3);
                     coor_inodes_q = getLocation(xcoor1,xcoor2,ycoor1,ycoor2,eq);
-                    %update coor matrix
+                    % update coor matrix
                     coor(nnode+1:nnode+ninode,1) = nnode+1: nnode + ninode;
-                    coor(nnode+1:nnode+ninode,4) = 1;  %weight
-                    coor(nnode+1:nnode+ninode,5) = 3;  %typ(inserted nodes)
-                    coor(nnode+1:nnode+ninode,6) = 0;  %which-region
-                    coor(nnode+1:nnode+ninode,7) = -1; %inside-region  
+                    coor(nnode+1:nnode+ninode,4) = 0;  % weight
+                    coor(nnode+1:nnode+ninode,5) = 3;  % typ(inserted nodes)
+                    coor(nnode+1:nnode+ninode,6) = 0;  % which-region
+                    
+                    % Check if current inserted node is inside the region enclosed by the NURBS curve            
+                    for j = 1: ninode
+                        pointInPoly = isPointInPolygon(NURBS_pts(1:end-1,1:2), coor_inodes_q(j,1:2));
+                        coor(nnode+j,7) = pointInPoly;
+                    end 
+
                     coor(nnode+1:nnode+ninode,2:3) =[coor_inodes_q];
                     nodeSec0 =[inode,nnode+1:nnode + ninode];
                     nodeSec = [nodeSec;nodeSec0];
                     nnode = nnode + ninode; 
                 end
-            end
-                      
-            
-            
-            %divide inserted nodes
-            sc = sections(idxse,6+nsec); %number of scaling center
-            
-            for indsec =1: nsec-1
-                inode = sections(idxse,6+indsec);
-                for eta = 1:ninode                   
-                    if ismember(inode,nodeElmt(:,1)) == 1
-                        idx = find(inode == nodeElmt(:,1));
-                        idxnode = nodeElmt(idx,eta+1);
-                        sections(idxse,6+indsec+(pgrad+1)*eta) = idxnode;
-                    else 
-                        idx = find(inode == nodeSec(:,1));
-                        idxnode = nodeSec(idx,eta+1);
-                        sections(idxse,6+indsec+(pgrad+1)*eta) = idxnode;
-                    end
-                end
-            end
-            
-            sections(idxse,6) = (pgrad+1)*eq + 1; %nsec
-            sections(idxse,6+(pgrad+1)*eq + 1) = sc; %scaling center
-            
-            ord(idxse,3) = eq;
+            end 
         end
         
-    else %kvno ~= 0
+     
         
-        %insert nodes in shared edges between sections per element
-        xcoor2 = coor(elmt(end),2); %x_coordinate of sc
-        ycoor2 = coor(elmt(end),3); %y_coordinate of sc  
-        ninode = eq - 1;
-        nodeElmt = [];
-        for inelmt = 1:length(elmt)-1
-            inode = elmt(inelmt);
-            xcoor1 = coor(inode,2);
-            ycoor1 = coor(inode,3);
-            coor_inodes_q = getLocation(xcoor1,xcoor2,ycoor1,ycoor2,eq);
-            %update coor matrix
-            coor(nnode+1:nnode+ninode,1) = nnode+1: nnode + ninode;
-            coor(nnode+1:nnode+ninode,4) = 1;  %weight
-            coor(nnode+1:nnode+ninode,5) = 3;  %typ(inserted nodes)
-            coor(nnode+1:nnode+ninode,6) = 0;  %which-region
-            coor(nnode+1:nnode+ninode,7) = -1; %inside-region  
-            coor(nnode+1:nnode+ninode,2:3) =[coor_inodes_q];
-            nodeElmt0 =[inode,nnode+1:nnode + ninode];
-            nodeElmt = [nodeElmt;nodeElmt0];
-            nnode = nnode + ninode;
-        end    
-                
-  
-        %insert nodes per section within element       
-        
-        for ise = 1:numSecPoly
-            idxse = secElmts(ise); %section number within element
-            ikv = sections(idxse,4);
-            nsec = sections(idxse,6);
-            pgrad = ord(idxse,2);
-            
-            nodeSec = [];
-            %insert nodes 
-            if ikv == 0                
-                for indsec = 1:nsec-1                        
-                    inode = sections(idxse,6+indsec);
-                    if ismember(inode,nodeElmt(:,1)) == 0
-                        xcoor1 = coor(inode,2);
-                        ycoor1 = coor(inode,3);
-                        coor_inodes_q = getLocation(xcoor1,xcoor2,ycoor1,ycoor2,eq);
-                        %update coor matrix
-                        coor(nnode+1:nnode+ninode,1) = nnode+1: nnode + ninode;
-                        coor(nnode+1:nnode+ninode,4) = 1;  %weight
-                        coor(nnode+1:nnode+ninode,5) = 3;  %typ(inserted nodes)
-                        coor(nnode+1:nnode+ninode,6) = 0;  %which-region
-                        coor(nnode+1:nnode+ninode,7) = -1; %inside-region  
-                        coor(nnode+1:nnode+ninode,2:3) =[coor_inodes_q];
-                        nodeSec0 =[inode,nnode+1:nnode + ninode];
-                        nodeSec = [nodeSec;nodeSec0];
-                        nnode = nnode + ninode; 
-                    end
-                end 
-            end
-            
-         
-            
-            %divide inserted nodes
-            sc = sections(idxse,6+nsec); %number of scaling center                
-            for indsec =1: nsec-1
-                inode = sections(idxse,6+indsec);
-                for eta = 1:ninode                   
-                    if ismember(inode,nodeElmt(:,1)) == 1
-                        idx = find(inode == nodeElmt(:,1));
-                        idxnode = nodeElmt(idx,eta+1);
-                        sections(idxse,6+indsec+(pgrad+1)*eta) = idxnode;
-                    else 
-                        idx = find(inode == nodeSec(:,1));
-                        idxnode = nodeSec(idx,eta+1);
-                        sections(idxse,6+indsec+(pgrad+1)*eta) = idxnode;
-                    end
+        % divide inserted nodes
+        sc = sections(idxse,6+nsec); % number of scaling center 
+        numPnodes = nsec - 1; % number of original nodes in circumferential direction
+        for indsec =1: numPnodes
+            inode = sections(idxse,6+indsec);
+            for eta = 1:ninode                   
+                if ismember(inode,nodeElmt(:,1)) == 1
+                    idx = find(inode == nodeElmt(:,1));
+                    idxnode = nodeElmt(idx,eta+1);
+                    sections(idxse,6+indsec+numPnodes*eta) = idxnode;
+                else 
+                    idx = find(inode == nodeSec(:,1));
+                    idxnode = nodeSec(idx,eta+1);
+                    sections(idxse,6+indsec+numPnodes*eta) = idxnode;
                 end
             end
-            
-            sections(idxse,6) = (pgrad+1)*eq + 1; %nsec
-            sections(idxse,6+(pgrad+1)*eq + 1) = sc; %scaling center
-            
-            ord(idxse,3) = eq;
         end
+        
+        sections(idxse,6) = numPnodes*eq + 1; % nsec
+        sections(idxse,6+numPnodes*eq + 1) = sc; % scaling center
+        
+        ord(idxse,3) = eq;
+    end
+   
+end
+
+%% insert nodes in Q-direction for qualified sections
+
+numSeedingPoints_merge = size(seedingPoints_merge,1);
+
+ElmtQsec = [];    %element which contain qualified sections
+for isp = 1: numSeedingPoints_merge
+    isec0 = seedingPoints_merge(isp,2);
+    qgrad = seedingPoints_merge(isp,8);
+    iel_merge = sections(isec0,2);
+    if isempty(ElmtUQsec) == 1 || ismember(iel_merge,ElmtUQsec(:,1)) == 0
+        ElmtQsec = [ElmtQsec;iel_merge,qgrad];
     end
 end
 
+[~,ia] = unique(ElmtQsec,'rows');
+ElmtQsec = ElmtQsec(ia,:);
 
     
+% connectivity = [iel, ikv, idxLeaf, which_region, nel, node_1,...,node_nel, scaling_center]
+numElmtUQsec = size(ElmtQsec,1); % number of poly element
+for i = 1: numElmtUQsec
+    iel = ElmtUQsec(i); % poly element number
+    qgrad = ElmtUQsec(i,2); % qgrad from last calculation
+    elmt = connectivity{iel}(1,6:end); % vertices and sc of poly element
+    numSecPoly = polyElmts(iel,3); % number of the sections within current poly
+    secElmts = polyElmts(iel,4:3 + numSecPoly); % sections number of current poly
+    eq = qgrad + 1; % elevated qgrad
+    ninode = eq - 1; % number of inserted nodes
+    
+    if ninode == 0
+        continue
+    end
+
+    % insert nodes in shared edges between sections per element
+    xcoor2 = coor(elmt(end),2); % x_coordinate of sc
+    ycoor2 = coor(elmt(end),3); % y_coordinate of sc  
+    nodeElmt = []; % nodeElmt = [ivertex of poly, inserted nodes]
+    for inelmt = 1:length(elmt)-1
+        inode = elmt(inelmt);
+        xcoor1 = coor(inode,2);
+        ycoor1 = coor(inode,3);
+        coor_inodes_q = getLocation(xcoor1,xcoor2,ycoor1,ycoor2,eq);
+       
+        % update coor matrix
+        coor(nnode+1:nnode+ninode,1) = nnode+1: nnode + ninode;
+        coor(nnode+1:nnode+ninode,4) = 0;  % weight
+        coor(nnode+1:nnode+ninode,5) = 3;  % typ(inserted nodes)
+        coor(nnode+1:nnode+ninode,6) = 0;  % which-region
+        
+        % Check if current inserted node is inside the region enclosed by the NURBS curve            
+        for j = 1: ninode
+            pointInPoly = isPointInPolygon(NURBS_pts(1:end-1,1:2), coor_inodes_q(j,1:2));
+            coor(nnode+j,7) = pointInPoly;
+        end 
+         
+        coor(nnode+1:nnode+ninode,2:3) =[coor_inodes_q];
+        nodeElmt0 =[inode,nnode+1:nnode + ninode];
+        nodeElmt = [nodeElmt;nodeElmt0];
+        nnode = nnode + ninode;
+    end    
             
+
+    % insert nodes per section within element       
+    for ise = 1:numSecPoly
+        idxse = secElmts(ise); % section number within element
+        ikv = sections(idxse,4);
+        nsec = sections(idxse,6);
+        
+        nodeSec = []; % nodeSec = [inode of current section except vertices, inserted nodes]
+
+        if ikv == 0
+            for indsec = 1:nsec-1                        
+                inode = sections(idxse,6+indsec);
+                if ismember(inode,nodeElmt(:,1)) == 0
+                    xcoor1 = coor(inode,2);
+                    ycoor1 = coor(inode,3);
+                    coor_inodes_q = getLocation(xcoor1,xcoor2,ycoor1,ycoor2,eq);
+                    % update coor matrix
+                    coor(nnode+1:nnode+ninode,1) = nnode+1: nnode + ninode;
+                    coor(nnode+1:nnode+ninode,4) = 0;  % weight
+                    coor(nnode+1:nnode+ninode,5) = 3;  % typ(inserted nodes)
+                    coor(nnode+1:nnode+ninode,6) = 0;  % which-region
+                    
+                    % Check if current inserted node is inside the region enclosed by the NURBS curve            
+                    for j = 1: ninode
+                        pointInPoly = isPointInPolygon(NURBS_pts(1:end-1,1:2), coor_inodes_q(j,1:2));
+                        coor(nnode+j,7) = pointInPoly;
+                    end 
+
+                    coor(nnode+1:nnode+ninode,2:3) =[coor_inodes_q];
+                    nodeSec0 =[inode,nnode+1:nnode + ninode];
+                    nodeSec = [nodeSec;nodeSec0];
+                    nnode = nnode + ninode; 
+                end
+            end 
+        end
+        
+     
+        
+        % divide inserted nodes
+        sc = sections(idxse,6+nsec); % number of scaling center 
+        numPnodes = nsec - 1; % number of original nodes in circumferential direction
+        for indsec =1: numPnodes
+            inode = sections(idxse,6+indsec);
+            for eta = 1:ninode                   
+                if ismember(inode,nodeElmt(:,1)) == 1
+                    idx = find(inode == nodeElmt(:,1));
+                    idxnode = nodeElmt(idx,eta+1);
+                    sections(idxse,6+indsec+numPnodes*eta) = idxnode;
+                else 
+                    idx = find(inode == nodeSec(:,1));
+                    idxnode = nodeSec(idx,eta+1);
+                    sections(idxse,6+indsec+numPnodes*eta) = idxnode;
+                end
+            end
+        end
+        
+        sections(idxse,6) = numPnodes*eq + 1; % nsec
+        sections(idxse,6+numPnodes*eq + 1) = sc; % scaling center
+        
+        ord(idxse,3) = eq;
+    end
+   
+end
+    
+%% adjust the size of sections matrix
+maxnsec = max(sections(:,6));
+sections(:,6+maxnsec+1:end) = [];            
 
 end
                                 

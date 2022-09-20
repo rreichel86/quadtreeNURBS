@@ -1,12 +1,9 @@
-function [Quadtree,nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] = elevateOrder_quadtree_mesh(Quadtree,seedingPoints_splitt,seedingPoints_merge,ep,eq)
+function [Quadtree,nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] = refine_quadtree_mesh_epeq(Quadtree,seedingPoints_splitt,seedingPoints_merge,ep,eq)
 % refine_quadtree_mesh: refine given quadtree based mesh
 %
 % INPUT: 
 % Quadtree ------------------- Quadtree data structure 
 % seedingPoints -------------- list of seeding points
-% ep ------------------------- preset pgrad
-% eq ------------------------- preset qgrad
-
 %
 % OUTPUT:
 % Quadtree ------------------- updated Quadtree data structure 
@@ -16,7 +13,6 @@ function [Quadtree,nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] =
 %
 %                              type: 1 -  node
 %                                    2 - control point or intersection point
-%                                    3 - inserted nodes
 %                              which_region: region number
 %                              inside_region: 0 - at the boundary
 %                                             1 - inside 
@@ -28,7 +24,7 @@ function [Quadtree,nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] =
 %                               nodes, where the first three entries
 %                               isec - section number
 %                               ipoly - polygonal element number
-%                               idxLeaf - index of Leaf
+%                               idxLeaf - index of leaf
 %                               ikv - knot vector number
 %                               region - region number 
 %                               nsec - number of nodes per section
@@ -41,22 +37,23 @@ function [Quadtree,nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] =
 % wgt = [iw, nweights, weight_1,...,weigth_nweigths]
 %
 % polyElmts -------------------- relate sections and polygonal elements
-% polyElmts = [ipoly, region, numSecPoly, sec_1,...,sec_numSecPoly, idxLeaf]
+% polyElmts = [ipoly, region, numSecPoly, sec_1,...,sec_numSecPoly,idxLeaf]
 %
 % -------------------------------------------------------------------------
 
 figure 
 hold on 
 
+
 %% Quadtree decomposition
 % Get NURBS curve
-% data = Quadtree.Node{1,1};
-% NURBS = data{3};
+data = Quadtree.Node{1,1};
+NURBS = data{3};
 
-% [Quadtree] = QuadtreeSplit(Quadtree,NURBS,seedingPoints_splitt);
-% 
-% [Quadtree] = QuadtreeBalance(Quadtree,NURBS);
-% [Quadtree] = check_leaf(Quadtree);
+[Quadtree] = QuadtreeSplit(Quadtree,NURBS,seedingPoints_splitt);
+
+[Quadtree] = QuadtreeBalance(Quadtree,NURBS);
+[Quadtree] = check_leaf(Quadtree);
 
 %% Extract polygonal elements 
 [nnode,coor,numel,connectivity,~,...
@@ -66,11 +63,10 @@ hold on
 
 [nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] = splittIntoSections(nnode,coor,numel,connectivity,...
                                                                     numKnotVectors,knotVectors,maxnknots,idxControlPoints);
+
+
 %% Elevate Order in P-/Q-Direction
-if ~exist('ep') %elevate the order gradually
-    [coor,maxnsec,nnode,sections,ord]=elevateGrad(Quadtree,nnode,coor,sections,ord,polyElmts,connectivity,seedingPoints_splitt,seedingPoints_merge);
-else %elevate order with ep and eq
-    [coor,maxnsec,nnode,sections,ord]=elevateOrder_hRef_epeq(Quadtree,nnode,coor,sections,ord,polyElmts,connectivity,ep,eq);
-end
-                                                  
+
+[coor,maxnsec,nnode,sections,ord]=elevateOrder_hRef_epeq(Quadtree,nnode,coor,sections,ord,polyElmts,connectivity,ep,eq);
+                                                      
 end
