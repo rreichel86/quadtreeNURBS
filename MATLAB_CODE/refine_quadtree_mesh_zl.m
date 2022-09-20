@@ -1,4 +1,4 @@
-function [Quadtree,nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] = refine_quadtree_mesh(Quadtree,seedingPoints_splitt,seedingPoints_merge)
+function [Quadtree,nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] = refine_quadtree_mesh(Quadtree,seedingPoints_splitt,seedingPoints_merge,ElevateOrderNumber)
 % refine_quadtree_mesh: refine given quadtree based mesh
 %
 % INPUT: 
@@ -41,13 +41,24 @@ function [Quadtree,nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] =
 %
 % -------------------------------------------------------------------------
 
+figure 
+hold on 
+
+%%extract parameters from seedingPoints for different case
+if ~exist('ElevateOrderNumber')
+    refSeedingPoints_splitt = seedingPoints_splitt;
+    ElevateOrderNumber = 0;
+else
+    [QuadLeaf_splitt,QuadLeaf_merge,refSeedingPoints_splitt,refSeedingPoints_merge] = seedingPoints_settle(seedingPoints_splitt,seedingPoints_merge, ElevateOrderNumber);
+end
 
 %% Quadtree decomposition
 % Get NURBS curve
 data = Quadtree.Node{1,1};
 NURBS = data{3};
 
-[Quadtree] = QuadtreeSplit(Quadtree,NURBS,seedingPoints_splitt);
+[Quadtree] = QuadtreeSplit(Quadtree,NURBS,refSeedingPoints_splitt,QuadLeaf_splitt);
+[Quadtree] = localRef_nurbs(Quadtree,QuadLeaf_splitt,1);
 
 [Quadtree] = QuadtreeBalance(Quadtree,NURBS);
 [Quadtree] = check_leaf(Quadtree);
@@ -60,5 +71,13 @@ NURBS = data{3};
 
 [nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] = splittIntoSections(nnode,coor,numel,connectivity,...
                                                                     numKnotVectors,knotVectors,maxnknots,idxControlPoints);
+
+%% Remain the order from last calculation
+
+if ElevateOrderNumber ~= 0
+
+    [coor,maxnsec,nnode,sections,ord] = remainGrad(Quadtree,nnode,coor,sections,ord,polyElmts,connectivity,QuadLeaf_splitt,QuadLeaf_merge);
+                                                  
+end
 
 end
