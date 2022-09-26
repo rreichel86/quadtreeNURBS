@@ -57,11 +57,11 @@ end
 data = Quadtree.Node{1,1};
 NURBS = data{3};
 
-[Quadtree] = QuadtreeSplit(Quadtree,NURBS,refSeedingPoints_splitt,QuadLeaf_splitt);
-[Quadtree] = localRef_nurbs(Quadtree,QuadLeaf_splitt,1);
+[Quadtree] = QuadtreeSplit(Quadtree,NURBS,refSeedingPoints_splitt);
+%[Quadtree] = localRef_nurbs(Quadtree,QuadLeaf_splitt,1);
 
 [Quadtree] = QuadtreeBalance(Quadtree,NURBS);
-[Quadtree] = check_leaf(Quadtree);
+%[Quadtree] = check_leaf(Quadtree);
 
 %% Extract polygonal elements 
 [nnode,coor,numel,connectivity,~,...
