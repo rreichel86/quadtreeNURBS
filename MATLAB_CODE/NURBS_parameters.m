@@ -1,5 +1,5 @@
-if flag == 1
 function [NURBS,Boundary,name] = NURBS_parameters(nro)
+if nro == 1
     degree = 3;
     controlPoints = [ 0 -0.2 -0.5 -0.7 -1.7 -4 -4 -3.75 0 4 4 4  2.5 0;...
                      -2 -1.8 -1.3 -1.4 0.2 -3.5  0  3.5 4 4 0 -4 -0.1 -2];
@@ -7,7 +7,7 @@ function [NURBS,Boundary,name] = NURBS_parameters(nro)
     weights = [1 0.707 1 0.707 1 0.5 1 0.707 1 0.707 1 1 2 1];
     Boundary = [-6 -6 6 6;5 -5 -5 5];
 
-elseif flag == 2
+elseif nro == 2
     degree = 2;
     controlPoints = [ 0 -1 -1 -1 0 1 1 1 0;...
                      -1 -1 0 1 1 1 0 -1 -1];
@@ -16,7 +16,7 @@ elseif flag == 2
     Boundary = [-5 5 5 -5;...
                 -5 -5 5 5];
 
-elseif flag == 3
+elseif nro == 3
     degree = 2;
     controlPoints = [ 0 -4 -4 -4 0 4 4 4 0; -0.9 -4 0 4 -0.3 4 0 -4 -0.9];
     knots = [0 0 0 0.25 0.25 0.5 0.5 0.75 0.75 1 1 1];  
@@ -24,7 +24,7 @@ elseif flag == 3
     Boundary = [min(controlPoints(1,:))*1.2, min(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2;...
         max(controlPoints(2,:))*1.2, min(controlPoints(2,:))*1.2, min(controlPoints(2,:))*1.2, max(controlPoints(2,:))*1.2];
 
-elseif flag == 4
+elseif nro == 4
     degree = 3;
     controlPoints = [-2 -10 -20  -20 -10 0 10 20 20 10 0 -2;...
                       0 -2   -1    1  2  3  2  1 -1 -2 1  0];
@@ -35,7 +35,7 @@ elseif flag == 4
 
 
 
-elseif flag == 7
+elseif nro == 5
     degree = 3;
 %     controlPoints = [ 0 -5 -2 0 2 5  0;...
 %                      -4  1  4 1 4 1 -4];
@@ -50,7 +50,7 @@ elseif flag == 7
     Boundary=[-5 5 5 -5;...
           -5 -5 5 5];            
 
-elseif flag == 8
+elseif nro == 6
     degree = 2;
     
     controlPoints = [ 0 -1 -1 -1 0 1 1 1 0;...
