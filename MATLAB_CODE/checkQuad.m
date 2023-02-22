@@ -7,14 +7,11 @@ nPoints = size(points,1);
 
 
 for ii = 1:nPoints
-    
-      if isPointInPolygon(polygon, points(ii,:))  ~= -1
-        
+      isPtInPoly = isPointInPolygon(polygon, points(ii,:));
+      if isPtInPoly  == 1
         counter = counter + 1;
         currentPoints(counter,:) = points(ii,:);
-    
       end
-    
 end
 
 % check for dublicated control point 
