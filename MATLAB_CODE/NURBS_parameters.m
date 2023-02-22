@@ -1,5 +1,5 @@
-function [NURBS,Boundary] = NURBS_parameters(flag)
 if flag == 1
+function [NURBS,Boundary,name] = NURBS_parameters(nro)
     degree = 3;
     controlPoints = [ 0 -0.2 -0.5 -0.7 -1.7 -4 -4 -3.75 0 4 4 4  2.5 0;...
                      -2 -1.8 -1.3 -1.4 0.2 -3.5  0  3.5 4 4 0 -4 -0.1 -2];
