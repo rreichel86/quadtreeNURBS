@@ -5,7 +5,8 @@ if nro == 1
                      -2 -1.8 -1.3 -1.4 0.2 -3.5  0  3.5 4 4 0 -4 -0.1 -2];
     knots = [0 0 0 0 0.25 0.3 0.4 0.5 0.6 0.75 0.75 0.75 0.8 0.9 1 1 1 1];
     weights = [1 0.707 1 0.707 1 0.5 1 0.707 1 0.707 1 1 2 1];
-    Boundary = [-6 -6 6 6;5 -5 -5 5];
+    Boundary = [-6 -6  6 6;...
+                 6 -6 -6 6];
 
     name = "Mobi-Dick";
 
@@ -25,8 +26,9 @@ elseif nro == 3
     controlPoints = [ 0 -4 -4 -4 0 4 4 4 0; -0.9 -4 0 4 -0.3 4 0 -4 -0.9];
     knots = [0 0 0 0.25 0.25 0.5 0.5 0.75 0.75 1 1 1];  
     weights = [1 0.707 1 0.707 1 0.707 1 0.707 1];
-    Boundary = [min(controlPoints(1,:))*1.2, min(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2;...
-        max(controlPoints(2,:))*1.2, min(controlPoints(2,:))*1.2, min(controlPoints(2,:))*1.2, max(controlPoints(2,:))*1.2];
+
+    Boundary = [-5 5 5 -5;...
+                -5 -5 5 5];
 
     name = "DoubleCirumference";
 
@@ -36,9 +38,9 @@ elseif nro == 4
                       0 -2   -1    1  2  3  2  1 -1 -2 1  0];
     knots=[0 0 0 0 0.267 0.333 0.4 0.467 0.5333 0.6 0.667 0.733 1 1 1 1];  
     weights=[1 0.707 1 0.707 1 0.707 1 0.707 1 0.707 1 1];
-    Boundary=[min(controlPoints(1,:))*1.2, min(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2;...
-        max(controlPoints(1,:))*1.2, min(controlPoints(1,:))*1.2, min(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2];
 
+    Boundary = [-25 25 25 -25;...
+                -25 -25 25 25];
 
     name = "FlatShape";
 
