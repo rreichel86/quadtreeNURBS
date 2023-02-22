@@ -14,6 +14,11 @@ mesh, based on the complexity of the geometry, and to maintain an exact represen
 of the boundary.
 
 
+### Table of contents
+1. [Examples](#examples)
+1. [Acknowledgments](#acknowledgments)
+1. [Contact](#contact)
+
 ## Examples
 
 |  | |
