@@ -33,22 +33,7 @@ elseif flag == 4
     Boundary=[min(controlPoints(1,:))*1.2, min(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2;...
         max(controlPoints(1,:))*1.2, min(controlPoints(1,:))*1.2, min(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2];
 
-elseif flag == 5
-    degree = 2;
-    controlPoints = [ 0 -4 -4 -4 0 4 4 4 0; -0.9 -4 0 4 -0.89999 4 0 -4 -0.9];
-    knots = [0 0 0 0.25 0.25 0.5 0.5 0.75 0.75 1 1 1];  
-    weights = [1 0.707 1 0.707 1 0.707 1 0.707 1];
-    Boundary = [min(controlPoints(1,:))*1.2, min(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2;...
-                max(controlPoints(2,:))*1.2, min(controlPoints(2,:))*1.2, min(controlPoints(2,:))*1.2, max(controlPoints(2,:))*1.2];
 
-elseif flag == 6
-    degree = 2;
-    controlPoints = [ 0 -4 -4 -4 0 4 4 4 0; 
-                     -0.9 -4 0 4 -0.9 4 0 -4 -0.9];
-    knots = [0 0 0 0.25 0.25 0.5 0.5 0.75 0.75 1 1 1];  
-    weights = [1 0.707 1 0.707 1 0.707 1 0.707 1];
-    Boundary = [min(controlPoints(1,:))*1.2, min(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2;...
-                max(controlPoints(2,:))*1.2, min(controlPoints(2,:))*1.2, min(controlPoints(2,:))*1.2, max(controlPoints(2,:))*1.2];
 
 elseif flag == 7
     degree = 3;
@@ -76,16 +61,7 @@ elseif flag == 8
     Boundary = [0 5 5 0;...
                 0 0 5 5]; 
 
-elseif flag == 9
-    degree = 4;
-    controlPoints = [ 5 7 8 5.5 6 4 4.5 2 3 5;...
-                      3 3 6 7 4 4  7 6 3 3];
-    knots = [0 0 0 0 0 0.357 0.429 0.5 0.571 0.643 1 1 1 1 1];  
-    weights = [1 1 1 1 1 1 1 1 1 1];
-    Boundary = [0 10 10 0;...
-                0 0  10 10];
-    
-            
+
 end
 
     NURBS.degree = degree;
