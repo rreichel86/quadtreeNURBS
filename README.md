@@ -20,3 +20,20 @@ of the boundary.
 | ------ | ------ |
 | ![ALT](/Circumference.png) | ![ALT](/Double_Circumference.png) |
 | ![ALT](/Moby-Dick.png)  | ![ALT](/Flat_Shape.png) | 
+
+
+
+## Acknowledgments <a name="acknowledgments"></a>
+
+The financial support of the DFG (German Research Foundation) under 
+[project number 433734847](https://gepris.dfg.de/gepris/projekt/433734847?language=en)
+is gratefully acknowledged.
+
+## Contact <a name="contact"></a>  
+
+**Rainer Reichel** M.Sc.  
+LBB - Lehrstuhl für Baustatik und Baudynamik  
+RWTH Aachen University 
+email: <reichel@lbb.rwth-aaachen.de>
+
+
