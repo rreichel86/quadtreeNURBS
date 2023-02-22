@@ -7,6 +7,8 @@ if nro == 1
     weights = [1 0.707 1 0.707 1 0.5 1 0.707 1 0.707 1 1 2 1];
     Boundary = [-6 -6 6 6;5 -5 -5 5];
 
+    name = "Mobi-Dick";
+
 elseif nro == 2
     degree = 2;
     controlPoints = [ 0 -1 -1 -1 0 1 1 1 0;...
@@ -16,6 +18,8 @@ elseif nro == 2
     Boundary = [-5 5 5 -5;...
                 -5 -5 5 5];
 
+    name = "Circumference";
+
 elseif nro == 3
     degree = 2;
     controlPoints = [ 0 -4 -4 -4 0 4 4 4 0; -0.9 -4 0 4 -0.3 4 0 -4 -0.9];
@@ -23,6 +27,8 @@ elseif nro == 3
     weights = [1 0.707 1 0.707 1 0.707 1 0.707 1];
     Boundary = [min(controlPoints(1,:))*1.2, min(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2;...
         max(controlPoints(2,:))*1.2, min(controlPoints(2,:))*1.2, min(controlPoints(2,:))*1.2, max(controlPoints(2,:))*1.2];
+
+    name = "DoubleCirumference";
 
 elseif nro == 4
     degree = 3;
@@ -34,6 +40,7 @@ elseif nro == 4
         max(controlPoints(1,:))*1.2, min(controlPoints(1,:))*1.2, min(controlPoints(1,:))*1.2, max(controlPoints(1,:))*1.2];
 
 
+    name = "FlatShape";
 
 elseif nro == 5
     degree = 3;
@@ -50,6 +57,8 @@ elseif nro == 5
     Boundary=[-5 5 5 -5;...
           -5 -5 5 5];            
 
+    name = "Heart";
+
 elseif nro == 6
     degree = 2;
     
@@ -61,6 +70,7 @@ elseif nro == 6
     Boundary = [0 5 5 0;...
                 0 0 5 5]; 
 
+    name = "QuarterCircumference";
 
 end
 
