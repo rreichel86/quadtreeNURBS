@@ -17,12 +17,10 @@ of the boundary.
 | :---: | :---: | :---: |
 | <img src="./Images/HeartQuadtreeDecomp0.png" alt=" " width="150px"/> | <img src="./Images/HeartQuadtreeDecomp0.png" alt=" " width="150px"/>  | <img src="./Images/HeartQuadtreeDecomp1.png" alt=" " width="150px"/> |
 | (a)  | (b)  | (c) |
-| <img src="./Images/HeartQuadtreeDecomp1.png" alt=" " width="150px"/> | <img src="./Images/HeartQuadtreeDecomp2.png" alt=" " width="150px"/> | <img src="./Images/HeartQuadtreeDecomp3.png" alt=" " width="150px"/> |
+| <img src="./Images/HeartQuadtreeDecomp2.png" alt=" " width="150px"/> | <img src="./Images/HeartQuadtreeDecomp3.png" alt=" " width="150px"/> | <img src="./Images/HeartQuadtreeDecomp4.png" alt=" " width="150px"/> |
 | (d) | (e) | (f) |
-| <img src="./Images/HeartQuadtreeDecomp4.png" alt=" " width="150px"/> | <img src="./Images/HeartQuadtreeDecomp5.png" alt=" " width="150px"/> | <img src="./Images/HeartQuadtreeDecomp6.png" alt=" " width="150px"/> |
-| (g) | (h) | (i) |
-| <img src="./Images/HeartQuadtreeDecomp7.png" alt=" " width="150px"/> | <img src="./Images/HeartQuadtreeDecomp8.png" alt=" " width="150px"/> | <img src="./Images/HeartQuadtreeDecomp9.png" alt=" " width="150px"/> |
-| (j) | (k) | (l) |
+| <img src="./Images/HeartQuadtreeDecomp6.png" alt=" " width="150px"/> | <img src="./Images/HeartQuadtreeDecomp7.png" alt=" " width="150px"/> |  |
+| (g) | (h) |  |
 
 
 ### Table of contents
