@@ -22,8 +22,17 @@ inclusion. The corresponding finite element meshes are shown in Figures (g) and 
 
 ### Table of contents
 1. [Examples](#examples)
+1. [Dependencies](#dependencies)
 1. [Acknowledgments](#acknowledgments)
 1. [Contact](#contact)
+
+## Dependencies
+
+- [matlab-tree](https://github.com/tinevez/matlab-tree) [^1] - A MATLAB class.
+  to represent the tree data structure
+
+[^1]:  Jean-Yves Tinevez (2023). Tree data structure as a MATLAB class
+(https://github.com/tinevez/matlab-tree), GitHub. Retrieved February 23, 2023.
 
 ## Examples
 
