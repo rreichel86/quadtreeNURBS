@@ -27,8 +27,8 @@ inclusion. The corresponding finite element meshes are shown in Figures (g) and 
 
 ## Examples
 
-|  | |
-| ------ | ------ |
+| Two-dimensional domain | Quadtree decomposition |
+| :---: | :---: |
 |<img src="./Examples/Circumference0.png" alt=" " width="300px"/> | <img src="./Examples/Circumference1.png" alt=" " width="300px"/> |
 |<img src="./Examples/DoubleCircumference0.png" alt=" " width="300px"/> | <img src="./Examples/DoubleCircumference1.png" alt=" " width="300px"/> |
 |<img src="./Examples/Mobi-Dick0.png" alt=" " width="300px"/> | <img src="./Examples/Mobi-Dick1.png" alt=" " width="300px"/> |
