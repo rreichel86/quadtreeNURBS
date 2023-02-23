@@ -13,6 +13,17 @@ generates non-uniform interface-conforming meshes. This allows us to create an a
 mesh, based on the complexity of the geometry, and to maintain an exact representation
 of the boundary.
 
+| | | |
+| :---: | :---: | :---: |
+| <img src="./Images/HeartQuadtreeDecomp0.png" alt=" " width="150px"/> | <img src="./Images/HeartQuadtreeDecomp0.png" alt=" " width="150px"/>  | <img src="./Images/HeartQuadtreeDecomp1.png" alt=" " width="150px"/> |
+| (a)  | (b)  | (c) |
+| <img src="./Images/HeartQuadtreeDecomp1.png" alt=" " width="150px"/> | <img src="./Images/HeartQuadtreeDecomp2.png" alt=" " width="150px"/> | <img src="./Images/HeartQuadtreeDecomp3.png" alt=" " width="150px"/> |
+| (d) | (e) | (f) |
+| <img src="./Images/HeartQuadtreeDecomp4.png" alt=" " width="150px"/> | <img src="./Images/HeartQuadtreeDecomp5.png" alt=" " width="150px"/> | <img src="./Images/HeartQuadtreeDecomp6.png" alt=" " width="150px"/> |
+| (g) | (h) | (i) |
+| <img src="./Images/HeartQuadtreeDecomp7.png" alt=" " width="150px"/> | <img src="./Images/HeartQuadtreeDecomp8.png" alt=" " width="150px"/> | <img src="./Images/HeartQuadtreeDecomp9.png" alt=" " width="150px"/> |
+| (j) | (k) | (l) |
+
 
 ### Table of contents
 1. [Examples](#examples)
