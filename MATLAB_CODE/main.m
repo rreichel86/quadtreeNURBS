@@ -43,6 +43,8 @@ if f_plotNURBS == 1
     ymax = max(Boundary(2,:));
 
     figure(1)
+    xticks([])
+    yticks([])
     daspect([1 1 1])
     box on
     set(gca,'TickLabelInterpreter','latex','FontSize',20,'FontName','Times');
@@ -61,6 +63,9 @@ if f_plotNURBS == 1
 
 end
 
+currentFileName = strcat('../Examples/',FileName,'0');
+print(currentFileName,'-dpng');
+
 %% Quadtree decomposition
 k_min = 0;
 [Quadtree] = nurbs_brep_quadtree(k_min,NURBS,Boundary);
@@ -68,6 +73,9 @@ k_min = 0;
 %% Plots the NURBS segments contained in each leaf separately
 if f_plotLeaves == 1
     plot_leaf(Quadtree)
+
+    currentFileName = strcat('../Examples/',FileName,'1');
+    print(currentFileName,'-dpng');
 end
 
 %% Extract polygonal elements
