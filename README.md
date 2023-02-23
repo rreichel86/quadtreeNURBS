@@ -29,8 +29,10 @@ inclusion. The corresponding finite element meshes are shown in Figures (g) and 
 
 |  | |
 | ------ | ------ |
-| ![ALT](/Circumference.png) | ![ALT](/Double_Circumference.png) |
-| ![ALT](/Moby-Dick.png)  | ![ALT](/Flat_Shape.png) | 
+|<img src="./Examples/Circumference0.png" alt=" " width="150px"/> | <img src="./Examples/Circumference1.png" alt=" " width="150px"/> |
+|<img src="./Examples/DoubleCirumference0.png" alt=" " width="150px"/> | <img src="./Examples/DoubleCircumference1.png" alt=" " width="150px"/> |
+|<img src="./Examples/Mobi-Dick0.png" alt=" " width="150px"/> | <img src="./Examples/Mobi-Dick.png" alt=" " width="150px"/> |
+|<img src="./Examples/Heart0.png" alt=" " width="150px"/> | <img src="./Examples/Heart1.png" alt=" " width="150px"/> |
 
 
 
