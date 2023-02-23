@@ -1,5 +1,7 @@
 # A Quadtree decomposition of heterogeneous materials in NURBS boundary representation
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-success.svg)](https://opensource.org/licenses/MIT)
+
 Consider a two-dimensional domain given by a simple closed polygonal chain and
 a non-uniform rational B-spline (NURBS) curve, see Figure (a).  The polygonal chain correspond to the outer
 boundary of the two-dimensional domain and the NURBS curve represents the
