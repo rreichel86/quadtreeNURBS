@@ -63,8 +63,8 @@ if f_plotNURBS == 1
 
 end
 
-currentFileName = strcat('../Examples/',FileName,'0');
-print(currentFileName,'-dpng');
+% currentFileName = strcat('../Examples/',FileName,'0');
+% print(currentFileName,'-dpng');
 
 %% Quadtree decomposition
 k_min = 0;
@@ -74,8 +74,8 @@ k_min = 0;
 if f_plotLeaves == 1
     plot_leaf(Quadtree)
 
-    currentFileName = strcat('../Examples/',FileName,'1');
-    print(currentFileName,'-dpng');
+%     currentFileName = strcat('../Examples/',FileName,'1');
+%     print(currentFileName,'-dpng');
 end
 
 %% Extract polygonal elements
