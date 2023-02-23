@@ -12,7 +12,7 @@ inclusion. The corresponding finite element meshes are shown in Figures (g) and 
 
 | | | |
 | :---: | :---: | :---: |
-| <img src="./Images/heartquadtreedecomp0.png" alt=" " width="150px"/> | <img src="./Images/heartquadtreedecomp0.png" alt=" " width="150px"/>  | <img src="./Images/heartquadtreedecomp1.png" alt=" " width="150px"/> |
+| <img src="./Images/HeartQuadtreeDecomp0.png" alt=" " width="150px"/> | <img src="./Images/HeartQuadtreeDecomp0.png" alt=" " width="150px"/>  | <img src="./Images/HeartQuadtreeDecomp1.png" alt=" " width="150px"/> |
 | (a)  | (b)  | (c) |
 | <img src="./Images/HeartQuadtreeDecomp2.png" alt=" " width="150px"/> | <img src="./Images/HeartQuadtreeDecomp3.png" alt=" " width="150px"/> | <img src="./Images/HeartQuadtreeDecomp4.png" alt=" " width="150px"/> |
 | (d) | (e) | (f) |
@@ -29,10 +29,10 @@ inclusion. The corresponding finite element meshes are shown in Figures (g) and 
 
 |  | |
 | ------ | ------ |
-|<img src="./Examples/Circumference0.png" alt=" " width="150px"/> | <img src="./Examples/Circumference1.png" alt=" " width="150px"/> |
-|<img src="./Examples/DoubleCircumference0.png" alt=" " width="150px"/> | <img src="./Examples/DoubleCircumference1.png" alt=" " width="150px"/> |
-|<img src="./Examples/Mobi-Dick0.png" alt=" " width="150px"/> | <img src="./Examples/Mobi-Dick1.png" alt=" " width="150px"/> |
-|<img src="./Examples/Heart0.png" alt=" " width="150px"/> | <img src="./Examples/Heart1.png" alt=" " width="150px"/> |
+|<img src="./Examples/Circumference0.png" alt=" " width="300px"/> | <img src="./Examples/Circumference1.png" alt=" " width="300px"/> |
+|<img src="./Examples/DoubleCircumference0.png" alt=" " width="300px"/> | <img src="./Examples/DoubleCircumference1.png" alt=" " width="300px"/> |
+|<img src="./Examples/Mobi-Dick0.png" alt=" " width="300px"/> | <img src="./Examples/Mobi-Dick1.png" alt=" " width="300px"/> |
+|<img src="./Examples/Heart0.png" alt=" " width="300px"/> | <img src="./Examples/Heart1.png" alt=" " width="300px"/> |
 
 
 
