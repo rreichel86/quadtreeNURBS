@@ -18,7 +18,7 @@ Cw = zeros(3,1);
 for j = 1:degree+1
         Cw = Cw + (N(j) * Pw(:, spanIndex - degree + j ));
 end
-% Cw = Cw/Cw(3);
-C = Cw(1:2)/Cw(3);
+Cw = Cw/Cw(3);
+C = Cw(1:2);
 
 

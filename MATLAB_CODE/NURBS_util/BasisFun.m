@@ -1,5 +1,5 @@
-function N = basisfun(i,u,p,U)
-% function N = basisfun(i,p,u,U)
+function N = BasisFun(i,u,p,U)
+% function N = BasisFun(i,p,u,U)
 % NURBS-Book (algorithm A2.2)
 % evalute nonzero basis functions
 % INPUT:
@@ -29,6 +29,3 @@ for j = 1:p
     N(j+1) = saved;
 end
 end
-                                   
-   
-                                                  
