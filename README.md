@@ -58,4 +58,6 @@ LBB - Lehrstuhl für Baustatik und Baudynamik
 RWTH Aachen University 
 email: <reichel@lbb.rwth-aaachen.de>
 
+---
+
 
