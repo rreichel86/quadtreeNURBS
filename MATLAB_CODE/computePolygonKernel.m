@@ -10,6 +10,7 @@ function ker = computePolygonKernel(poly,dbg)
 %   
 % -------------------------------------------------------------------------
 
+
 if ~exist('dbg','var')
     dbg = 0;
 end  
@@ -33,7 +34,7 @@ end
 if dbg == 1
 x = [ poly(:,1)', poly(1,1)'];
 y = [ poly(:,2)', poly(1,2)'];  
-plot(x,y, '-r')    
+% plot(x,y, '-b','LineWidth',1.5)    
 hold on 
 end
 
@@ -77,7 +78,7 @@ else
     if dbg == 1
         x = [ poly(:,1)', poly(1,1)'];
         y = [ poly(:,2)', poly(1,2)'];
-        patch(x,y,'green','FaceAlpha',0.5);
+        patch(x,y,'blue','FaceAlpha',0.5);
     end 
     return
 end
@@ -228,9 +229,9 @@ for idx = 1:ncc
     % Delete C1s from the polygon's kernel
     ker(tmp,:)=[];
     if ~isempty(ker)
-%         x = [ ker(:,1)', ker(1,1)'];
-%         y = [ ker(:,2)', ker(1,2)'];
-%         plot(x,y, '-')
+        x = [ ker(:,1)', ker(1,1)'];
+        y = [ ker(:,2)', ker(1,2)'];
+%         plot(x,y, '-r','LineWidth',1.5)
 %         hold on
     else
         break
@@ -254,7 +255,9 @@ end
 if ~isempty(ker)
     % plot polygon's kernel
     if dbg == 1
-        patch(x,y,'green','FaceAlpha',0.5);
+%         plot(x,y, '-r','LineWidth',1.5)    
+       patch(x,y,'red','FaceAlpha',0.5);
+         
     end 
 end
 
