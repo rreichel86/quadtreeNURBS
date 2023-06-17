@@ -35,7 +35,7 @@ numRef = 0;
 NURBS = hRefinement1d(NURBS,numRef);
 
 %% Plot NURBS curve
-if f_plotNURBS == 1
+if f_plotNURBS == 1 || f_plotLeaves == 1
 
     xmin = min(Boundary(1,:));
     xmax = max(Boundary(1,:));
@@ -51,6 +51,9 @@ if f_plotNURBS == 1
     axis square
     axis([xmin xmax ymin ymax])
     hold on
+end
+
+if f_plotNURBS == 1
 
     % Plot control polygon
     plot(NURBS.controlPoints(1, :), NURBS.controlPoints(2, :),'b-.','LineWidth',1);
