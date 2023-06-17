@@ -21,7 +21,7 @@ f_plotLeaves = 0; % Plot the NURBS contained in each leaf separately
 % Initialization
 % ==============
 % Control points input should be a matrix with dimensions
-% (coordinates,nPoints), and should be as follows: first row corresponds to
+% (coordinates, nPoints), and should be as follows: first row corresponds to
 % the x coordinate, second to the y coordinate. Each control point
 % consequently lies in its own column.
 
