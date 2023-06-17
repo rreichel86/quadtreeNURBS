@@ -16,7 +16,7 @@ example_nro = 1;
 
 % Plot options
 f_plotNURBS = 1; % Plot NURBS curve
-f_plotLeaves = 1; % Plot the NURBS contained in each leaf separately
+f_plotLeaves = 0; % Plot the NURBS contained in each leaf separately
 
 % Initialization
 % ==============
@@ -70,7 +70,7 @@ end
 % print(currentFileName,'-dpng');
 
 %% Quadtree decomposition
-dbg = 1; % plot kernels of quads intersected by the NURBS curve
+dbg = 0; % plot kernels of quads intersected by the NURBS curve
 k_min = 1;
 [Quadtree] = nurbs_brep_quadtree(k_min,NURBS,Boundary,dbg);
 
