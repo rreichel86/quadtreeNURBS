@@ -1,4 +1,4 @@
-function [Quadtree] = Star_Shape(Quadtree,NURBS,leaves)
+function [Quadtree] = Star_Shape(Quadtree,NURBS,leaves,dbg)
 % Star_Shape: Check if Quadtree leaves are star-shaped. Only the Quadtree 
 % leaves that are splitted by the NURBS curve are checked. 
 %
@@ -18,8 +18,16 @@ function [Quadtree] = Star_Shape(Quadtree,NURBS,leaves)
 
 % Find Quadtree leaves
 if ~exist('leaves','var')
-leaves = Quadtree.findleaves();
+    leaves = Quadtree.findleaves();
 end 
+
+if isempty(leaves)
+    leaves = Quadtree.findleaves();
+end
+
+if ~exist('dbg','var')    
+    dbg = 0;
+end
 
 % Filter Quadtree leaves
 for i = 1:length(leaves)
@@ -30,7 +38,7 @@ for i = 1:length(leaves)
     else  % Quadtree leaves with 2 intersections 
         % use algorithm 1
         % check if the 2 Quad subregions are star-shaped
-        [star_shaped, Quadtree] = starAlgorithm1(Quadtree,leaves(i));
+        [star_shaped, Quadtree] = starAlgorithm1(Quadtree,leaves(i),dbg);
         if star_shaped == 1
             leaves(i) = 0; % delete Quad from the list
             continue

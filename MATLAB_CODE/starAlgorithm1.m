@@ -1,4 +1,4 @@
-function [star_shaped, Quadtree] = starAlgorithm1(Quadtree,idx)
+function [star_shaped, Quadtree] = starAlgorithm1(Quadtree,idx,dbg)
 % starAlgorithm1: compute kernels of a Quadtree leaf
 % Only for Quadtree leaves that are splitted by the NURBS curve
 %
@@ -15,6 +15,10 @@ function [star_shaped, Quadtree] = starAlgorithm1(Quadtree,idx)
 % -------------------------------------------------------------------------
 
 tol = 1e-10;
+
+if ~exist('dbg','var')
+    dbg = 0;
+end
 
 % get data stored in current leaf
 
@@ -107,8 +111,8 @@ else
 end
 
 % compute polygons kernel
-K1 = computePolygonKernel(polygon_1');
-K2 = computePolygonKernel(polygon_2');
+K1 = computePolygonKernel(polygon_1',dbg);
+K2 = computePolygonKernel(polygon_2',dbg);
 star_shaped = ~isempty(K1) && ~isempty(K2);
 end
 

@@ -1,4 +1,4 @@
-function [Quadtree] = nurbs_brep_quadtree(k_min,NURBS,Boundary)
+function [Quadtree] = nurbs_brep_quadtree(k_min,NURBS,Boundary,dbg)
 % nurbs_brep_quadree: quadtree decomposition 
 % 
 % INPUT: 
@@ -14,6 +14,10 @@ function [Quadtree] = nurbs_brep_quadtree(k_min,NURBS,Boundary)
 % Quadtree ------------------- Quadtree data structure 
 % 
 % -------------------------------------------------------------------------
+
+if ~exist('dbg','var')
+    dbg = 0;
+end
 
 % Count control points in the root
 nPoints = checkQuad(Boundary',NURBS.controlPoints');
@@ -39,5 +43,14 @@ end
 [Quadtree] = Star_Shape(Quadtree,NURBS);
 
 [Quadtree] = QuadtreeBalance(Quadtree,NURBS);
+
+% Balanced quadtree grid
+% check if the quads intersected by the NURBS curve are star-shaped
+% All quads intersected by the NURBS curve should be star-shaped !!
+% Plot the kernels of quads intersected by the NURBS curve
+
+if dbg == 1
+    [Quadtree] = Star_Shape(Quadtree,NURBS,[],dbg);
+end
 
 end
