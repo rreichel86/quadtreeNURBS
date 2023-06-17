@@ -70,8 +70,9 @@ end
 % print(currentFileName,'-dpng');
 
 %% Quadtree decomposition
-k_min = 0;
-[Quadtree] = nurbs_brep_quadtree(k_min,NURBS,Boundary);
+dbg = 1; % plot kernels of quads intersected by the NURBS curve
+k_min = 1;
+[Quadtree] = nurbs_brep_quadtree(k_min,NURBS,Boundary,dbg);
 
 %% Plots the NURBS segments contained in each leaf separately
 if f_plotLeaves == 1
@@ -88,4 +89,12 @@ end
 %% Splitt polygonal elements into section
 [nnode,coor,numsec,maxnsec,sections,ord,knots,wgt,polyElmts] = splittIntoSections(nnode,coor,numel,connectivity,...
                                                                     numKnotVectors,knotVectors,maxnknots,idxControlPoints);
+
+% plot kernels of quads intersected by the NURBS curve.
+if dbg == 1
+    currentFileName = strcat('../Examples/',FileName,'2');
+    print(currentFileName,'-dpng');
+     print('-vector',currentFileName,'-depsc');
+end
+
 
