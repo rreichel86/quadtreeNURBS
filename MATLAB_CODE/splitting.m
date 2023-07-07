@@ -31,6 +31,7 @@ Q_aux = refQ;
 if k == 1 % first level of decomposition
     data = Quadtree.get(1);
     NURBS = data{3};
+    OP = NURBSCurveOrientation(NURBS);
 else % other levels of decomposition
     refFQ = Q_aux(1:end-2);
     idxFQ = findQ(Quadtree,refFQ);
@@ -85,12 +86,26 @@ if ~isempty(NURBS)
     % and the corresponding knots
     U = [Ux0, Uy0, Ux1, Uy1];
     % avoid duplicated knot values
-    U = unique(U);
-    
+    % U = unique(U);
+    % test if knot values are duplicated?
+    if numel(U) ~= numel(unique(U))
+        disp('- There are duplicated knot values!');
+    end 
+
     % plot intersection points 
     if ~isempty(Ip)
         plot(Ip(1,:),Ip(2,:),'bo', 'LineWidth',1.5);
     end
+
+    if k == 1 && length(U) == 2
+        if OP == 1 
+            if U(1) < U(2) && U(1) == 0
+                U(1) = 1;
+            end
+        end
+
+    end 
+
     % ???
     % if any(U == 0)
     %     if any((U-0.65) > 0)
@@ -103,7 +118,11 @@ if ~isempty(NURBS)
     % intersection points
     
     % intersection points in parametric coordinates
-    newKnotVals = sort(U);
+    if ~isempty(U) && issorted(U,"descend")
+        disp('- The knots are sorted in descending order!')
+    end
+
+    newKnotVals = sort(U); % need knot values to be sorted?
     % copy knot vector, newKnots is the knot vector after Knot isertion
     newKnots = knots;
     
