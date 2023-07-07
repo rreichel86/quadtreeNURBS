@@ -17,6 +17,7 @@ example_nro = 2;
 % Plot options
 f_plotNURBS = 1; % Plot NURBS curve
 f_plotLeaves = 1; % Plot the NURBS contained in each leaf separately
+f_extractPolygonalElements = 0; % Extract polygonal elements
 
 % Initialization
 % ==============
@@ -83,6 +84,9 @@ if f_plotLeaves == 1
 end
 
 %% Extract polygonal elements
+if f_extractPolygonalElements == 0
+    return
+end
 [nnode,coor,numel,connectivity,maxnel,...
  numKnotVectors,knotVectors,maxnknots,idxControlPoints] = extractElements(Quadtree);
 
