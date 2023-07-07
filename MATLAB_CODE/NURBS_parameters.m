@@ -81,6 +81,34 @@ elseif nro == 6
 
 end
 
+
+    % check if control points are ordered CCW
+    % if there are ordered CW, reverse orientation of the NURBS curve.
+    ncp = length(knots) - 1 -degree;
+    poly = controlPoints.';
+
+    % determine signed polygon area
+    % area =  1 for CCW
+    % area = -1 for CW
+    area = poly(ncp,1) * poly(1,2) - poly(1,1) * poly(ncp,2);
+
+    for i = 1: ncp-1
+        area = area + poly(i,1) * poly(i+1,2);
+        area = area - poly(i+1,1) * poly(i,2);
+    end
+
+    % - area is positive, thus vertices are arranged CCW
+    % - area is negative, thus vertices are arranged CW
+    %   and orientation fo the NURBS curve need to be reverse!
+    if area < 0
+        iknot = knots(1);
+        jknot = knots(end);
+
+        knots = flip( (iknot + jknot) - knots );
+        controlPoints = flip(controlPoints,2);
+        weights = flip(weights);
+    end
+
     NURBS.degree = degree;
     NURBS.knots = knots;
     NURBS.controlPoints = controlPoints;
