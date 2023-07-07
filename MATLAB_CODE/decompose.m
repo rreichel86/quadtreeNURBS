@@ -26,6 +26,9 @@ end
 % Split the parent quad into 4 child quads
 [children, vertices] = splitQuad(Quad,1);
 
+if k > 18 % k_max, maximum level
+  return
+end 
 for i = 1:4
     % Loop over the 4 children. First we split the eventual NURBS segment
     % contained in the given children. Then we check if there is more than
