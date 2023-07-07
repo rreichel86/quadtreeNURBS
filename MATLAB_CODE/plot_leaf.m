@@ -6,7 +6,7 @@ if ~exist('plotOptions','var')
     % 2 - plot Quad 
     % 3 - plot control polygon and control points
     % 4 - plot intersection points
-    plotOptions = [0 1 0 0];
+    plotOptions = [1 1 1 1];
 end
 
 

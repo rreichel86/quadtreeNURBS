@@ -16,7 +16,7 @@ example_nro = 2;
 
 % Plot options
 f_plotNURBS = 1; % Plot NURBS curve
-f_plotLeaves = 0; % Plot the NURBS contained in each leaf separately
+f_plotLeaves = 1; % Plot the NURBS contained in each leaf separately
 
 % Initialization
 % ==============
@@ -43,8 +43,8 @@ if f_plotNURBS == 1 || f_plotLeaves == 1
     ymax = max(Boundary(2,:));
 
     figure(1)
-    xticks([])
-    yticks([])
+%     xticks([])
+%     yticks([])
     daspect([1 1 1])
     box on
     set(gca,'TickLabelInterpreter','latex','FontSize',20,'FontName','Times');
