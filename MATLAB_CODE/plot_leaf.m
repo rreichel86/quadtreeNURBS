@@ -14,14 +14,14 @@ end
 leaves = Quadtree.findleaves();
 numLeaves = length(leaves);
 
-% figure(2)
-% % xticks([])
-% % yticks([])
-% daspect([1 1 1])
-% box on
-% set(gca,'TickLabelInterpreter','latex','FontSize',20,'FontName','Times');
-% axis square
-% hold on
+figure(2)
+% xticks([])
+% yticks([])
+daspect([1 1 1])
+box on
+set(gca,'TickLabelInterpreter','latex','FontSize',20,'FontName','Times');
+axis square
+hold on
 
 for i = 1: numLeaves
     
