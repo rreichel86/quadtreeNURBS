@@ -94,9 +94,9 @@ if ~isempty(NURBS)
     end
     
     % plot intersection points 
-%     if ~isempty(Ip)
-%         plot(Ip(1,:),Ip(2,:),'bo', 'LineWidth',1.5);
-%     end
+    if ~isempty(Ip)
+        plot(Ip(1,:),Ip(2,:),'bo', 'LineWidth',1.5);
+    end
     
     % Knot insertions:
     % insert knots that correspond to the parametric coordinates of the

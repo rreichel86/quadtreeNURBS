@@ -35,7 +35,7 @@ for i = 1:4
     % Selecting given quad
     Quad = vertices(:,children(i,:));
     
-%     patch(Quad(1,:),Quad(2,:),'w','FaceAlpha',0,'LineStyle','-','LineWidth',1);
+    patch(Quad(1,:),Quad(2,:),'w','FaceAlpha',0,'LineStyle','-','LineWidth',1);
     
     %Call the splitting function. Get the tree data structure after
     %performing the splitting at the given quad and an auxiliary array
