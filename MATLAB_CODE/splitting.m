@@ -87,17 +87,17 @@ if ~isempty(NURBS)
     % avoid duplicated knot values
     U = unique(U);
     
-    if any(U == 0)
-        if any((U-0.65) > 0)
-            U(U == 0)=1;
-        end
-    end
-    
     % plot intersection points 
     if ~isempty(Ip)
         plot(Ip(1,:),Ip(2,:),'bo', 'LineWidth',1.5);
     end
-    
+    % ???
+    % if any(U == 0)
+    %     if any((U-0.65) > 0)
+    %         U(U == 0)=1;
+    %     end
+    % end
+
     % Knot insertions:
     % insert knots that correspond to the parametric coordinates of the
     % intersection points
